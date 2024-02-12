@@ -1,0 +1,22 @@
+{
+  "name": "cs35l-project-local-copy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdarellsalazar/cs35L-W24-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cdarellsalazar/cs35L-W24-Project/issues"
+  },
+  "homepage": "https://github.com/cdarellsalazar/cs35L-W24-Project#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
