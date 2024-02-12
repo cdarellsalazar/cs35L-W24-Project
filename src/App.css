@@ -1,0 +1,96 @@
+.logo {
+  position: fixed; /* Fixed position relative to the viewport */
+  top: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+  width: 100px; /* Adjust based on your logo size */
+  opacity: 0.5; /* Start with a lower opacity for blending */
+  transition: opacity 0.5s ease; /* Smooth transition for hover effect */
+}
+
+.centered-chunk {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  height: 100vh; 
+  text-align: center;
+}
+
+.login-form {
+  display: flex; 
+  align-items: center; 
+}
+.register-form {
+  display: flex; 
+  align-items: center; 
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column; 
+  margin-right: 2px; 
+}
+
+input {
+  padding: 2px 4px;
+  margin-bottom: 2px; 
+}
+
+.login-button {
+  background-color: #007bff; 
+  color: white; 
+  padding: 12px 8px; 
+  border: none; 
+  border-radius: 5px; 
+  text-decoration: none;
+  font-size: 16px; 
+  cursor: pointer; 
+  transition: background-color 0.2s; 
+  margin-right: 10px;
+}
+
+.text-link {
+  display: inline;
+}
+.link-button:hover {
+  background-color: #0056b3; 
+}
+
+.container {
+  display: flex;
+  height: 100vh; 
+}
+
+.left-column, .center-column, .right-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.left-column {
+  flex: 2; 
+  background-color:#7a90a8
+}
+
+.center-column {
+  flex: 6; 
+  background-color:#c4ddf1
+}
+
+.right-column {
+  flex: 1; 
+}
+
+.top-right-chunk, .bottom-right-chunk {
+  flex: 1; 
+  
+}
+.sending-box{
+  position: fixed;
+  bottom: 0;
+}
+.message-input{
+  color: white;
+}
+.send-button{
+  color: gray;
+}
