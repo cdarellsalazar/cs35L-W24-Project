@@ -1,19 +1,34 @@
+//File that starts application, outputs console data for developers, and sets routes
 require('dotenv').config()
 
 const express = require('express');
+const mongoose = require('mongoose')
+const userRoutes = require('./routes/user')
 
 // creates express app
 const app = express();
 
-//listens for requests on port 3000
-app.listen(process.env.PORT);
 
-//homepage TODO 
- app.get('/', (req, res) => {
-    res.json({mssg: 'Welcome to the app'})
-});
 
-/*//404 page (for any pages we haven't implemented yet)
- app.use((req, res) => {
-    res.status(404).sendFile('./views/404.html', { root: __dirname });
- }); */
+//middleware (debug info for us)
+app.use(express.json())
+
+app.use((req, res, next) => {
+    console.log(req.path, req.method)
+    next()
+})
+
+//routes
+app.use('/api/user', userRoutes)
+
+// connect to db
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+       app.listen(process.env.PORT, () => {
+        console.log('listening on port', process.env.PORT)
+       }) 
+    })
+    .catch((error) => {
+        console.log(error)
+    })
+
