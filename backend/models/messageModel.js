@@ -5,6 +5,11 @@ const Schema = mongoose.Schema;
 // Schema
 const messageSchema = new Schema({
     // field with a reference to the User schmema
+    conversation: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'A conversation is required for this message'],
+        ref: 'Conversation'
+    },
     sender: {
         type: Schema.Types.ObjectId,
         required: [true, 'A sender is required for the message'], 

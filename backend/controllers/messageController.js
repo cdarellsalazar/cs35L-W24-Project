@@ -1,15 +1,18 @@
 //logic for handling HTTP requests that relate to message operations
 const Message = require('../models/messageModel');
+const Conversation = require('../models/conversationModel')
 
 // Send a message
 exports.sendMessage = async (req, res) => {
     try {
-        const { senderId, receiverId, content } = req.body;
+        const { conversation, senderId, receiverId, content } = req.body;
         const message = await Message.create({
+            conversation,
             sender: senderId,
             receiver: receiverId,
             content: content,
         });
+        
         res.status(201).json(message);
     } catch (error) {
         res.status(400).json({ error: error.message });
