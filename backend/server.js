@@ -5,10 +5,12 @@ const express = require('express');
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
 
+//requries cors package that allows cross origin for communication between front and back
+const cors = require("cors");
+app.use(cors());
+
 // creates express app
 const app = express();
-
-
 
 //middleware (debug info for us)
 app.use(express.json())
@@ -31,4 +33,3 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((error) => {
         console.log(error)
     })
-
