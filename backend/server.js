@@ -9,9 +9,18 @@ const userRoutes = require('./routes/user')
 const app = express();
 
 
-
 //middleware (debug info for us)
+app.use(express.static('../frontend/src/pages/register.js'))
 app.use(express.json())
+
+app.post('/', (req, res) => {
+    const  { parcel } = req.body
+    console.log(parcel)
+    if (!parcel) {
+        res.status(400).send({ status: 'failed'})
+    }
+    res.status(200).send({ status: 'received' })
+})
 
 app.use((req, res, next) => {
     console.log(req.path, req.method)
