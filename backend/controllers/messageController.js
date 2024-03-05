@@ -17,7 +17,7 @@ exports.sendMessage = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-};
+}
 
 // Get all messages for a user
 exports.getMessagesForUser = async (req, res) => {
@@ -30,7 +30,7 @@ exports.getMessagesForUser = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-};
+}
 
 // Get unread messages for a user
 exports.getUnreadMessages = async (req, res) => {
@@ -44,7 +44,7 @@ exports.getUnreadMessages = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-};
+}
 
 // Mark a message as read
 exports.markMessageAsRead = async (req, res) => {
@@ -57,4 +57,4 @@ exports.markMessageAsRead = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-};
+}

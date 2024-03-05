@@ -10,4 +10,17 @@ exports.startConversation = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
-};
+}
+
+exports.getConversation = async (req, res) => {
+    try {
+        const conversationID = req.params.conversationID;
+        const conversation = await Conversation.find({
+            ID: conversationID
+        }).populate('conversation');
+        res.status(200).json(conversation);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+    
