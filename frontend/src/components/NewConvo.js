@@ -2,7 +2,7 @@ import {useState} from "react"
 
 const NewConvo = () => {
     const [recipient, setRecipient] = useState('')
-    const [error, setError] = useState(null)
+    //const [error, setError] = useState(null)
 
 
     const handleSubmit = async (e) => {

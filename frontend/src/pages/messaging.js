@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import NewConvo from "../components/NewConvo"
 import logoImg from '../disrupt_logo.png'; 
 import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
+import ChatList from "./LeftSidebar/ChatList";
 
 function Messaging() {
 
     const [message, setMessage] = useState('');
-    const [showNewConversationBox, setShowNewConversationBox] = useState(false);
+    //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const {logout} = useLogout()
     const navigate = useNavigate();
     const handleInputChange = (event) => {
@@ -43,33 +43,25 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
-
+/*
     const handleNewConvo = () => {
         setShowNewConversationBox(true); // Show the new conversation box
     }
 
-    const handleStartConversation = () => {
-
-    }
-
-    /*
+    
                        
                         {showNewConversationBox && (
                             <div className="new-conversation-box">
                                 <p>This is the new conversation box.</p>
                                 <button onClick={handleStartConversation}>Start Conversation</button>
                             </div>
+                            
     */
     
     return (
         <div className="container">
             <div className="left-column">
-                Friends List Selection and Online Statuses Displayed
-                
-                <button className="start-convo-button" onClick={handleNewConvo}>Create New Convo</button>
-                {showNewConversationBox && <NewConvo/>}
-
-                
+                <ChatList />
             </div>
             
         <div className="center-column">

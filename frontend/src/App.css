@@ -116,3 +116,41 @@ input {
   align-items: center; /* Center the logout button vertically if needed */
   background: transparent; /* or any color/background you want */
 }
+
+.btn {
+  background-color: #e6e5ea;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 320px;
+  height: 47px;
+  line-height: 47px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.02);
+  display: flex;
+  padding: 0;
+  transition: all 0.3s ease-in-out;
+  justify-content: center;
+  align-items: center;
+}
+.btn:hover {
+  background-color: #c4ddf1;
+  color: black;
+  transform: scale(1.02);
+}
+.btn #plus-sign {
+  flex: 0.2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 14px;
+  border-right: 1px solid #ebe7fb;
+}
+.btn span {
+  flex: 0.8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
