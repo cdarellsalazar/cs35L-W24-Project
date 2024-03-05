@@ -13,6 +13,7 @@ export default class ChatList extends Component {
       name: "Paul Eggert",
       active: true,
       isOnline: true,
+      activeTime: "Online",
     },
     {
       image:
@@ -21,6 +22,7 @@ export default class ChatList extends Component {
       name: "Gene Block",
       active: false,
       isOnline: false,
+      activeTime: "Active 32 mins ago"
     },
     {
       image:
@@ -29,6 +31,7 @@ export default class ChatList extends Component {
       name: "Majid Sarrafzadeh",
       active: false,
       isOnline: false,
+      activeTime: "Active 55 mins ago"
     },
     {
       image:
@@ -37,6 +40,7 @@ export default class ChatList extends Component {
       name: "Joe Bruin",
       active: false,
       isOnline: true,
+      activeTime: "Online"
     },
     {
       image:
@@ -45,6 +49,7 @@ export default class ChatList extends Component {
       name: "Oski",
       active: false,
       isOnline: false,
+      activeTime: "Active 2 hours ago"
     },
     {
       image:
@@ -53,6 +58,7 @@ export default class ChatList extends Component {
       name: "Spongebob Squarepants",
       active: false,
       isOnline: true,
+      activeTime: "Online"
     },
     {
       image:
@@ -61,6 +67,7 @@ export default class ChatList extends Component {
       name: "Freddy Fazbear",
       active: false,
       isOnline: true,
+      activeTime: "Online"
     },
     {
       image:
@@ -69,6 +76,7 @@ export default class ChatList extends Component {
       name: "Jin Young Park(JYP)",
       active: false,
       isOnline: false,
+      activeTime: "Active 1 hour ago"
     },
     {
       image:
@@ -77,6 +85,7 @@ export default class ChatList extends Component {
       name: "Anakin Skywalker",
       active: false,
       isOnline: true,
+      activeTime: "Online"
     },
     {
       image: "https://2.bp.blogspot.com/_2oy76hdmatE/TMxTxgc18MI/AAAAAAAAAOk/c8ZW3SyVtVI/s1600/Community-Dean-Pelton_300.jpg",
@@ -84,6 +93,7 @@ export default class ChatList extends Component {
       name: "Craig Pelton",
       active: false,
       isOnline: true,
+      activeTime: "Online"
     },
   ];
   constructor(props) {
@@ -122,6 +132,7 @@ export default class ChatList extends Component {
                 animationDelay={index + 1}
                 active={item.active ? "active" : ""}
                 isOnline={item.isOnline ? "active" : ""}
+                activeTime={item.activeTime}
                 image={item.image}
               />
             );

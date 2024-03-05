@@ -129,7 +129,7 @@
     border: 2px solid #fff;
   }
   .isOnline.active {
-    background-color: tomato;
+    background-color: green;
   }
   .avatar-img {
     overflow: hidden;
