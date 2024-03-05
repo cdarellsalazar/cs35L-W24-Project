@@ -1,16 +1,23 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLogin } from "../hooks/useLogin";
+
+
 
 function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const {login, error, isLoading} = useLogin()
-
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault()
-
-        console.log(email, password)
+        try {
+            await login(email, password);
+            navigate('/messaging');
+        } catch (err) {
+            console.error("Login failed: ", err);
+        }
+        
     }
 
     return (

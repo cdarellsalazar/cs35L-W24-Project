@@ -1,10 +1,13 @@
 .logo {
-  position: fixed; /* Fixed position relative to the viewport */
-  top: 10px; /* Adjust as needed */
-  right: 10px; /* Adjust as needed */
-  width: 100px; /* Adjust based on your logo size */
-  opacity: 0.5; /* Start with a lower opacity for blending */
-  transition: opacity 0.5s ease; /* Smooth transition for hover effect */
+  width: 100px; 
+  opacity: 0.5; 
+}
+
+.logo-container {
+  position: fixed;
+  top: 10px; 
+  right: 10px; 
+  width: 100px; 
 }
 
 .centered-chunk {
@@ -48,6 +51,15 @@ input {
   transition: background-color 0.2s; 
   margin-right: 10px;
 }
+.logout-button {
+  margin-top: auto; 
+  background-color: transparent;
+  color: black; 
+  border: 2px solid black;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
 
 .text-link {
   display: inline;
@@ -78,12 +90,12 @@ input {
 
 .right-column {
   flex: 1; 
+  display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%
 }
 
-.top-right-chunk, .bottom-right-chunk {
-  flex: 1; 
-  
-}
 .sending-box{
   position: fixed;
   bottom: 0;
@@ -93,4 +105,14 @@ input {
 }
 .send-button{
   color: gray;
+}
+
+.logout-container {
+  padding: 10px; /* Adjust padding as needed */
+  margin-top: auto; /* This pushes the logout container to the bottom if right-column is a flex container */
+  width: 100%; /* Ensures it takes the full width of its parent container */
+  display: flex;
+  justify-content: center; /* Center the logout button horizontally */
+  align-items: center; /* Center the logout button vertically if needed */
+  background: transparent; /* or any color/background you want */
 }

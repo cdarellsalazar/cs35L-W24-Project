@@ -1,15 +1,31 @@
-import { use } from "../../../backend/routes/user"
-import { useAuthContext } from "./useAuthContext"
+import { useState } from 'react';
+import { useAuthContext } from './useAuthContext';
 
 export const useLogout = () => {
-    const { dispatch } = useAuthContext()
+    const [error, setError] = useState(null);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const { dispatch } = useAuthContext();
 
-    const logout = () => {
-        //remove from storage
-        localStorage.removeItem('user')
+    const logout = async () => {
+        setIsLoggingOut(true);
+        setError(null);
+        try {
+            const response = await fetch('http://localhost:4000/api/user/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to log out');
+            }
+            localStorage.removeItem('user');
+            dispatch({ type: 'LOGOUT' });
+        } catch (error) {
+            setError(error.message);
+        }
 
-        dispatch({type: 'LOGOUT'})
-    }
-
-    return {logout}
-}
+        setIsLoggingOut(false);
+    };
+    return { logout, isLoggingOut, error };
+};

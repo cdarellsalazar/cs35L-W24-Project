@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import NewConvo from "../components/NewConvo"
-//import { Link } from 'react-router-dom';
-//uncomment this import when sign-out button is added
-
+import logoImg from '../disrupt_logo.png'; 
+import { useLogout } from "../hooks/useLogout";
+import { useNavigate } from 'react-router-dom';
 
 function Messaging() {
 
     const [message, setMessage] = useState('');
     const [showNewConversationBox, setShowNewConversationBox] = useState(false);
-
+    const {logout} = useLogout()
+    const navigate = useNavigate();
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
-
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/'); // Redirect to login page after logout
+        } catch (err) {
+            console.error('Logout failed:', err);
+            // Optionally handle logout error here
+        }
+    };
     const handleSendMessage = () => {
         fetch('/api/messages/send', {
             method: 'POST',
@@ -71,12 +80,12 @@ function Messaging() {
             </div>
         </div>
         <div className="right-column">
-            <div className="top-right-chunk">
-                
-            </div>
-        <div className="bottom-right-chunk">
-            profile card, search function, sign out
-        </div>
+                <div className="logo-container">
+                    <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                </div>
+                <div className="logout-container">
+                    <button className="logout-button" onClick={handleLogout}>Logout</button>
+                </div>
   </div>
 </div>
     );
