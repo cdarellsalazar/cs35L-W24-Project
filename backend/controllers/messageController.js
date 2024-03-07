@@ -25,10 +25,27 @@ exports.getMessagesForUser = async (req, res) => {
         const userId = req.params.userId;
         const messages = await Message.find({
             $or: [{ sender: userId }, { receiver: userId }]
-        }).populate('sender receiver', 'email');
+        });
         res.status(200).json(messages);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message }); 
+    }
+}
+
+//Get all messages for a user based on a search query
+exports.getMessagesWithSearchQuery = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const searchQuery = req.params.searchQuery;
+        const messages = await Message.find({
+            $and: [
+                {$or: [{ sender: userId }, { receiver: userId }]},
+                {content: contains(searchQuery)}
+            ]
+        });
+        res.status(200).json(messages);
+    } catch(error) {
+        res.status(400).json({ error: error.message});
     }
 }
 
@@ -39,7 +56,7 @@ exports.getUnreadMessages = async (req, res) => {
         const unreadMessages = await Message.find({
             receiver: userId,
             readAt: { $exists: false }
-        }).populate('sender', 'email');
+        });
         res.status(200).json(unreadMessages);
     } catch (error) {
         res.status(400).json({ error: error.message });
