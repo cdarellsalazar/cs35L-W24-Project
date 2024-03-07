@@ -1,60 +1,63 @@
 import React, { Component, useState, createRef, useEffect } from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./ChatContent.css";
 import Avatar from "../LeftSidebar/Avatar";
 import ChatItem from "./ChatItem";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 export default class ChatContent extends Component {
+  eggertPhoto = "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png"
+  penguinPhoto = "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg"
   messagesEndRef = createRef(null);
   chatItms = [
     {
       key: 1,
       image:
-        "https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg",
+        "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg",
       type: "",
-      msg: "Hi Tim, How are you?",
+      msg: "Eggert why do you do this to us",
     },
     {
       key: 2,
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
+        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
       type: "other",
-      msg: "I am fine.",
+      msg: "LOL",
     },
     {
       key: 3,
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
+        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
       type: "other",
-      msg: "What about you?",
+      msg: "It'd be too easy otherwise",
     },
     {
       key: 4,
       image:
-        "https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg",
+        "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg",
       type: "",
-      msg: "Awesome these days.",
+      msg: "All of us are stressing over this project",
     },
     {
       key: 5,
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
+        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
       type: "other",
-      msg: "Finally. What's the plan?",
+      msg: "That's the point.",
     },
     {
       key: 6,
       image:
-        "https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg",
+        "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg",
       type: "",
-      msg: "what plan mate?",
+      msg: "You can't be serious",
     },
     {
       key: 7,
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU",
+        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
       type: "other",
-      msg: "I'm taliking about the tutorial",
+      msg: "You'll get egged again on the final too.",
     },
   ];
 
@@ -70,29 +73,39 @@ export default class ChatContent extends Component {
     this.messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  sendMessage = () => {
+    if (this.state.msg !== "") {
+      this.chatItms.push({
+        key: 1,
+        type: "",
+        msg: this.state.msg,
+        image:
+          "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg",
+      });
+      this.setState({ chat: [...this.chatItms] });
+      this.scrollToBottom();
+      this.setState({ msg: "" });
+    }
+  };
+  
+  keydownHandler = (e) => {
+    if (e.key === "Enter") {
+      this.sendMessage();
+    }
+  };
+  
   componentDidMount() {
-    window.addEventListener("keydown", (e) => {
-      if (e.keyCode == 13) {
-        if (this.state.msg != "") {
-          this.chatItms.push({
-            key: 1,
-            type: "",
-            msg: this.state.msg,
-            image:
-              "https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg",
-          });
-          this.setState({ chat: [...this.chatItms] });
-          this.scrollToBottom();
-          this.setState({ msg: "" });
-        }
-      }
-    });
+    window.addEventListener("keydown", this.keydownHandler);
     this.scrollToBottom();
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.keydownHandler);
   }
   onStateChange = (e) => {
     this.setState({ msg: e.target.value });
   };
-
+  
   render() {
     return (
       <div className="main__chatcontent">
@@ -101,9 +114,9 @@ export default class ChatContent extends Component {
             <div className="current-chatting-user">
               <Avatar
                 isOnline="active"
-                image="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU"
+                image="https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png"
               />
-              <p>Tim Hover</p>
+              <p>Paul Eggert</p>
             </div>
           </div>
 
@@ -133,17 +146,14 @@ export default class ChatContent extends Component {
         </div>
         <div className="content__footer">
           <div className="sendNewMessage">
-            <button className="addFiles">
-              <i className="fa fa-plus"></i>
-            </button>
             <input
               type="text"
-              placeholder="Type a message here"
+              placeholder="Type a message here..."
               onChange={this.onStateChange}
               value={this.state.msg}
             />
-            <button className="btnSendMsg" id="sendMsgBtn">
-              <i className="fa fa-paper-plane"></i>
+            <button className="btnSendMsg" id="sendMsgBtn" onClick={this.sendMessage}>
+              <FontAwesomeIcon icon={faPaperPlane}/>
             </button>
           </div>
         </div>
