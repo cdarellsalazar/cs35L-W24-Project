@@ -3,6 +3,7 @@ import logoImg from '../disrupt_logo.png';
 import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
 import ChatList from "./LeftSidebar/ChatList";
+import ChatContent from "./MiddleColumn/ChatContent";
 
 function Messaging() {
 
@@ -65,11 +66,13 @@ function Messaging() {
             </div>
             
         <div className="center-column">
-            Message History of currently selected friend
+            {/*Message History of currently selected friend
             <div className="sending-box">
                 <input type="text" className="message-input" value={message} onChange={handleInputChange}/>
                 <button className="send-button" onClick={handleSendMessage}>Send</button>
             </div>
+            */}
+                <ChatContent />
         </div>
         <div className="right-column">
                 <div className="logo-container">
