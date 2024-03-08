@@ -41,4 +41,17 @@ const signupUser = async (req, res) => {
     }
 }
 
-module.exports = { signupUser, loginUser }
+const fetchConvos = async (req, res) => {
+  try{
+      const { userID } = req.body 
+
+      const convos = await loadConversationInfo(userID)
+
+      res.status(200).json({ convos })
+      
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+}
+
+module.exports = { signupUser, loginUser, fetchConvos }
