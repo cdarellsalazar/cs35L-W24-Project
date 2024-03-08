@@ -15,9 +15,7 @@ function Messaging() {
     //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const {logout} = useLogout()
     const navigate = useNavigate();
-    const handleInputChange = (event) => {
-        setMessage(event.target.value);
-    };
+
     const handleLogout = async () => {
         try {
             await logout();
@@ -65,33 +63,27 @@ function Messaging() {
     const handleNewConvo = () => {
         setShowNewConversationBox(true); // Show the new conversation box
     }
+*/
+    const [selectedConversation, setSelectedConversation] = useState(null);
 
-    
-                       
-                        {showNewConversationBox && (
-                            <div className="new-conversation-box">
-                                <p>This is the new conversation box.</p>
-                                <button onClick={handleStartConversation}>Start Conversation</button>
-                            </div>
-                            
-    */
-    
+    const handleConversationClick = (conversation) => {
+      //console.log('handleConversationClick called with id:', id);
+      //setSelectedConversation(id);
+      //const selectedConversation = allChatUsers1.find(conversation => conversation.id === id);
+
+     // Update the selectedConversation state with the found conversation
+      setSelectedConversation(conversation);
+      console.log(conversation);
+    };
     return (
         <div className="container">
             <div className="left-column">
-                <ChatList />
+                <ChatList onConversationClick={handleConversationClick} />
             </div>
-            
-        <div className="center-column">
-            {/*Message History of currently selected friend
-            <div className="sending-box">
-                <input type="text" className="message-input" value={message} onChange={handleInputChange}/>
-                <button className="send-button" onClick={handleSendMessage}>Send</button>
+            <div className="center-column">
+                <ChatContent selectedConversation={selectedConversation} />
             </div>
-            */}
-                <ChatContent />
-        </div>
-        <div className="right-column">
+            <div className="right-column">
                 <div className="logo-container">
                     <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
                 </div>
@@ -102,8 +94,8 @@ function Messaging() {
                 <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>
-  </div>
-</div>
+            </div>
+        </div>
     );
 };
 export default Messaging;

@@ -105,6 +105,12 @@ export default class ChatContent extends Component {
   onStateChange = (e) => {
     this.setState({ msg: e.target.value });
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedConversation !== prevProps.selectedConversation) {
+      console.log(this.props.selectedConversation);
+    }
+  }
   
   render() {
     return (
@@ -113,10 +119,10 @@ export default class ChatContent extends Component {
           <div className="blocks">
             <div className="current-chatting-user">
               <Avatar
-                isOnline="active"
-                image="https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png"
+                isOnline={this.props.selectedConversation ? this.props.selectedConversation.isOnline : false}
+                image={this.props.selectedConversation ? this.props.selectedConversation.image : "http://placehold.it/80x80"}
               />
-              <p>Paul Eggert</p>
+              <p>{this.props.selectedConversation ? this.props.selectedConversation.name : "No conversation selected"}</p>
             </div>
           </div>
 

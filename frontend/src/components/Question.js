@@ -25,7 +25,7 @@ export default function Question(props){
         "22": "Physical books are obsolete in the digital age.",
         "23": "A hot dog is a type of sandwich.",
         "24": "Batman could beat Superman in a fight.",
-        "25": "Showering in the morning is better than showering at night.",
+        "25": "Pooping in the shower is efficient.",
         "26": "Texting is better than calling.",
         "27": "Winter is the best season.",
         "28": "It's okay to wear white after Labor Day.",
