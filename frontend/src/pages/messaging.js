@@ -4,9 +4,13 @@ import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
 import ChatList from "./LeftSidebar/ChatList";
 import ChatContent from "./MiddleColumn/ChatContent";
+import Answered from '../components/Answered';
+import Question from '../components/Question';
 
 function Messaging() {
-
+    const now = new Date();
+    const day = now.getDate();
+    const [answered, answer] = useState(true);
     const [message, setMessage] = useState('');
     //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const {logout} = useLogout()
@@ -23,6 +27,19 @@ function Messaging() {
             // Optionally handle logout error here
         }
     };
+    function toggleBoolYes() {
+        answer(!answered)
+      }
+    function toggleBoolNo() {
+        answer(!answered)
+      }
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
     const handleSendMessage = () => {
         fetch('/api/messages/send', {
             method: 'POST',
@@ -77,6 +94,10 @@ function Messaging() {
         <div className="right-column">
                 <div className="logo-container">
                     <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                </div>
+
+                <div className="disrupt-container">
+                {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered />}
                 </div>
                 <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
