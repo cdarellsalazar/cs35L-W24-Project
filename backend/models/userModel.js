@@ -98,10 +98,10 @@ userSchema.statics.getMessageIDfromConversation = async function (conversationID
 
 
 // static signup method
-userSchema.statics.signup = async function(email, password) {
+userSchema.statics.signup = async function(username, email, password) {
 
     //validation
-    if(!email || !password){
+    if(!email || !password || !username){
         throw Error('All fields must be filled')
     }
     if (!validator.isEmail(email)) {
@@ -121,7 +121,7 @@ userSchema.statics.signup = async function(email, password) {
 
     const hash = await bcrypt.hash(password, salt) //password encryption step
 
-    const user = await this.create({ email, password: hash }) //creates user in database
+    const user = await this.create({ username, email, password: hash }) //creates user in database
 
     return user
 }
