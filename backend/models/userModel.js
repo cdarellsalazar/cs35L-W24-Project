@@ -16,7 +16,8 @@ const userSchema = new Schema({
     },*/ //No need, as mongo automatically creates a unique ObjectID when not given. 
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     email: {
         type: String,
@@ -111,10 +112,16 @@ userSchema.statics.signup = async function(username, email, password) {
         throw Error('Password not strong enough')
     }
 
-    const exists = await this.findOne({ email })
+    const emailExists = await this.findOne({ email })
 
-    if (exists) {
+    const usernameExists = await this.findOne({ username })
+
+    if (emailExists) {
         throw Error('Email already in use')
+    }
+
+    if (usernameExists) {
+        throw Error('Username already in use')
     }
 
     const salt = await bcrypt.genSalt(10)
