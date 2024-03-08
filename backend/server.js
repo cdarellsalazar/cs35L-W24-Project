@@ -21,7 +21,10 @@ app.use((req, res, next) => {
 })
 
 //routes
-app.use('/api/user', userRoutes)
+try {app.use('/api/user', userRoutes)
+} catch(e) {
+    console.log(e)
+}
 
 // connect to db
 mongoose.connect(process.env.MONGO_URI)

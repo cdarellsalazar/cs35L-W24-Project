@@ -8,7 +8,7 @@ function Messaging() {
 
     const [message, setMessage] = useState('');
     //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
-    const {logout} = useLogout()
+    const { logout } = useLogout()
     const navigate = useNavigate();
     const handleInputChange = (event) => {
         setMessage(event.target.value);

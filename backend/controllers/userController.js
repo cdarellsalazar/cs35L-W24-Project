@@ -12,6 +12,7 @@ const loginUser = async (req, res) => {
   const {email, password} = req.body
 
   try{
+    console.log('trying')
     const user = await User.login(email, password)
     
     //create a token
@@ -19,6 +20,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({email, token}) //Sent out success status code and return the email and newly generated token
   } catch (error) {
+    console.log(error)
     res.status(400).json({error: error.message}) //If an error is detected (in this case credentials do not match, send error)
   }
 }
