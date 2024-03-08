@@ -9,11 +9,11 @@ const createToken = (_id) => { //Creates json web token that is used for authent
 
 //login user
 const loginUser = async (req, res) => {
-  const {email, password} = req.body
+  const data = req.body
 
   try{
     console.log('trying')
-    const user = await User.login(email, password)
+    const user = await User.login(data.email, data.password)
     
     //create a token
     const token = createToken(user._id)
@@ -37,6 +37,7 @@ const signupUser = async (req, res) => {
 
       res.status(200).json({email, token}) //return newly authenticated user and give token so they don't have to login after signing up
     } catch (error) {
+      console.log(error.message)
       res.status(400).json({error: error.message})
     }
 }
