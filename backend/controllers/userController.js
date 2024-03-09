@@ -15,7 +15,7 @@ const loginUser = async (req, res) => {
     const user = await User.login(email, password)
     
     //create a token
-    const token = createToken(user._id)
+    const token = createToken(user.id)
 
     res.status(200).json({email, token}) //Sent out success status code and return the email and newly generated token
   } catch (error) {
@@ -31,7 +31,7 @@ const signupUser = async (req, res) => {
       const user = await User.signup(email, password) 
       
       //create a token
-      const token = createToken(user._id)
+      const token = createToken(user.id)
 
       res.status(200).json({email, token}) //return newly authenticated user and give token so they don't have to login after signing up
     } catch (error) {
@@ -39,4 +39,19 @@ const signupUser = async (req, res) => {
     }
 }
 
-module.exports = { signupUser, loginUser }
+const getUserByIdFromReq = async (req, res) => {
+  try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+      const token = createToken(user.id);
+
+      res.status(200).json({ user, token });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
+
+module.exports = { signupUser, loginUser, getUserByIdFromReq };
