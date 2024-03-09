@@ -155,13 +155,14 @@ export default class ChatContent extends Component {
       <div className="main__chatcontent">
         <div className="content__header">
           <div className="blocks">
+            {this.props.selectedConversation ? (
             <div className="current-chatting-user">
               <Avatar
                 isOnline={this.props.selectedConversation ? this.props.selectedConversation.isOnline : false}
                 image={this.props.selectedConversation ? this.props.selectedConversation.image : "http://placehold.it/80x80"}
               />
               <p>{this.props.selectedConversation ? this.props.selectedConversation.name : "No conversation selected"}</p>
-            </div>
+            </div>) : (<div className="current-chatting-user"><p>Welcome to DisruptChat!</p> </div>)}
           </div>
 
           <div className="blocks">
@@ -174,7 +175,7 @@ export default class ChatContent extends Component {
         </div>
         <div className="content__body">
           <div className="chat__items">
-          {this.state.chat.map((message, index) => {
+          {this.props.selectedConversation && this.state.chat.map((message, index) => {
             return (
               <ChatItem
                 isOnline={message.sender === "User Logged In" ? true : (this.props.selectedConversation ? this.props.selectedConversation.isOnline : false)}
@@ -202,6 +203,7 @@ export default class ChatContent extends Component {
           </div>
         </div>
         <div className="content__footer">
+          {this.props.selectedConversation &&
           <div className="sendNewMessage">
             <input
               type="text"
@@ -213,6 +215,7 @@ export default class ChatContent extends Component {
               <FontAwesomeIcon icon={faPaperPlane}/>
             </button>
           </div>
+          }
         </div>
       </div>
     );
