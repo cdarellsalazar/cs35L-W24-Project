@@ -7,12 +7,15 @@ const messageController = require('../controllers/messageController');
 router.post('/send', messageController.sendMessage);
 
 // GET endpoint for retrieving all messages for a user
-router.get('/user/:userId', messageController.getMessagesForUser);
+router.get('/message/:userId', messageController.getMessagesForUser);
 
 // GET endpoint for retrieving unread messages for a user
-router.get('/user/:userId/unread', messageController.getUnreadMessages);
+router.get('/message/unread/:userId', messageController.getUnreadMessages);
+
+// GET endpoint for retrieving all messages for a user given a search query
+router.get('/message/:userId/:searchQuery', messageController.getMessagesWithSearchQuery);
 
 // PUT endpoint for marking a message as read
-router.put('/read/:messageId', messageController.markMessageAsRead);
+router.put('/message/read/:messageId', messageController.markMessageAsRead);
 
 module.exports = router;
