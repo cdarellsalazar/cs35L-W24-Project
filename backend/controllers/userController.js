@@ -54,4 +54,19 @@ const fetchConvos = async (req, res) => {
   }
 }
 
-module.exports = { signupUser, loginUser, fetchConvos }
+const getUserByIdFromReq = async (req, res) => {
+  try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+      const token = createToken(user.id);
+
+      res.status(200).json({ user, token });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
+
+module.exports = { signupUser, loginUser, getUserByIdFromReq, fetchConvos };
