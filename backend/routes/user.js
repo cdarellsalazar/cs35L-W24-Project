@@ -14,4 +14,7 @@ router.post('/login', loginUser)
 //signup route
 router.post('/signup', signupUser)
 
+//user id route
+router.post('/getUserByIdFromReq', getUserByIdFromReq);
+
 module.exports = router;
