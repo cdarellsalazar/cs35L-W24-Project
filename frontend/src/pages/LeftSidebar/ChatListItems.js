@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import Avatar from "./Avatar";
 
 export default class ChatListItems extends Component {
-  constructor(props) {
+  /*constructor(props) {
     super(props);
     this.state = {selected: false};
-  }
+  }*/
   selectChat = (e) => {
     this.props.onClick();
-    this.setState({selected: true});
+    //this.setState({selected: true});
   };
 
   render() {
@@ -16,9 +16,7 @@ export default class ChatListItems extends Component {
       <div
         style={{ animationDelay: `0.${this.props.animationDelay}s` }}
         onClick={this.selectChat}
-        className={`chatlist__item ${
-          this.state.selected ? "active" : ""
-        }`}
+        className={`chatlist__item ${this.props.selected ? "active" : ""}`}
       >
         <Avatar
           image={

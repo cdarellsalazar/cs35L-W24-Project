@@ -61,10 +61,34 @@ export default class ChatContent extends Component {
     },
   ];
 
+  testConvo = [
+    {
+      messageId: 8,
+      sender: "Paul Eggert",
+      receiver: "User Logged In",
+      msg: "How's your Latin?",
+      timeSent: "12:53",
+    },
+    {
+      messageId: 9,
+      sender: "User Logged In",
+      receiver: "Paul Eggert",
+      msg: "LOL",
+      timeSent: "12:54",
+    },
+    {
+      messageId: 10,
+      sender: "Paul Eggert",
+      receiver: "User Logged In",
+      msg: "I can't wait for everyone to fail the final!",
+      timeSent: "12:55",
+    },
+  ];
+
   constructor(props) {
     super(props);
     this.state = {
-      chat: this.chatItms,
+      chat: this.testConvo, //this.chatItms,
       msg: "",
     };
   }
@@ -74,7 +98,18 @@ export default class ChatContent extends Component {
   };
 
   sendMessage = () => {
-    if (this.state.msg !== "") {
+    if (this.state.msg !== "" && this.props.selectedConversation) {
+      const now = new Date();
+      const currentTime = now.getHours() + ":" + now.getMinutes();
+
+      this.testConvo.push({
+        messageId: this.testConvo.length + 1,
+        sender: "User Logged In",
+        receiver: this.props.selectedConversation.name,
+        msg: this.state.msg,
+        timeSent: currentTime,
+      });
+      /*
       this.chatItms.push({
         key: 1,
         type: "",
@@ -83,9 +118,12 @@ export default class ChatContent extends Component {
           "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg",
       });
       this.setState({ chat: [...this.chatItms] });
+      */
+      this.setState({ chat: [...this.testConvo] });
       this.scrollToBottom();
       this.setState({ msg: "" });
     }
+    console.log("Printing testConvo:", this.testConvo);
   };
   
   keydownHandler = (e) => {
@@ -136,6 +174,19 @@ export default class ChatContent extends Component {
         </div>
         <div className="content__body">
           <div className="chat__items">
+          {this.state.chat.map((message, index) => {
+            return (
+              <ChatItem
+                isOnline={message.sender === "User Logged In" ? true : (this.props.selectedConversation ? this.props.selectedConversation.isOnline : false)}
+                timeSent={message.timeSent}
+                animationDelay={index + 2}
+                key={message.messageId}
+                user={message.sender === "User Logged In" ? "" : "other"}
+                msg={message.msg}
+                image={message.sender === "User Logged In" ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (this.props.selectedConversation ? this.props.selectedConversation.image : "http://placehold.it/80x80")}              />
+            );
+          })}
+            {/*}
             {this.state.chat.map((itm, index) => {
               return (
                 <ChatItem
@@ -146,8 +197,8 @@ export default class ChatContent extends Component {
                   image={itm.image}
                 />
               );
-            })}
-            <div ref={this.messagesEndRef} />
+            })} */}
+            <div ref={this.messagesEndRef} /> 
           </div>
         </div>
         <div className="content__footer">
