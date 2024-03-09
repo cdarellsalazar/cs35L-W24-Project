@@ -10,10 +10,13 @@ const createToken = (_id) => { //Creates json web token that is used for authent
 //login user
 const loginUser = async (req, res) => {
   const data = req.body
+  const email = data.email
+  const password = data.password
 
   try{
     console.log('trying')
-    const user = await User.login(data.email, data.password)
+    console.log('verifying it works')
+    const user = await User.login(email, password)
     
     //create a token
     const token = createToken(user._id)
