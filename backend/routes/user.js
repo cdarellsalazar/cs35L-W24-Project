@@ -1,6 +1,7 @@
 //File that manages how different routes are dealt with by the server by controlling control methods
 
 const express = require('express')
+const requireAuth = require('../middleware/requireAuth')
 
 //controller functions
 const { signupUser, loginUser, fetchConvos } = require('../controllers/userController')
@@ -13,6 +14,8 @@ router.post('/login', loginUser)
 
 //signup route
 router.post('/signup', signupUser)
+
+router.use(requireAuth)
 
 router.post('/fetchConvos', fetchConvos)
 

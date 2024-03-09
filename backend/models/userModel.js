@@ -77,7 +77,9 @@ userSchema.statics.getAllParticipants = async function (userID) {
 }
 
 userSchema.statics.loadConversationInfo = async function (userID) {
-    const userList = await Conversation.getAllParticipants(userID)
+    const user = await this.findById(userID)
+
+    const userList = await getAllParticipants(user.userID)
 
     const infoList = []
 

@@ -43,9 +43,9 @@ const signupUser = async (req, res) => {
 
 const fetchConvos = async (req, res) => {
   try{
-      const { userID } = req.body 
+      const { userID } = req.user._id
 
-      const convos = await loadConversationInfo(userID)
+      const convos = await User.loadConversationInfo(userID)
 
       res.status(200).json({ convos })
       

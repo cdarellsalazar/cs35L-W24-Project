@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logoImg from '../disrupt_logo.png'; 
 import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
