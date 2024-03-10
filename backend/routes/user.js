@@ -15,6 +15,7 @@ router.post('/login', loginUser)
 //signup route
 router.post('/signup', signupUser)
 
-router.use(requireAuth)
+//user id route
+router.post('/getUserByIdFromReq', getUserByIdFromReq);
 
 module.exports = router;

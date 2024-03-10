@@ -5,9 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useConvosContext } from "../hooks/useConvosContext";
 import ChatList from "./LeftSidebar/ChatList";
+import ChatContent from "./MiddleColumn/ChatContent";
+import Answered from '../components/Answered';
+import Question from '../components/Question';
 
 function Messaging() {
-
+    const now = new Date();
+    const day = now.getDate();
+    const [answered, answer] = useState(true);
     const [message, setMessage] = useState('');
     //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
@@ -44,6 +49,19 @@ function Messaging() {
             // Optionally handle logout error here
         }
     };
+    function toggleBoolYes() {
+        answer(!answered)
+      }
+    function toggleBoolNo() {
+        answer(!answered)
+      }
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
     const handleSendMessage = () => {
         fetch('/api/messages/send', {
             method: 'POST',
@@ -65,43 +83,55 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
-/*
-    const handleNewConvo = () => {
-        setShowNewConversationBox(true); // Show the new conversation box
-    }
+    const [selectedConversation, setSelectedConversation] = useState(null);
+    const [previousConversation, setPreviousConversation] = useState(null);
 
-    
-                       
-                        {showNewConversationBox && (
-                            <div className="new-conversation-box">
-                                <p>This is the new conversation box.</p>
-                                <button onClick={handleStartConversation}>Start Conversation</button>
-                            </div>
-                            
-    */
-    
+    const handleConversationClick = (newConversation) => {
+        // Set the clicked conversation's selected field to be true
+        newConversation.selected = true;
+        if(previousConversation === null) // if there isn't a previous conversation
+        {
+            setPreviousConversation(newConversation); // set it to the new conversation
+            console.log("Prev Selected Convo:", previousConversation); 
+        }
+        else // if there is a previous conversation
+        {
+            previousConversation.selected = false; // set its selected field to false
+            setPreviousConversation(newConversation); // set the previous conversation to the new conversation
+            console.log("Prev Selected Convo:", previousConversation.name);
+        }
+        
+        // Set the 'selected' field of the new conversation to true
+        const updatedNewConversation = { ...newConversation, selected: true };
+      
+        // Update the selectedConversation state with the new conversation
+        setSelectedConversation(updatedNewConversation);
+      
+        console.log("Selected Conversation:", updatedNewConversation.name);
+
+      };
+
     return (
         <div className="container">
             <div className="left-column">
-                <ChatList />
+                <ChatList onConversationClick={handleConversationClick} />
             </div>
-            
-        <div className="center-column">
-            Message History of currently selected friend
-            <div className="sending-box">
-                <input type="text" className="message-input" value={message} onChange={handleInputChange}/>
-                <button className="send-button" onClick={handleSendMessage}>Send</button>
+            <div className="center-column">
+                <ChatContent selectedConversation={selectedConversation} />
             </div>
-        </div>
-        <div className="right-column">
+            <div className="right-column">
                 <div className="logo-container">
                     <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                </div>
+
+                <div className="disrupt-container">
+                {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered />}
                 </div>
                 <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>
-  </div>
-</div>
+            </div>
+        </div>
     );
 };
 export default Messaging;
