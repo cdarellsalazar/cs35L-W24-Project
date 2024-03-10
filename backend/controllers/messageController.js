@@ -20,7 +20,7 @@ exports.sendMessage = async (req, res) => {
 }
 
 // Get all messages for a user
-exports.getMessagesForUser = async (req, res) => {
+exports.getMessages = async (req, res) => {
     try {
         const userId = req.params.userId;
         const messages = await Message.find({

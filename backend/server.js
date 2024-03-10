@@ -33,10 +33,10 @@ try {app.use('/api/convos', convoRoutes)
 }
 
 // connect to db
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-projectdataba.l4wjg5l.mongodb.net/?retryWrites=true&w=majority')
     .then(() => {
-       app.listen(process.env.PORT, () => {
-        console.log('listening on port', process.env.PORT)
+       app.listen(4000, () => {
+        console.log('listening on port ', 4000)
        }) 
     })
     .catch((error) => {

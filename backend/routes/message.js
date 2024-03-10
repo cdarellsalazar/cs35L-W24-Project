@@ -7,7 +7,7 @@ const messageController = require('../controllers/messageController');
 router.post('/send', messageController.sendMessage);
 
 // GET endpoint for retrieving all messages for a user
-router.get('/message/:userId', messageController.getMessagesForUser);
+router.get('/messages', messageController.getMessagesForUser);
 
 // GET endpoint for retrieving unread messages for a user
 router.get('/message/unread/:userId', messageController.getUnreadMessages);

@@ -16,6 +16,6 @@ router.post('/login', loginUser)
 router.post('/signup', signupUser)
 
 //user id route
-router.post('/getUserByIdFromReq', getUserByIdFromReq);
+//router.post('/getUserByIdFromReq', getUserByIdFromReq);
 
 module.exports = router;

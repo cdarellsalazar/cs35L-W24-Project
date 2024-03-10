@@ -4,6 +4,7 @@ import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useConvosContext } from "../hooks/useConvosContext";
+import { useMessageContext } from "../hooks//useMessageContext"
 import ChatList from "./LeftSidebar/ChatList";
 import ChatContent from "./MiddleColumn/ChatContent";
 import Answered from '../components/Answered';
@@ -16,7 +17,8 @@ function Messaging() {
     const [message, setMessage] = useState('');
     //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
-    const { dispatch } = useConvosContext
+    const { dispatch: ConvoDispatch } = useConvosContext
+    const { dispatch: MessageDispatch } = useMessageContext
     const { user } = useAuthContext
     const navigate = useNavigate();
     const handleInputChange = (event) => {
@@ -31,14 +33,25 @@ function Messaging() {
           const json = await response.json()
     
           if (response.ok) {
-            dispatch({type: 'SET_CONVOS', payload: json})
+            ConvoDispatch({type: 'SET_CONVOS', payload: json})
           }
+        }
+          const fetchMessages = async () => {
+            const response = await fetch('/api/messages', {
+                headers: {'Authorization': `Bearer ${user.token}`},
+            })
+            const json = await response.json()
+
+            if (response.ok){
+                MessageDispatch({type: 'SET_MESSAGES', payload: json})
+            }
         }
     
         if (user) {
           fetchConvos()
+          fetchMessages()
         }
-      }, [dispatch, user])
+      }, [ConvoDispatch, MessageDispatch, user])
 
     const handleLogout = async () => {
         try {

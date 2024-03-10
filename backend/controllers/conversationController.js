@@ -22,13 +22,13 @@ exports.getConversation = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
+}
 
 exports.fetchConversations = async (req, res) => {
     const userID = req.user._id
 
-    const conversations = Conversation.find({userID})
+    const conversations = await Conversation.find({userID})
 
     res.status(200).json(conversations)
-}
 }
     

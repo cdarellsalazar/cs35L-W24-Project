@@ -10,7 +10,7 @@ const NewConvo = () => {
 
         const conversation = {recipient}
 
-        const response = await fetch('/api/user', {
+        const response = await fetch('/api/convos/newConvo', {
             method: 'POST',
             body: JSON.stringify(conversation),
             headers: {
