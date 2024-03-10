@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import  useFetchUserById  from "../../hooks/getUser";
 import "./ChatList.css";
 import ChatListItems from "./ChatListItems";
 import {faPlus, faEllipsis, faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+//import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
+//import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
 
 export default class ChatList extends Component {
   allChatUsers1 = [
@@ -113,6 +116,8 @@ export default class ChatList extends Component {
       allChatUsers1: [...(prevState.allChatUsers1 || []), prevState.newChat],
       newChat: null
     }));
+    console.log('New chat added:', this.state.newChat);
+    console.log("User Info:")//useFetchUserById(this.state.newChat.name));
   };
 
   renderChatListItems(chatUsers) {
@@ -137,14 +142,19 @@ export default class ChatList extends Component {
     if (this.state.newChat) {
       return (
         <form onSubmit={this.handleNewChatSubmit}>
-          <input type="text" placeholder="Enter user name" required onChange={e => this.setState({ newChat: { name: e.target.value } })}/>
-          <button type="submit">Start Chat</button>
-        </form>
-      );
-    }
-  
-    return (
-      <div className="main__chatlist">
+                <input type="text" placeholder="Enter user name" required 
+                onChange={e => {
+                  this.setState({ newChat: e.target.value });
+                  console.log(e.target.value);
+                }}/>
+                <button type="submit">Start Chat</button>
+              </form>
+            );
+            
+          }
+        
+          return (
+            <div className="main__chatlist">
         <button className="btn" onClick={() => this.setState({newChat: {}})}>
           <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
           <span>Start New Chat</span>
