@@ -17,6 +17,4 @@ router.post('/signup', signupUser)
 
 router.use(requireAuth)
 
-router.post('/fetchConvos', fetchConvos)
-
 module.exports = router;

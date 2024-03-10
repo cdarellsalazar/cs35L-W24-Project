@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import logoImg from '../disrupt_logo.png'; 
 import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useConvosContext } from "../hooks/useConvosContext";
 import ChatList from "./LeftSidebar/ChatList";
 
 function Messaging() {
@@ -9,10 +11,30 @@ function Messaging() {
     const [message, setMessage] = useState('');
     //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
+    const { dispatch } = useConvosContext
+    const { user } = useAuthContext
     const navigate = useNavigate();
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
+
+    useEffect(() => {
+        const fetchConvos = async () => {
+          const response = await fetch('/api/convos', {
+            headers: {'Authorization': `Bearer ${user.token}`},
+          })
+          const json = await response.json()
+    
+          if (response.ok) {
+            dispatch({type: 'SET_CONVOS', payload: json})
+          }
+        }
+    
+        if (user) {
+          fetchConvos()
+        }
+      }, [dispatch, user])
+
     const handleLogout = async () => {
         try {
             await logout();
