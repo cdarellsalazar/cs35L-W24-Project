@@ -103,10 +103,17 @@ export default class ChatList extends Component {
     this.state = {
       allChats: this.allChatUsers1,
       searchTerm: "",
+      newChat: null,
     };
   }
 
-  
+  handleNewChatSubmit = (e) => {
+    e.preventDefault();
+    this.setState(prevState => ({
+      allChatUsers1: [...(prevState.allChatUsers1 || []), prevState.newChat],
+      newChat: null
+    }));
+  };
 
   renderChatListItems(chatUsers) {
     console.log('renderChatListItems called with:', chatUsers);
@@ -127,12 +134,22 @@ export default class ChatList extends Component {
     const filteredChats = this.allChatUsers1.filter(chat =>
       chat.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
     );
+    if (this.state.newChat) {
+      return (
+        <form onSubmit={this.handleNewChatSubmit}>
+          <input type="text" placeholder="Enter user name" required onChange={e => this.setState({ newChat: { name: e.target.value } })}/>
+          <button type="submit">Start Chat</button>
+        </form>
+      );
+    }
+  
     return (
       <div className="main__chatlist">
-        <button className="btn">
+        <button className="btn" onClick={() => this.setState({newChat: {}})}>
           <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
           <span>Start New Chat</span>
         </button>
+        
         <div className="chatlist__heading">
           <h2 className="centered-heading">Chats</h2>
           <button className="btn-nobg">
