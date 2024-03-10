@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
 const convoRoutes = require('./routes/conversation')
+const messageRoutes = require('./routes/message')
 const cors = require('cors')
 
 // creates express app
@@ -28,6 +29,11 @@ try {app.use('/api/user', userRoutes)
 }
 
 try {app.use('/api/convos', convoRoutes)
+} catch(e) {
+    console.log(e)
+}
+
+try {app.use('/api/messages', messageRoutes)
 } catch(e) {
     console.log(e)
 }

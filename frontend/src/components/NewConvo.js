@@ -1,8 +1,10 @@
 import {useState} from "react"
+import { useAuthContext } from "../hooks/useAuthContext"
 
 const NewConvo = () => {
     const [recipient, setRecipient] = useState('')
-    //const [error, setError] = useState(null)
+    const { user } = useAuthContext()
+    const [error, setError] = useState(null)
 
 
     const handleSubmit = async (e) => {

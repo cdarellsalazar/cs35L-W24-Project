@@ -2,7 +2,9 @@ const Conversation = require('../models/conversationModel');
 
 exports.startConversation = async (req, res) => {
     try {
-        const { participants } = req.body;
+        userID = req.user_id
+        otherID = req.body
+        const { participants } = [userID, otherID];
         const conversation = await Conversation.create({ 
             participants
         });

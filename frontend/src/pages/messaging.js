@@ -4,7 +4,7 @@ import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useConvosContext } from "../hooks/useConvosContext";
-import { useMessageContext } from "../hooks//useMessageContext"
+//import { useMessageContext } from "../hooks//useMessageContext"
 import ChatList from "./LeftSidebar/ChatList";
 import ChatContent from "./MiddleColumn/ChatContent";
 import Answered from '../components/Answered';
@@ -18,7 +18,7 @@ function Messaging() {
     //const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
     const { dispatch: ConvoDispatch } = useConvosContext
-    const { dispatch: MessageDispatch } = useMessageContext
+    //const { dispatch: MessageDispatch } = useMessageContext
     const { user } = useAuthContext
     const navigate = useNavigate();
     const handleInputChange = (event) => {
@@ -49,9 +49,9 @@ function Messaging() {
     
         if (user) {
           fetchConvos()
-          fetchMessages()
+          //fetchMessages()
         }
-      }, [ConvoDispatch, MessageDispatch, user])
+      }, [ConvoDispatch, user])
 
     const handleLogout = async () => {
         try {

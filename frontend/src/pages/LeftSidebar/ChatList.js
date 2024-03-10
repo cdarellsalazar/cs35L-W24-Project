@@ -125,7 +125,7 @@ export default class ChatList extends Component {
   render() {
     return (
       <div className="main__chatlist">
-        <button className="btn">
+        <button className="btn" onClick>
           <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
           <span>Start New Chat</span>
         </button>
