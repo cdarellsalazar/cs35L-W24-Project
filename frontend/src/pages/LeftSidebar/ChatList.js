@@ -102,10 +102,11 @@ export default class ChatList extends Component {
     super(props);
     this.state = {
       allChats: this.allChatUsers1,
+      searchTerm: "",
     };
   }
 
-
+  
 
   renderChatListItems(chatUsers) {
     console.log('renderChatListItems called with:', chatUsers);
@@ -123,6 +124,9 @@ export default class ChatList extends Component {
     ));
   }
   render() {
+    const filteredChats = this.allChatUsers1.filter(chat =>
+      chat.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+    );
     return (
       <div className="main__chatlist">
         <button className="btn">
@@ -137,14 +141,14 @@ export default class ChatList extends Component {
         </div>
         <div className="chatList__search">
           <div className="search_wrap">
-            <input type="text" placeholder="Search Here" required />
+            <input type="text" placeholder="Search Here" required onChange={e => this.setState({ searchTerm: e.target.value })}/>
             <button className="search-btn">
               <FontAwesomeIcon icon={faMagnifyingGlass}/>
             </button>
           </div>
         </div>
         <div className="chatlist__items" >
-          {this.renderChatListItems(this.allChatUsers1)}
+          {this.renderChatListItems(filteredChats)}
           {/*{this.renderChatListItems(this.allChatUsers1)}*/}
         </div>
       </div>
