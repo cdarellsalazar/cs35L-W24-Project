@@ -6,7 +6,7 @@ const requireAuth = async (req, res, next) => {
     //console.log('auth running')
 
     if(!authorization) {
-      //  return res.status(401).json({error: 'Requires Authorization Token'})
+        return res.status(401).json({error: 'Requires Authorization Token'})
     }
 
     const token = authorization.split(' ')[1]
@@ -15,7 +15,7 @@ const requireAuth = async (req, res, next) => {
         const {_id} = jwt.verify(token, 'nZ5XM37vWkFUWTCsoCtL')
 
         req.user = await User.findOne({ _id }).select('_id')
-        //console.log('user: ', req.user)
+        console.log('user: ', req.user)
         next()
 
     } catch (error) {

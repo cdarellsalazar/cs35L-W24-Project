@@ -24,15 +24,15 @@ conversationSchema.statics.getMessageIDfromConversation = async function (conver
 }
 
 conversationSchema.statics.getParticipants = async function (conversationID, userID) {
-    //console.log('conversation: ', conversationID)
+    console.log('conversation: ', conversationID, 'userID: ', userID)
 
     const conversation = await Conversation.findById(conversationID)
 
-    console.log(conversation)
+   // console.log(conversation)
 
     const otherParticipants = conversation.participants.filter(participant => participant.toString() !== userID.toString())
 
-    console.log(otherParticipants)
+    //console.log(otherParticipants)
 
     return otherParticipants
 }

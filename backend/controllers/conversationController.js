@@ -50,17 +50,16 @@ exports.fetchConversations = async (req, res) => {
 exports.getRenderInfo = async (req, res) => {
     try{
         const conversationID = req.body.conversationID
-        //const userID = req.user._id
-        const userID = req.body.userID
-        console.log(userID)
-        console.log(conversationID)
+        const userID = req.user._id
+        //console.log(userID)
+        //console.log(conversationID)
         const info = await Conversation.getParticipants(conversationID, userID)
-        console.log(info)
+        //console.log(info)
         const renderInfo = await User.findById(info)
-        console.log(renderInfo)
-        console.log(userID)
-        console.log(conversationID)
-        res.status(200)
+        //console.log(renderInfo)
+        //console.log(userID)
+        //console.log(conversationID)
+        res.status(200).json(renderInfo);
     } catch(error) {
         console.log(error)
         res.status(400).json({error: error.message });

@@ -53,15 +53,15 @@ const ChatList = (props) => {
             body: JSON.stringify({conversationID: convoID}),
             headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
           });
-          const json = response.json()
+          const json = await response.json()
           console.log('response: ', response)
           if (!response.ok) {
-           // console.error('Error: ', json.error);
+           console.error('Error: ', json.error);
           }
-          const data = await response.json();
-          return data; // Return fetched data
+          console.log('json: ', json)
+          return json; // Return fetched data
         } catch (error) {
-          //onsole.error('Error fetching conversation data:', error);
+          console.error('Error fetching conversation data:', error);
           return null; // Return null if an error occurs
         }
       };
@@ -70,7 +70,7 @@ const ChatList = (props) => {
       if(convos){
       Promise.all(convos.map(convo => fetchConversationData(convo)))
         .then(results => {
-          //console.log('results', results)
+          console.log('results', results)
           // Filter out any null results (errors)
           const filteredResults = results.filter(result => result !== null);
           // Update state with fetched data
@@ -126,10 +126,22 @@ const ChatList = (props) => {
     ));
   };
 
-  //console.log('allChatUsers: ', allChatUsers)
+  console.log('allChatUsers: ', allChatUsers)
 
-  const filteredChats = allChatUsers.filter(chat =>
-    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  /**const filteredChats = [
+    {
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
+      id: 1,
+      name: "Paul Eggert",
+      selected: false,
+      isOnline: true,
+      activeTime: "Online",
+    }
+  ]; **/
+const filteredChats = allChatUsers.filter(chat =>
+    //console.log('chat: ', chat)
+    chat.username.toLowerCase().includes(searchTerm.toLowerCase())
 );
 
   //console.log('filteredChats: ', filteredChats)

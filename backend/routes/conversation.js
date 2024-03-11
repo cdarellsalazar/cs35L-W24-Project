@@ -2,10 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const { fetchConversations, startConversation, getConversation, getRenderInfo, getMessagesFromConvo } = require('../controllers/conversationController')
-//const requireAuth = require('../middleware/requireAuth')
+const requireAuth = require('../middleware/requireAuth')
 
 // GET endpoint for retreiving all messages in a conversation
-//router.use(requireAuth)
+router.use(requireAuth)
 
 router.get('/conversation/:conversationID', getConversation);
 
