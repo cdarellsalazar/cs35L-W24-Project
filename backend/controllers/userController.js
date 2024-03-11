@@ -48,4 +48,32 @@ const signupUser = async (req, res) => {
     }
 }
 
-module.exports = { signupUser, loginUser }
+const fetchConvos = async (req, res) => {
+  try{
+      const { userID } = req.body 
+
+      const convos = await loadConversationInfo(userID)
+
+      res.status(200).json({ convos })
+      
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+}
+
+const getUserByIdFromReq = async (req, res) => {
+  try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+      const token = createToken(user.id);
+
+      res.status(200).json({ user, token });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
+
+module.exports = { signupUser, loginUser, getUserByIdFromReq, fetchConvos };

@@ -19,6 +19,22 @@ conversationSchema.statics.addMessage = async function(messageId) {
     this.messages.push(messageId);
 }
 
+conversationSchema.statics.getMessageIDfromConversation = async function (conversationID) {
+    
+    const messageIDs = await Conversation.findById(conversationID).populate('messages')
+
+    return messageIDs
+}
+
+conversationSchema.statics.getParticipants = async function (conversationID, userID) {
+
+    const conversation = await Conversation.findById(conversationID).populate('participants')
+
+    const otherParticipants = conversation.participants.filter(participant => participant !== userID)
+
+    return otherParticipants
+}
+
 const Conversation = mongoose.model('Conversation', conversationSchema);
 
 module.exports = Conversation;
