@@ -8,6 +8,7 @@ export default class ChatListItems extends Component {
   }*/
   selectChat = (e) => {
     this.props.onClick();
+    console.log(this.props.name);
     //this.setState({selected: true});
   };
 
