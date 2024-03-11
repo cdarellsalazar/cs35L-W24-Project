@@ -3,8 +3,10 @@ import { createContext, useReducer } from 'react'
 export const ConvosContext = createContext()
 
 export const convosReducer = (state, action) => {
+  console.log('convo reducer is running. Type: ', action.type, ' payload: ', action.payload)
   switch (action.type) {
     case 'SET_CONVOS': 
+      console.log('convos: ', action.payload)
       return {
         convos: action.payload
       }

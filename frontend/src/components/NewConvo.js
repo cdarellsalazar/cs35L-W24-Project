@@ -12,12 +12,13 @@ const NewConvo = () => {
 
         const conversation = {recipient}
 
-        const response = await fetch('/api/convos/newConvo', {
+        const response = await fetch('http://localhost:4000/api/convos/newConvo', {
             method: 'POST',
-            body: JSON.stringify(conversation),
             headers: {
+                'Authorization': `Bearer ${user.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(conversation)
         })
         const json = await response.json()
 

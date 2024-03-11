@@ -1,7 +1,7 @@
 import { MessageContext } from '../context/MessageContext'
 import { useContext } from 'react'
 
-export const useConvosContext = () => {
+export const useMessageContext = () => {
   const context = useContext(MessageContext)
 
   if (!context) {
