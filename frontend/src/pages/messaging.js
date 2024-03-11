@@ -59,8 +59,35 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
-    const [selectedConversation, setSelectedConversation] = useState(null);
-    const [previousConversation, setPreviousConversation] = useState(null);
+    const [currentConvoMessages, setCurrentConvoMessages] = useState( [
+        {
+          messageId: 8,
+          sender: "Paul Eggert",
+          receiver: "User Logged In",
+          msg: "How's your Latin?",
+          timeSent: "12:53",
+        },
+        {
+          messageId: 9,
+          sender: "User Logged In",
+          receiver: "Paul Eggert",
+          msg: "LOL",
+          timeSent: "12:54",
+        },
+        {
+          messageId: 10,
+          sender: "Paul Eggert",
+          receiver: "User Logged In",
+          msg: "I can't wait for everyone to fail the final!",
+          timeSent: "12:55",
+        },
+      ])
+      const newMessage = "";
+      const [selectedConversation, setSelectedConversation] = useState();
+      const [previousConversation, setPreviousConversation] = useState(null);
+      //const [newMessage, setNewMessage] = useState('');
+
+      setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
 /*
     useEffect(() => {
         if (previousConversation) {
@@ -78,6 +105,7 @@ function Messaging() {
         setPreviousConversation(newConversation);
         setSelectedConversation({ ...newConversation, selected: true });
         console.log("Selected Conversation:", newConversation.name);
+        console.log("Messages of Selected Convo:", newConversation.messages);
     };
     /*
         const handleConversationClick = (newConversation) => {
@@ -120,7 +148,7 @@ function Messaging() {
                 <ChatList onConversationClick={handleConversationClick} onNewChatSubmit={handleNewChatSubmit}/>
             </div>
             <div className="center-column">
-                <ChatContent selectedConversation={selectedConversation} />
+                <ChatContent selectedConversation={selectedConversation} currentConvoMessages={currentConvoMessages}/> {/*convoMessages={testConvo}*/}
             </div>
             <div className="right-column">
                 <div className="logo-container">
