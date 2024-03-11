@@ -3,7 +3,7 @@
 const express = require('express')
 
 //controller functions
-const { signupUser, loginUser } = require('../controllers/userController')
+const { signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq } = require('../controllers/userController');
 
 //router object that holds routes to be exported
 const router = express.Router()
@@ -16,5 +16,8 @@ router.post('/signup', signupUser)
 
 //user id route
 router.post('/getUserByIdFromReq', getUserByIdFromReq);
+
+// User by username route
+router.post('/getUserByUsernameFromReq', getUserByUsernameFromReq);
 
 module.exports = router;
