@@ -26,9 +26,13 @@ conversationSchema.statics.getMessageIDfromConversation = async function (conver
 conversationSchema.statics.getParticipants = async function (conversationID, userID) {
     //console.log('conversation: ', conversationID)
 
-    const conversation = await Conversation.findById(conversationID).populate('participants')
+    const conversation = await Conversation.findById(conversationID)
 
-    const otherParticipants = conversation.participants.filter(participant => participant !== userID)
+    console.log(conversation)
+
+    const otherParticipants = conversation.participants.filter(participant => participant.toString() !== userID.toString())
+
+    console.log(otherParticipants)
 
     return otherParticipants
 }

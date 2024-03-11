@@ -144,4 +144,6 @@ userSchema.statics.login = async function(email, password) {
     return user //compares info sent in with info in database
 }
 
-module.exports = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
+
+module.exports = User;

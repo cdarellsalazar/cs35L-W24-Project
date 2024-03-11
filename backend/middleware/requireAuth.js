@@ -6,7 +6,7 @@ const requireAuth = async (req, res, next) => {
     //console.log('auth running')
 
     if(!authorization) {
-        return res.status(401).json({error: 'Requires Authorization Token'})
+      //  return res.status(401).json({error: 'Requires Authorization Token'})
     }
 
     const token = authorization.split(' ')[1]
