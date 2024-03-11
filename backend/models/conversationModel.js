@@ -24,6 +24,7 @@ conversationSchema.statics.getMessageIDfromConversation = async function (conver
 }
 
 conversationSchema.statics.getParticipants = async function (conversationID, userID) {
+    //console.log('conversation: ', conversationID)
 
     const conversation = await Conversation.findById(conversationID).populate('participants')
 

@@ -1,7 +1,7 @@
 //ensures that when the API receives a certain request, it knows which controller function should handle it
 const express = require('express');
 const router = express.Router();
-const { sendMessage, getMessages, getUnreadMessages, getMessagesWithSearchQuery, markMessageAsRead } = require('../controllers/messageController');
+const { sendMessage, getMessages, getUnreadMessages, getMessagesWithSearchQuery, markMessageAsRead, getMessage } = require('../controllers/messageController');
 
 // POST endpoint for sending a message
 router.post('/send', sendMessage);
@@ -17,5 +17,7 @@ router.get('/', getMessages);
 
 // PUT endpoint for marking a message as read
 //router.put('/message/read/:messageId', markMessageAsRead);
+
+router.get('/getMessage:messageID', getMessage)
 
 module.exports = router;

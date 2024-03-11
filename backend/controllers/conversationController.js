@@ -38,24 +38,42 @@ exports.getConversation = async (req, res) => {
 exports.fetchConversations = async (req, res) => {
     const userID = req.user._id
 
-    console.log('user: ', userID)
+   //console.log('user: ', userID)
 
     const conversations = await Conversation.find({ participants: { $in: [userID]}})
 
-    console.log('conversations: ', conversations)
+    //console.log('conversations: ', conversations)
 
     res.status(200).json(conversations)
 }
 
 exports.getRenderInfo = async (req, res) => {
+    //console.log(req)
     try{
-        const conversationID = req.params.conversationID
+        const conversationID = req.body.conversationID
         const userID = req.user._id
+        console.log(userID)
         const info = await Conversation.getParticipants(conversationID, userID)
-        res.status(200).json(info)
+        const renderInfo = User.findById(info)
+        //console.log(renderInfo)
+        res.status(200)
     } catch(error) {
+        console.log(error)
         res.status(400).json({error: error.message });
     }
 
+}
+
+exports.getMessagesFromConvo = async (req, res) => {
+    try{
+        const converationID = req.body.converationID
+        //console.log('conversationID: ', converationID)
+        const messages = await Conversation.findById(converationID).populate('messages')
+        //console.log('success')
+        res.status(200).json(messages)
+    } catch(error) {
+        console.log(error)
+        res.status(400).json({ error: error.message })
+    }
 }
     

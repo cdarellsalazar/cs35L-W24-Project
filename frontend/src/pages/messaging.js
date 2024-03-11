@@ -29,7 +29,7 @@ function Messaging() {
     };
 
     useEffect(() => {
-        console.log('user: ', user)
+        //console.log('user: ', user)
         const fetchConvos = async () => {
           const response = await fetch('http://localhost:4000/api/convos/', {
             headers: {'Authorization': `Bearer ${user.token}`},

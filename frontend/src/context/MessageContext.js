@@ -8,15 +8,15 @@ export const messageReducer = (state, action) => {
     case 'SET_MESAGES': 
       console.log('messages: ', action.payload)
       return {
-        convos: action.payload
+        messages: action.payload
       }
     case 'CREATE_MESSAGE':
       return {
-        convos: [action.payload, ...state.convos]
+        messages: [action.payload, ...state.convos]
       }
     case 'DELETE_MESSAGE':
       return {
-        workouts: state.convos.filter((w) => w._id !== action.payload._id)
+        messages: state.convos.filter((w) => w._id !== action.payload._id)
       }
     default:
       return state
