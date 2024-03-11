@@ -10,7 +10,7 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await signup(email, password)
+        await signup(user, email, password)
     }
 
     return (
@@ -31,6 +31,7 @@ function Register() {
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
                     />
+                    
                     <input 
                     type="password" 
                     placeholder="password" 

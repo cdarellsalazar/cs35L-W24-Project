@@ -4,8 +4,8 @@ require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
-const convoRoutes = require('./routes/conversation')
 const messageRoutes = require('./routes/message')
+const conversationRoutes = require('./routes/conversation')
 const cors = require('cors')
 
 // creates express app
@@ -22,21 +22,18 @@ app.use((req, res, next) => {
     next()
 })
 
+app.get('/', (req, res) => {
+    res.send('Hello World');
+})
+
+app.post('/test', (req, res) => {
+    res.send('example');
+})
+
 //routes
-try {app.use('/api/user', userRoutes)
-} catch(e) {
-    console.log(e)
-}
-
-try {app.use('/api/convos', convoRoutes)
-} catch(e) {
-    console.log(e)
-}
-
-try {app.use('/api/messages', messageRoutes)
-} catch(e) {
-    console.log(e)
-}
+app.use('/api/user', userRoutes)
+//app.use('/api/message', messageRoutes)
+//app.use('/api/converastion', conversationRoutes)
 
 // connect to db
 mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-projectdataba.l4wjg5l.mongodb.net/?retryWrites=true&w=majority')

@@ -16,7 +16,8 @@ const userSchema = new Schema({
     },*/ //No need, as mongo automatically creates a unique ObjectID when not given. 
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     email: {
         type: String,
@@ -46,18 +47,27 @@ const userSchema = new Schema({
 
 userSchema.statics.getConversations = async function(userID) {
 
-    const user = await userSchema.findById(userID).populate('conversations')
+    const user = await this.findById(userID).populate('conversations')
 
     return user
 
 }
 
 
-userSchema.statics.getAllParticipants = async function (userID) {
+userSchema.statics.getParticipants = async function (conversationID, userID) {
 
-    const user = await userSchema.findById(userID)
+    const Conversation = mongoose.model('Conversation')
 
-    const listOfConversationIDs = user.conversations
+    const conversation = await Conversation.findById(conversationID).populate('participants')
+
+    const otherParticipants = conversation.participants.filter(participant => participant !== userID)
+
+    return otherParticipants
+}
+
+userSchema.statics.getAllParticipants = async function (listOfConversationIDs, userID) {
+    
+    const Conversation = mongoose.model('Conversation')
 
     const allParticipants = new Set()
 
@@ -77,27 +87,22 @@ userSchema.statics.getAllParticipants = async function (userID) {
     return allParticipants
 }
 
-userSchema.statics.loadConversationInfo = async function (userID) {
-    const user = await userSchema.findById(userID)
+userSchema.statics.getMessageIDfromConversation = async function (conversationID) {
+    
+    const Conversation = mongoose.model('Conversation')
 
-    const userList = await getAllParticipants(user.userID)
+    const messageIDs = await Conversation.findById(conversationID).populate('messages')
 
-    const infoList = []
-
-    for(let user of userList){
-        const info = await this.findById('user')
-        infoList.push(info)
-    }
-
-    return infoList
-
+    return messageIDs
 }
 
+
+
 // static signup method
-userSchema.statics.signup = async function(email, password) {
+userSchema.statics.signup = async function(username, email, password) {
 
     //validation
-    if(!email || !password){
+    if(!email || !password || !username){
         throw Error('All fields must be filled')
     }
     if (!validator.isEmail(email)) {
@@ -107,17 +112,23 @@ userSchema.statics.signup = async function(email, password) {
         throw Error('Password not strong enough')
     }
 
-    const exists = await this.findOne({ email })
+    const emailExists = await this.findOne({ email })
 
-    if (exists) {
+    const usernameExists = await this.findOne({ username })
+
+    if (emailExists) {
         throw Error('Email already in use')
+    }
+
+    if (usernameExists) {
+        throw Error('Username already in use')
     }
 
     const salt = await bcrypt.genSalt(10)
 
     const hash = await bcrypt.hash(password, salt) //password encryption step
 
-    const user = await this.create({ email, password: hash }) //creates user in database
+    const user = await this.create({ username, email, password: hash }) //creates user in database
 
     return user
 }
