@@ -46,15 +46,16 @@ const userSchema = new Schema({
 
 userSchema.statics.getConversations = async function(userID) {
 
-    const user = await this.findById(userID).populate('conversations')
+    const user = await userSchema.findById(userID).populate('conversations')
 
     return user
 
 }
 
+
 userSchema.statics.getAllParticipants = async function (userID) {
 
-    const user = await this.findById(userID)
+    const user = await userSchema.findById(userID)
 
     const listOfConversationIDs = user.conversations
 
@@ -77,7 +78,7 @@ userSchema.statics.getAllParticipants = async function (userID) {
 }
 
 userSchema.statics.loadConversationInfo = async function (userID) {
-    const user = await this.findById(userID)
+    const user = await userSchema.findById(userID)
 
     const userList = await getAllParticipants(user.userID)
 

@@ -36,6 +36,7 @@ const signupUser = async (req, res) => {
       const token = createToken(user.id)
 
       res.status(200).json({email, token}) //return newly authenticated user and give token so they don't have to login after signing up
+      console.log(token)
     } catch (error) {
       res.status(400).json({error: error.message})
     }
