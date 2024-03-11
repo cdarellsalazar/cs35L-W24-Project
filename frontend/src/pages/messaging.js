@@ -100,8 +100,41 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
-    const [selectedConversation, setSelectedConversation] = useState(null);
-    const [previousConversation, setPreviousConversation] = useState(null);
+    const [currentConvoMessages, setCurrentConvoMessages] = useState( [
+        {
+          messageId: 8,
+          sender: "Paul Eggert",
+          receiver: "User Logged In",
+          msg: "How's your Latin?",
+          timeSent: "12:53",
+        },
+        {
+          messageId: 9,
+          sender: "User Logged In",
+          receiver: "Paul Eggert",
+          msg: "LOL",
+          timeSent: "12:54",
+        },
+        {
+          messageId: 10,
+          sender: "Paul Eggert",
+          receiver: "User Logged In",
+          msg: "I can't wait for everyone to fail the final!",
+          timeSent: "12:55",
+        },
+      ])
+      const newMessage = "";
+      const [selectedConversation, setSelectedConversation] = useState();
+      const [previousConversation, setPreviousConversation] = useState(null);
+      //const [newMessage, setNewMessage] = useState('');
+      /*
+      useEffect(() => {
+        if (newMessage !== "") {
+          setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+        }
+      }, [newMessage]);*/ // This effect runs whenever newMessage changes
+
+      //setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
 /*
     useEffect(() => {
         if (previousConversation) {
@@ -119,6 +152,7 @@ function Messaging() {
         setPreviousConversation(newConversation);
         setSelectedConversation({ ...newConversation, selected: true });
         console.log("Selected Conversation:", newConversation.name);
+        console.log("Messages of Selected Convo:", newConversation.messages);
     };
     /*
         const handleConversationClick = (newConversation) => {
@@ -147,21 +181,27 @@ function Messaging() {
       };*/
 
     const [username, setUsername] = useState(null);
-    
-    const handleNewChatSubmit = async (newUsername) => {
+
+    const onNewChatSubmit = (newMessage) => {
+        // Update the state with the new message
+        setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+      };
+
+    /*
+    const handleNewChatSubmit = (newUsername) => {
         setUsername(newUsername);
         //const user = await getUserByUserName(newUsername);
         console.log(getUserByUserName(newUsername));
         //console.log('User:', user);
-        };
+        };*/
 
     return (
         <div className="container">
             <div className="left-column">
-                <ChatList onConversationClick={handleConversationClick} onNewChatSubmit={handleNewChatSubmit}/>
+                <ChatList onConversationClick={handleConversationClick} />
             </div>
             <div className="center-column">
-                <ChatContent selectedConversation={selectedConversation} />
+                <ChatContent selectedConversation={selectedConversation} currentConvoMessages={currentConvoMessages} onNewChatSubmit={onNewChatSubmit}/> {/*convoMessages={testConvo}*/}
             </div>
             <div className="right-column">
                 <div className="logo-container">
