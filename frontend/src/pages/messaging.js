@@ -86,8 +86,14 @@ function Messaging() {
       const [selectedConversation, setSelectedConversation] = useState();
       const [previousConversation, setPreviousConversation] = useState(null);
       //const [newMessage, setNewMessage] = useState('');
+      /*
+      useEffect(() => {
+        if (newMessage !== "") {
+          setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+        }
+      }, [newMessage]);*/ // This effect runs whenever newMessage changes
 
-      setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+      //setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
 /*
     useEffect(() => {
         if (previousConversation) {
@@ -134,21 +140,27 @@ function Messaging() {
       };*/
 
     const [username, setUsername] = useState(null);
-    
-    const handleNewChatSubmit = async (newUsername) => {
+
+    const onNewChatSubmit = (newMessage) => {
+        // Update the state with the new message
+        setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+      };
+
+    /*
+    const handleNewChatSubmit = (newUsername) => {
         setUsername(newUsername);
         //const user = await getUserByUserName(newUsername);
         console.log(getUserByUserName(newUsername));
         //console.log('User:', user);
-        };
+        };*/
 
     return (
         <div className="container">
             <div className="left-column">
-                <ChatList onConversationClick={handleConversationClick} onNewChatSubmit={handleNewChatSubmit}/>
+                <ChatList onConversationClick={handleConversationClick} />
             </div>
             <div className="center-column">
-                <ChatContent selectedConversation={selectedConversation} currentConvoMessages={currentConvoMessages}/> {/*convoMessages={testConvo}*/}
+                <ChatContent selectedConversation={selectedConversation} currentConvoMessages={currentConvoMessages} onNewChatSubmit={onNewChatSubmit}/> {/*convoMessages={testConvo}*/}
             </div>
             <div className="right-column">
                 <div className="logo-container">

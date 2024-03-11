@@ -4,7 +4,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import Logo from './components/Logo';
+import Logo from './components/logo';
 import Login from "./pages/login";
 import Messaging from "./pages/messaging";
 import Register from "./pages/register";

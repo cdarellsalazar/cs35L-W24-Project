@@ -37,12 +37,16 @@ const ChatContent = (props) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [props.currentConvoMessages]);
+  
+
   const [msg, setMsg] = useState("");
   const [chat, setChat] = useState(testConvo);
   const messagesEndRef = useRef(null);
   const [ selectedConversation, setSelectedConversation ] = useState(null);
-  
-
+  const inputRef = useRef();
   const handleConversationClick = (newConversation) => {
     setSelectedConversation(newConversation);
 };
@@ -59,7 +63,7 @@ const ChatContent = (props) => {
               msg: msg,
               timeSent: currentTime,
           };
-          props.handleMessageSubmit(newMessage);
+          props.onNewChatSubmit(newMessage);
           //props.setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
           setMsg("");
       }
@@ -82,12 +86,15 @@ const ChatContent = (props) => {
     }, []);
 
     useEffect(() => {
-        window.addEventListener("keydown", keydownHandler);
+      const inputElement = inputRef.current;
+      if (inputElement) {
+        inputElement.addEventListener("keydown", keydownHandler);
         scrollToBottom();
-
+  
         return () => {
-            window.removeEventListener("keydown", keydownHandler);
+          inputElement.removeEventListener("keydown", keydownHandler);
         };
+      }
     }, [keydownHandler]);
 
     const onStateChange = (e) => {
@@ -100,17 +107,18 @@ const ChatContent = (props) => {
 
     return (
       <div className="main__chatcontent">
+        {props.selectedConversation ? (
+        <>
           <div className="content__header">
-              <div className="blocks">
-                  <div className="current-chatting-user">
-                      <Avatar
-                          isOnline={props.selectedConversation ? props.selectedConversation.isOnline : false}
-                          image={props.selectedConversation ? props.selectedConversation.image : "http://placehold.it/80x80"}
-                      />
-                      <p>{props.selectedConversation ? props.selectedConversation.name : "No conversation selected"}</p>
-                  </div>
+            <div className="blocks">
+              <div className="current-chatting-user">
+                <Avatar
+                  isOnline={props.selectedConversation.isOnline ? props.selectedConversation.isOnline : false}
+                  image={props.selectedConversation.image ? props.selectedConversation.image : "http://placehold.it/80x80"}
+                />
+                <p>{props.selectedConversation.name ? props.selectedConversation.name : "No Conversation Selected"}</p>
               </div>
-
+              </div>
               <div className="blocks">
                   <div className="settings">
                       <button className="btn-nobg">
@@ -143,14 +151,24 @@ const ChatContent = (props) => {
                     placeholder="Type a message here..."
                     onChange={onStateChange}
                     value={msg}
+                    onKeyDown={event => {
+                      if (event.key === 'Enter') {
+                        sendMessage();
+                        event.preventDefault(); // Prevent form submission
+                      }
+                    }}
                 />
                 <button className="btnSendMsg" id="sendMsgBtn" onClick={sendMessage}>
                     <FontAwesomeIcon icon={faPaperPlane}/>
                 </button>
             </div>
         </div>
-       </div>
-    );
+      </>) : (
+                <div className="current-chatting-user">
+                <p>Welcome to DisruptChat!</p>
+              </div>
+    )}
+    </div>)
 };
 export default ChatContent
 /*
