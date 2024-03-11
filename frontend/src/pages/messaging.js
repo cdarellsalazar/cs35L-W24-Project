@@ -24,9 +24,11 @@ function Messaging() {
     const { dispatch: MessageDispatch } = useMessageContext()
     const { user } = useAuthContext()
     const navigate = useNavigate();
+    const [convoStarted, startConvo] = useState(false);
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
+
 
     useEffect(() => {
         //console.log('user: ', user)
@@ -214,7 +216,7 @@ function Messaging() {
                 <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>
-                <NewConvo />
+                
             </div>
         </div>
     );

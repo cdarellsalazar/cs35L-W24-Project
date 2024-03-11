@@ -34,8 +34,6 @@ const NewConvo = () => {
     }
     return (
         <form className="create" onSubmit={handleSubmit}>
-            <h3>Start Conversation</h3>
-
             <label>Recipient:</label>
             <input 
                 type="text"
