@@ -9,6 +9,7 @@ import ChatList from "./LeftSidebar/ChatList";
 import ChatContent from "./MiddleColumn/ChatContent";
 import Answered from '../components/Answered';
 import Question from '../components/Question';
+import getUserByUserName from "../hooks/fetchUserByUsername";
 import NewConvo from "../components/NewConvo";
 
 
@@ -101,8 +102,26 @@ function Messaging() {
     };
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [previousConversation, setPreviousConversation] = useState(null);
+/*
+    useEffect(() => {
+        if (previousConversation) {
+            console.log("printing from useEffect");
+            console.log("Prev Selected Convo:", previousConversation.name);
+        }
+    }, [previousConversation]);*/
 
     const handleConversationClick = (newConversation) => {
+        newConversation.selected = true;
+        if(previousConversation) {
+            console.log("Prev Selected Convo:", previousConversation.name);
+            previousConversation.selected = false;
+        }
+        setPreviousConversation(newConversation);
+        setSelectedConversation({ ...newConversation, selected: true });
+        console.log("Selected Conversation:", newConversation.name);
+    };
+    /*
+        const handleConversationClick = (newConversation) => {
         // Set the clicked conversation's selected field to be true
         newConversation.selected = true;
         if(previousConversation === null) // if there isn't a previous conversation
@@ -125,12 +144,21 @@ function Messaging() {
       
         console.log("Selected Conversation:", updatedNewConversation.name);
 
-      };
+      };*/
+
+    const [username, setUsername] = useState(null);
+    
+    const handleNewChatSubmit = async (newUsername) => {
+        setUsername(newUsername);
+        //const user = await getUserByUserName(newUsername);
+        console.log(getUserByUserName(newUsername));
+        //console.log('User:', user);
+        };
 
     return (
         <div className="container">
             <div className="left-column">
-                <ChatList onConversationClick={handleConversationClick} />
+                <ChatList onConversationClick={handleConversationClick} onNewChatSubmit={handleNewChatSubmit}/>
             </div>
             <div className="center-column">
                 <ChatContent selectedConversation={selectedConversation} />

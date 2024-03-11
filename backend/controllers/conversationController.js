@@ -48,6 +48,14 @@ exports.fetchConversations = async (req, res) => {
 }
 
 exports.getRenderInfo = async (req, res) => {
-    
+    try{
+        const conversationID = req.params.conversationID
+        const userID = req.user._id
+        const info = await Conversation.getParticipants(conversationID, userID)
+        res.status(200).json(info)
+    } catch(error) {
+        res.status(400).json({error: error.message });
+    }
+
 }
     

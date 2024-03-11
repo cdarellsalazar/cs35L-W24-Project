@@ -1,7 +1,7 @@
 //ensures that when the API receives a certain request, it knows which controller function should handle it
 const express = require('express');
 const router = express.Router();
-const { fetchConversations, startConversation, getConversation } = require('../controllers/conversationController')
+const { fetchConversations, startConversation, getConversation, getRenderInfo } = require('../controllers/conversationController')
 const requireAuth = require('../middleware/requireAuth')
 
 // GET endpoint for retreiving all messages in a conversation
@@ -12,6 +12,8 @@ router.get('/conversation/:conversationID', getConversation);
 router.post('/newConvo', startConversation)
 
 router.get('/', fetchConversations)
+
+router.post('/render', getRenderInfo)
 
 module.exports = router;
 

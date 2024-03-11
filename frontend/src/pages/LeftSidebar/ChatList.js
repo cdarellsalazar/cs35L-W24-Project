@@ -1,9 +1,152 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import  useFetchUserById  from "../../hooks/getUser";
+//import fetchUserByUsername from "../../hooks/getUser";
 import "./ChatList.css";
 import ChatListItems from "./ChatListItems";
 import {faPlus, faEllipsis, faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+//import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
+//import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
 
+const ChatList = (props) => {
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [newChat, setNewChat] = useState(null);
+
+  const allChatUsers = [
+    {
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
+      id: 1,
+      name: "Paul Eggert",
+      selected: false,
+      isOnline: true,
+      activeTime: "Online",
+    },
+    {
+      image:
+        "https://pbs.twimg.com/profile_images/1405919529713082370/wx64vl-A_400x400.jpg",
+      id: 2,
+      name: "Gene Block",
+      selected: false,
+      isOnline: false,
+      activeTime: "Active 32 mins ago"
+    },
+    {
+      image:
+        "https://s.research.com/images/f37a9fe6106c9c314ce360593a9e42f23098d35d-135x135.jpeg",
+      id: 3,
+      name: "Majid Sarrafzadeh",
+      selected: false,
+      isOnline: false,
+      activeTime: "Active 55 mins ago"
+    },
+    {
+      image:
+        "https://mascothalloffame.com/wp-content/uploads/bb-plugin/cache/joe-e1678911953635-circle.jpg",
+      id: 4,
+      name: "Joe Bruin",
+      selected: false,
+      isOnline: true,
+      activeTime: "Online"
+    },
+    {
+      image:
+        "https://mascothalloffame.com/wp-content/uploads/bb-plugin/cache/oski-e1678912051861-circle.jpg",
+      id: 5,
+      name: "Oski",
+      selected: false,
+      isOnline: false,
+      activeTime: "Active 2 hours ago"
+    },
+  ];
+  const [allChats, setAllChats] = useState(allChatUsers);
+
+  const handleNewChat = () => {
+    setNewChat("");
+  };
+
+  const handleSearchChange = (e) => { 
+    setSearchTerm(e.target.value);
+};
+
+  const handleNewChatSubmit = (e) => {
+      e.preventDefault();
+      setAllChats(prevChats => [...prevChats, newChat]);
+      setNewChat(null);
+      console.log('New chat added:', newChat);
+      try {
+          // const user = fetchUserByUsername(newChat);
+          console.log(props.user);
+      } catch (error) {
+          console.error('Error fetching user:', error);
+      }
+      console.log("User Info:") // useFetchUserById(newChat.name));
+    };
+
+  const renderChatListItems = (chatUsers) => {
+    console.log('renderChatListItems called with:', chatUsers);
+    return chatUsers.map((user, index) => (
+        <ChatListItems
+            id={user.id}
+            image={user.image}
+            name={user.name}
+            selected={user.selected}
+            isOnline={user.isOnline}
+            activeTime={user.activeTime}
+            animationDelay={index + 1}
+            onClick={() => props.onConversationClick(user)} //instead of user.id
+        />
+    ));
+  };
+
+  const filteredChats = allChatUsers.filter(chat =>
+    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+if (newChat) {
+    return (
+        <form onSubmit={handleNewChatSubmit}>
+            <input type="text" placeholder="Enter user name" required 
+            onChange={e => {
+                setNewChat(e.target.value);
+                console.log(e.target.value);
+            }}/>
+            <button type="submit">Start Chat</button>
+        </form>
+    );
+}
+
+return (
+  <div className="main__chatlist">
+      <button className="btn" onClick={handleNewChat}>
+          <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
+          <span>Start New Chat</span>
+      </button>
+      
+      <div className="chatlist__heading">
+          <h2 className="centered-heading">Chats</h2>
+          <button className="btn-nobg">
+              <FontAwesomeIcon icon={faEllipsis}/>
+          </button>
+      </div>
+      <div className="chatList__search">
+          <div className="search_wrap">
+              <input type="text" placeholder="Search Here" required onChange={handleSearchChange}/>
+              <button className="search-btn">
+                  <FontAwesomeIcon icon={faMagnifyingGlass}/>
+              </button>
+          </div>
+      </div>
+      <div className="chatlist__items">
+          {renderChatListItems(filteredChats)}
+      </div>
+  </div>
+);
+};
+export default ChatList;
+
+/*
 export default class ChatList extends Component {
   allChatUsers1 = [
     {
@@ -113,6 +256,16 @@ export default class ChatList extends Component {
       allChatUsers1: [...(prevState.allChatUsers1 || []), prevState.newChat],
       newChat: null
     }));
+    //const user = this.props.onNewChatSubmit(this.state.newChat);
+    //console.log(this.props.onNewChatSubmit(this.state.newChat));
+    console.log('New chat added:', this.state.newChat);
+    try {
+      {/*const user =  fetchUserByUsername(this.state.newChat);}*//*
+      console.log(this.props.user);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+    console.log("User Info:")//useFetchUserById(this.state.newChat.name));
   };
 
   renderChatListItems(chatUsers) {
@@ -137,14 +290,19 @@ export default class ChatList extends Component {
     if (this.state.newChat) {
       return (
         <form onSubmit={this.handleNewChatSubmit}>
-          <input type="text" placeholder="Enter user name" required onChange={e => this.setState({ newChat: { name: e.target.value } })}/>
-          <button type="submit">Start Chat</button>
-        </form>
-      );
-    }
-  
-    return (
-      <div className="main__chatlist">
+                <input type="text" placeholder="Enter user name" required 
+                onChange={e => {
+                  this.setState({ newChat: e.target.value });
+                  console.log(e.target.value);
+                }}/>
+                <button type="submit">Start Chat</button>
+              </form>
+            );
+            
+          }
+        
+          return (
+            <div className="main__chatlist">
         <button className="btn" onClick={() => this.setState({newChat: {}})}>
           <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
           <span>Start New Chat</span>
@@ -166,9 +324,9 @@ export default class ChatList extends Component {
         </div>
         <div className="chatlist__items" >
           {this.renderChatListItems(filteredChats)}
-          {/*{this.renderChatListItems(this.allChatUsers1)}*/}
+          {/*{this.renderChatListItems(this.allChatUsers1)}*//*}
         </div>
       </div>
     );
   }
-}
+}*/
