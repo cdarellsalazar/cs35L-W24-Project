@@ -61,11 +61,6 @@ const ChatList = (props) => {
     },
   ];
   const [allChats, setAllChats] = useState(allChatUsers);
-  const [selectedChat, setSelectedChat] = useState(null);
-
-const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
-};
 
   const handleNewChat = () => {
     setNewChat("");
@@ -100,8 +95,7 @@ const handleChatSelect = (chat) => {
             isOnline={user.isOnline}
             activeTime={user.activeTime}
             animationDelay={index + 1}
-            onClick={() => handleChatSelect(user)}
-            //onClick={() => props.onConversationClick(user)} //instead of user.id
+            onClick={() => props.onConversationClick(user)} //instead of user.id
         />
     ));
   };
