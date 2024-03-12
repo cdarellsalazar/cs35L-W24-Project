@@ -59,7 +59,7 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
-    const [currentConvoMessages, setCurrentConvoMessages] = useState( [
+    const [currentConvoMessages, setCurrentConvoMessages] = useState( [/*
         {
           messageId: 8,
           sender: "Paul Eggert",
@@ -80,7 +80,7 @@ function Messaging() {
           receiver: "User Logged In",
           msg: "I can't wait for everyone to fail the final!",
           timeSent: "12:55",
-        },
+        },*/
       ])
       const newMessage = "";
       const [selectedConversation, setSelectedConversation] = useState();
