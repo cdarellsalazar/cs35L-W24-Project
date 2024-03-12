@@ -145,6 +145,30 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
+
+    async function getMessagesFromConvo(conversationID) {
+        try {
+            const response = await fetch('http://localhost:4000/api/conversations/getMessagesFromConvo', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ conversationID }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch messages');
+            }
+    
+            const messages = await response.json();
+    
+            return messages;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
     const [currentConvoMessages, setCurrentConvoMessages] = useState( [
         {
           messageId: 8,
@@ -168,9 +192,18 @@ function Messaging() {
           timeSent: "12:55",
         },
       ])
+      const [conversationID, setConversationID] = useState(null);
+      useEffect(() => {
+        if (conversationID) {
+            getMessagesFromConvo(conversationID)
+                .then(messages => setCurrentConvoMessages(messages))
+                .catch(error => console.error(error));
+        }
+    }, [conversationID]);
       const newMessage = "";
       const [selectedConversation, setSelectedConversation] = useState();
       const [previousConversation, setPreviousConversation] = useState(null);
+
       //const [newMessage, setNewMessage] = useState('');
       /*
       useEffect(() => {
@@ -197,6 +230,7 @@ function Messaging() {
         setPreviousConversation(newConversation);
         setSelectedConversation({ ...newConversation, selected: true });
         console.log("Selected Conversation:", newConversation.username);
+        console.log("Selected Conversation ID:", newConversation._id);
         console.log("Messages of Selected Convo:", newConversation.messages);
     };
     /*

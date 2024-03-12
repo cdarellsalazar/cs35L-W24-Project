@@ -41,14 +41,13 @@ const ChatContent = (props) => {
             },
             
         });
-        console.log("current user:", user)
-        console.log("response: ", response)
         if (!response.ok) {
             throw new Error('Failed to fetch user');
         }
 
         const userData = await response.json();
         console.log("User data:", userData);
+        console.log("user name:", userData.username)
         return userData;
     } catch (error) {
         console.error('Error:', error);
@@ -60,15 +59,17 @@ const ChatContent = (props) => {
       if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
           const now = new Date(); // Get the current time
           const currentTime = now.getHours() + ":" + now.getMinutes();
-          const currentUser = fetchCurrentUser(); // Get the current user
-          console.log("current user:", currentUser);
+          const currentUser = await fetchCurrentUser(); // Get the current user
+          const username = currentUser.user.username;
+          console.log("current user in sendmessage:", username);
           const newMessage = { // Create a new message object
               messageId: props.currentConvoMessages.length + 1,
-              sender: currentUser.username, // Change this to current user later once the function to fetch user data is up
+              sender: username, // Change this to current user later once the function to fetch user data is up
               receiver: props.selectedConversation.name,
               msg: msg, // actual message the user is typing
               timeSent: currentTime,
           };
+          console.log("sender:", newMessage.sender);
           /*
           try {
             const response = await fetch('http://localhost:4000/message', {
