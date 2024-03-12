@@ -16,7 +16,7 @@ const conversationSchema = new Schema({
 conversationSchema.path('messages').default([]);
 
 conversationSchema.statics.addMessage = async function(messageId) {
-    this.messages.push(messageId);
+    conversationSchema.messages.push(messageId);
 }
 
 conversationSchema.statics.getMessageIDfromConversation = async function (conversationID) {
@@ -24,6 +24,24 @@ conversationSchema.statics.getMessageIDfromConversation = async function (conver
     const messageIDs = await Conversation.findById(conversationID).populate('messages')
 
     return messageIDs
+}
+
+conversationSchema.statics.getConversationIDfromParticipants = async function (participantIDs) {
+    
+    if (participantIDs.length === 0) {
+        throw Error('There are no participants in this conversation')
+    }
+
+    const conversationID = await Conversation.findOne({
+        participants: { $all: participantIDs }
+    }); 
+
+    if (conversationID) {
+        return conversation._id
+    }
+    else {
+        throw Error('There does not exist a conversation for the given participants')
+    }
 }
 
 conversationSchema.statics.getParticipants = async function (conversationID, userID) {

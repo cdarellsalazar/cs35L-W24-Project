@@ -57,39 +57,40 @@ const ChatContent = (props) => {
 
   // Send Message Function
   const sendMessage = async () => {
-      if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
-          const now = new Date(); // Get the current time
-          const currentTime = now.getHours() + ":" + now.getMinutes();
-          const currentUser = fetchCurrentUser(); // Get the current user
-          console.log("current user:", currentUser);
-          const newMessage = { // Create a new message object
-              messageId: props.currentConvoMessages.length + 1,
-              sender: currentUser.username, // Change this to current user later once the function to fetch user data is up
-              receiver: props.selectedConversation.name,
-              msg: msg, // actual message the user is typing
-              timeSent: currentTime,
-          };
-          /*
-          try {
-            const response = await fetch('http://localhost:4000/message', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newMessage),
-            });
+    if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
+        const now = new Date(); // Get the current time
+        const currentTime = now.getHours() + ":" + now.getMinutes();
+        const currentUser = await fetchCurrentUser(); // Get the current user
+        console.log("current user in sendmessage:", currentUser.user.username);
+        const newMessage = { // Create a new message object
+            //messageId: props.currentConvoMessages.length + 1, commented out for maybe future usage
+            conversation: ,
+            sender: currentUser.user._id, // Change this to current user later once the function to fetch user data is up
+            receiver: props.selectedConversation._id,
+            msg: msg // actual message the user is typing
+            //timeSent: currentTime,
+        };
+          
+        try {
+          const response = await fetch('http://localhost:4000/api/message/send', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(newMessage),
+          });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
 
-            const message = await response.json();
+          const message = await response.json();
 
-            console.log("Message sent successfully:", message);
+          console.log("Message sent successfully:", message); 
         } catch (error) {
-            console.error("There was an error sending the message:", error);
-        }
-*/
+          console.error("There was an error sending the message:", error);
+      }
+
           props.onNewChatSubmit(newMessage); // passes the new message to onNewChatSubmit, which updates currentConvoMessages
           setMsg(""); //clears message
           console.log("Entire selected convo details:", props.currentConvoMessages); // used for debugging

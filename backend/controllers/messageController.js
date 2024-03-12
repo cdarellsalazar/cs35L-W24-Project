@@ -7,7 +7,7 @@ exports.sendMessage = async (req, res) => {
     try {
         const { conversation, senderId, receiverId, content } = req.body;
         const message = await Message.create({
-            conversation,
+            //conversation: ,
             sender: senderId,
             receiver: receiverId,
             content: content,
