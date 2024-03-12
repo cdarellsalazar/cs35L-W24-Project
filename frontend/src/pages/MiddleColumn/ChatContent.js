@@ -192,9 +192,11 @@ const ChatContent = (props) => {
             </div>
         </div>
       </>) : ( // else just display this
-                <div className="current-chatting-user">
-                <p>Welcome to DisruptChat!</p>
-              </div>
+      <>
+      <div >
+        <p> Welcome to DisruptChat! For optimal viewing, please ensure your browser window is maximized and zoom is set to 100%. </p>
+      </div>
+    </>
     )}
     </div>)
 };
