@@ -84,16 +84,17 @@
     color: #c4ddf1;
   }
   .chat__msg {
-    color: #000;
+    color: black;
   }
   
   .chat__item.other {
     flex-direction: row-reverse;
     transform-origin: left;
+    color: black
   }
   .chat__item.other .chat__item__content {
     background-color: #fff;
-    color: #000;
+    color: white;
     border-radius: 10px 10px 10px 0;
     max-width: 100%;
   }
