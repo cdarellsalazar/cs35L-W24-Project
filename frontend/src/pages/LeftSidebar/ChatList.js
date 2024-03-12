@@ -1,5 +1,7 @@
+
 import React, { Component, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+//import fetchUserByUsername from "../../hooks/getUser";
 import  useFetchUserById  from "../../hooks/getUser";
 //import fetchUserByUsername from "../../hooks/getUser";
 import "./ChatList.css";
@@ -117,11 +119,11 @@ const ChatList = (props) => {
     return chatUsers.map((user, index) => (
         <ChatListItems
             id={user.id}
-            image={user.image}
-            name={user.name}
+            image={user.image || "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"}
+            name={user.username}
             selected={user.selected}
             isOnline={user.isOnline}
-            activeTime={user.activeTime}
+            //activeTime={user.activeTime}
             animationDelay={index + 1}
             onClick={() => props.onConversationClick(user)} //instead of user.id
         />
@@ -198,11 +200,13 @@ export default ChatList;
 /*
 export default class ChatList extends Component {
   allChatUsers1 = [
+  allChatUsers1 = [
     {
       image:
         "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
       id: 1,
       name: "Paul Eggert",
+      selected: false,
       selected: false,
       isOnline: true,
       activeTime: "Online",
@@ -213,6 +217,7 @@ export default class ChatList extends Component {
       id: 2,
       name: "Gene Block",
       selected: false,
+      selected: false,
       isOnline: false,
       activeTime: "Active 32 mins ago"
     },
@@ -221,6 +226,7 @@ export default class ChatList extends Component {
         "https://s.research.com/images/f37a9fe6106c9c314ce360593a9e42f23098d35d-135x135.jpeg",
       id: 3,
       name: "Majid Sarrafzadeh",
+      selected: false,
       selected: false,
       isOnline: false,
       activeTime: "Active 55 mins ago"
@@ -231,6 +237,7 @@ export default class ChatList extends Component {
       id: 4,
       name: "Joe Bruin",
       selected: false,
+      selected: false,
       isOnline: true,
       activeTime: "Online"
     },
@@ -240,9 +247,12 @@ export default class ChatList extends Component {
       id: 5,
       name: "Oski",
       selected: false,
+      selected: false,
       isOnline: false,
       activeTime: "Active 2 hours ago"
     },
+  ]
+  allChatUsers = [
   ]
   allChatUsers = [
     {
@@ -250,6 +260,7 @@ export default class ChatList extends Component {
         "https://www.spongebobshop.com/cdn/shop/products/SB-Standees-Spong-1_grande.jpg?v=1603744567",
       id: 6,
       name: "Spongebob Squarepants",
+      selected: false,
       selected: false,
       isOnline: true,
       activeTime: "Online"
@@ -260,6 +271,7 @@ export default class ChatList extends Component {
       id: 7,
       name: "Freddy Fazbear",
       selected: false,
+      selected: false,
       isOnline: true,
       activeTime: "Online"
     },
@@ -267,6 +279,8 @@ export default class ChatList extends Component {
       image:
         "https://i.mydramalist.com/qLyY8_5c.jpg",
       id: 8,
+      name: "Jin Young Park (JYP)",
+      selected: false,
       name: "Jin Young Park (JYP)",
       selected: false,
       isOnline: false,
@@ -278,6 +292,7 @@ export default class ChatList extends Component {
       id: 9,
       name: "Anakin Skywalker",
       selected: false,
+      selected: false,
       isOnline: true,
       activeTime: "Online"
     },
@@ -285,6 +300,7 @@ export default class ChatList extends Component {
       image: "https://2.bp.blogspot.com/_2oy76hdmatE/TMxTxgc18MI/AAAAAAAAAOk/c8ZW3SyVtVI/s1600/Community-Dean-Pelton_300.jpg",
       id: 10,
       name: "Craig Pelton",
+      selected: false,
       selected: false,
       isOnline: true,
       activeTime: "Online"
@@ -296,7 +312,44 @@ export default class ChatList extends Component {
       allChats: this.allChatUsers1,
       searchTerm: "",
       newChat: null,
+      allChats: this.allChatUsers1,
+      searchTerm: "",
+      newChat: null,
     };
+  }
+
+  handleNewChatSubmit = (e) => {
+    e.preventDefault();
+    this.setState(prevState => ({
+      allChatUsers1: [...(prevState.allChatUsers1 || []), prevState.newChat],
+      newChat: null
+    }));
+    //const user = this.props.onNewChatSubmit(this.state.newChat);
+    //console.log(this.props.onNewChatSubmit(this.state.newChat));
+    console.log('New chat added:', this.state.newChat);
+    try {
+      {/*const user =  fetchUserByUsername(this.state.newChat);}*//*
+      console.log(this.props.user);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+    console.log("User Info:")//useFetchUserById(this.state.newChat.name));
+  };
+
+  renderChatListItems(chatUsers) {
+    console.log('renderChatListItems called with:', chatUsers);
+    return chatUsers.map((user, index) => (
+      <ChatListItems
+        id={user.id}
+        image={user.image}
+        name={user.name}
+        selected={user.selected}
+        isOnline={user.isOnline}
+        activeTime={user.activeTime}
+        animationDelay={index + 1}
+        onClick={() => this.props.onConversationClick(user)} //instead of user.id
+      />
+    ));
   }
 
   handleNewChatSubmit = (e) => {
@@ -353,9 +406,30 @@ export default class ChatList extends Component {
           return (
             <div className="main__chatlist">
         <button className="btn" onClick={() => this.setState({newChat: {}})}>
+    const filteredChats = this.allChatUsers1.filter(chat =>
+      chat.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+    );
+    if (this.state.newChat) {
+      return (
+        <form onSubmit={this.handleNewChatSubmit}>
+                <input type="text" placeholder="Enter user name" required 
+                onChange={e => {
+                  this.setState({ newChat: e.target.value });
+                  console.log(e.target.value);
+                }}/>
+                <button type="submit">Start Chat</button>
+              </form>
+            );
+            
+          }
+        
+          return (
+            <div className="main__chatlist">
+        <button className="btn" onClick={() => this.setState({newChat: {}})}>
           <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
           <span>Start New Chat</span>
         </button>
+        
         
         <div className="chatlist__heading">
           <h2 className="centered-heading">Chats</h2>
@@ -366,11 +440,15 @@ export default class ChatList extends Component {
         <div className="chatList__search">
           <div className="search_wrap">
             <input type="text" placeholder="Search Here" required onChange={e => this.setState({ searchTerm: e.target.value })}/>
+            <input type="text" placeholder="Search Here" required onChange={e => this.setState({ searchTerm: e.target.value })}/>
             <button className="search-btn">
               <FontAwesomeIcon icon={faMagnifyingGlass}/>
             </button>
           </div>
         </div>
+        <div className="chatlist__items" >
+          {this.renderChatListItems(filteredChats)}
+          {/*{this.renderChatListItems(this.allChatUsers1)}*//*}
         <div className="chatlist__items" >
           {this.renderChatListItems(filteredChats)}
           {/*{this.renderChatListItems(this.allChatUsers1)}*//*}
