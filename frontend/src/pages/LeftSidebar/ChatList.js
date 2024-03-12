@@ -13,7 +13,7 @@ const ChatList = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [newChat, setNewChat] = useState(null);
 
-  const allChatUsers = [
+  const [allChatUsers, setAllChatUsers] = useState( [
     {
       image:
         "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
@@ -59,8 +59,7 @@ const ChatList = (props) => {
       isOnline: false,
       activeTime: "Active 2 hours ago"
     },
-  ];
-  const [allChats, setAllChats] = useState(allChatUsers);
+  ]);
 
   const handleNewChat = () => {
     setNewChat("");
@@ -72,7 +71,7 @@ const ChatList = (props) => {
 
   const handleNewChatSubmit = (e) => {
       e.preventDefault();
-      setAllChats(prevChats => [...prevChats, newChat]);
+      setAllChatUsers(prevChats => [...prevChats, newChat]);
       setNewChat(null);
       console.log('New chat added:', newChat);
       try {

@@ -59,7 +59,7 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
-    const [currentConvoMessages, setCurrentConvoMessages] = useState( [/*
+    const [currentConvoMessages, setCurrentConvoMessages] = useState( [
         {
           messageId: 8,
           sender: "Paul Eggert",
@@ -80,7 +80,7 @@ function Messaging() {
           receiver: "User Logged In",
           msg: "I can't wait for everyone to fail the final!",
           timeSent: "12:55",
-        },*/
+        },
       ])
       const newMessage = "";
       const [selectedConversation, setSelectedConversation] = useState();
@@ -145,14 +145,6 @@ function Messaging() {
         // Update the state with the new message
         setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
       };
-
-    /*
-    const handleNewChatSubmit = (newUsername) => {
-        setUsername(newUsername);
-        //const user = await getUserByUserName(newUsername);
-        console.log(getUserByUserName(newUsername));
-        //console.log('User:', user);
-        };*/
 
     return (
         <div className="container">
