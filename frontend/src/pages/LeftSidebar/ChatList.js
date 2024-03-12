@@ -84,9 +84,7 @@ const ChatList = (props) => {
        } }
   , [convos, user]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  
 
      
 
