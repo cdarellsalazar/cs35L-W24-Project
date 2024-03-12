@@ -83,14 +83,20 @@ const getUserByUsernameFromReq = async (req, res) => {
 const getCurrentUser = async (req, res) => {
   try {
       // Get the user ID from the token
-      // const token = req.headers.authorization.split(' ')[1];
-      // const decodedToken = jwt.verify(token, SECRET);
-      // const userId = decodedToken.id;
-      const userId = req.user._id
-      console.log("this is the userid:", userId);
+      const token = req.headers.authorization.split(' ')[1];
+      console.log(token)
+      //console.log("-----------------------------------")
+      const decodedTokenArray = jwt.verify(token, "nZ5XM37vWkFUWTCsoCtL");
+      const currentUserId = decodedTokenArray._id;
+      //console.log("-----------------------------------");
+      console.log(currentUserId);
+      //const userId = req.user._id
+      console.log("this is the userid:", currentUserId);
 
       // Find the user in the database
-      const user = await User.findById(userId);
+      const user = await User.findById(currentUserId);
+
+      console.log(user)
 
       if (!user) {
           return res.status(404).json({ error: "User not found" });

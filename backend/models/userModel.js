@@ -53,18 +53,6 @@ userSchema.statics.getConversations = async function(userID) {
 
 }
 
-
-userSchema.statics.getParticipants = async function (conversationID, userID) {
-
-    const Conversation = mongoose.model('Conversation')
-
-    const conversation = await Conversation.findById(conversationID).populate('participants')
-
-    const otherParticipants = conversation.participants.filter(participant => participant !== userID)
-
-    return otherParticipants
-}
-
 userSchema.statics.getAllParticipants = async function (listOfConversationIDs, userID) {
     
     const Conversation = mongoose.model('Conversation')
