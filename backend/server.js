@@ -33,7 +33,7 @@ app.post('/test', (req, res) => {
 //routes
 app.use('/api/user', userRoutes)
 //app.use('/api/message', messageRoutes)
-//app.use('/api/converastion', conversationRoutes)
+app.use('/api/convos', conversationRoutes)
 
 // connect to db
 mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-projectdataba.l4wjg5l.mongodb.net/?retryWrites=true&w=majority')

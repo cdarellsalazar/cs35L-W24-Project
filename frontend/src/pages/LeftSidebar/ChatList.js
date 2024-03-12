@@ -28,13 +28,14 @@ const ChatList = (props) => {
           headers: {'Authorization': `Bearer ${user.token}`},
         });
         if (!response.ok) {
+          console.log("response:", response);
           throw new Error('Failed to fetch convos');
         }
         const json = await response.json();
         dispatch({type: 'SET_CONVOS', payload: json});
         setLoading(false); // Set loading to false after successful fetch
       } catch (error) {
-        console.error('Error fetching convos:', error);
+        console.log('Error:', error);
       }
     };
 

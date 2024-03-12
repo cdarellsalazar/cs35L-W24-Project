@@ -36,13 +36,14 @@ exports.getConversation = async (req, res) => {
 }
 
 exports.fetchConversations = async (req, res) => {
+    console.log("running");
     const userID = req.user._id
-
+    
    //console.log('user: ', userID)
 
     const conversations = await Conversation.find({ participants: { $in: [userID]}})
 
-    //console.log('conversations: ', conversations)
+    console.log('conversations: ', conversations)
 
     res.status(200).json(conversations)
 }
