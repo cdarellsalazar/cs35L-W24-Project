@@ -34,10 +34,14 @@ exports.testExampleFunction = async (req, res) => {
 exports.getMessages = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const messages = await Message.find({
-            $or: [{ sender: userId }, { receiver: userId }]
-        });
-        res.status(200).json(messages);
+        if (!userId) {
+            return res.status(400).json({ error: "User ID parameter is required" });
+        }
+        const message = await Message.findById(userId);
+        if (!message) {
+            return res.status(404).json({ error: "Message not found" });
+        }
+        res.status(200).json(message);
     } catch (error) {
         res.status(400).json({ error: error.message }); 
     }
