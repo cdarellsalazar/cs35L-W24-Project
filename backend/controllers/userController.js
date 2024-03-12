@@ -4,14 +4,18 @@ const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 
 const createToken = (_id) => { //Creates json web token that is used for authentication purposes
-  return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
+  return jwt.sign({_id}, 'nZ5XM37vWkFUWTCsoCtL', { expiresIn: '3d' })
 }
 
 //login user
 const loginUser = async (req, res) => {
-  const {email, password} = req.body
+  const data = req.body
+  const email = data.email
+  const password = data.password
 
   try{
+    console.log('trying')
+    console.log('verifying it works')
     const user = await User.login(email, password)
     
     //create a token
@@ -19,22 +23,28 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({email, token}) //Sent out success status code and return the email and newly generated token
   } catch (error) {
+    console.log(error)
     res.status(400).json({error: error.message}) //If an error is detected (in this case credentials do not match, send error)
   }
 }
 
 //signup user
 const signupUser = async (req, res) => {
-    const {email, password} = req.body
+    const data = req.body
+    const username = data.username
+    const email = data.email
+    const password = data.password
 
     try{
-      const user = await User.signup(email, password) 
+      const user = await User.signup(username, email, password) 
       
       //create a token
       const token = createToken(user.id)
 
       res.status(200).json({email, token}) //return newly authenticated user and give token so they don't have to login after signing up
+      console.log(token)
     } catch (error) {
+      console.log(error.message)
       res.status(400).json({error: error.message})
     }
 }

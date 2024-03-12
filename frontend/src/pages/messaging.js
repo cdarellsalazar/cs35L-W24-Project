@@ -2,19 +2,60 @@ import React, { useState, useEffect } from "react";
 import logoImg from '../disrupt_logo.png'; 
 import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useConvosContext } from "../hooks/useConvosContext";
+import { useMessageContext } from "../hooks/useMessageContext"
 import ChatList from "./LeftSidebar/ChatList";
 import ChatContent from "./MiddleColumn/ChatContent";
 import Answered from '../components/Answered';
 import Question from '../components/Question';
 import getUserByUserName from "../hooks/fetchUserByUsername";
+import NewConvo from "../components/NewConvo";
+
 
 function Messaging() {
     const now = new Date();
     const day = now.getDate();
     const [answered, answer] = useState(true);
     const [message, setMessage] = useState('');
-    const {logout} = useLogout()
+    const [showNewConversationBox, setShowNewConversationBox] = useState(false);
+    const { logout } = useLogout()
+    const { dispatch: ConvoDispatch } = useConvosContext()
+    const { dispatch: MessageDispatch } = useMessageContext()
+    const { user } = useAuthContext()
     const navigate = useNavigate();
+    const handleInputChange = (event) => {
+        setMessage(event.target.value);
+    };
+
+    useEffect(() => {
+        //console.log('user: ', user)
+        const fetchConvos = async () => {
+          const response = await fetch('http://localhost:4000/api/convos/', {
+            headers: {'Authorization': `Bearer ${user.token}`},
+          })
+          const json = await response.json()
+    
+          if (response.ok) {
+            ConvoDispatch({type: 'SET_CONVOS', payload: json})
+          }
+        }
+          const fetchMessages = async () => {
+            const response = await fetch('http://localhost:4000/api/messages/', {
+                headers: {'Authorization': `Bearer ${user.token}`},
+            })
+            const json = await response.json()
+
+            if (response.ok){
+                MessageDispatch({type: 'SET_MESSAGES', payload: json})
+            }
+        }
+    
+        if (user) {
+          fetchConvos()
+          //fetchMessages()
+        }
+      }, [ConvoDispatch, MessageDispatch, user])
 
     const handleLogout = async () => {
         try {
@@ -165,6 +206,7 @@ function Messaging() {
                 <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>
+                <NewConvo />
             </div>
         </div>
     );

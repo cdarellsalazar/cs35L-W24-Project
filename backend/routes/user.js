@@ -1,9 +1,10 @@
 //File that manages how different routes are dealt with by the server by controlling control methods
 
 const express = require('express')
+const requireAuth = require('../middleware/requireAuth')
 
 //controller functions
-const { signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq } = require('../controllers/userController');
+const { signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, fetchConvos } = require('../controllers/userController');
 
 //router object that holds routes to be exported
 const router = express.Router()
@@ -15,7 +16,7 @@ router.post('/login', loginUser)
 router.post('/signup', signupUser)
 
 //user id route
-router.post('/getUserByIdFromReq', getUserByIdFromReq);
+//router.post('/getUserByIdFromReq', getUserByIdFromReq);
 
 // User by username route
 router.post('/getUserByUsernameFromReq', getUserByUsernameFromReq);

@@ -3,20 +3,25 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate
 } from "react-router-dom";
-import Logo from './components/Logo';
+import { useAuthContext } from './hooks/useAuthContext';
+import Logo from './components/logo';
 import Login from "./pages/login";
 import Messaging from "./pages/messaging";
 import Register from "./pages/register";
 
 function App() {
+  const { user } = useAuthContext()
+  console.log('user: ', user);
+
   return (
       <Router>
           <Logo />
           <Routes>
-              <Route path="/" element={<Login />} /> 
-              <Route path="/messaging" element={<Messaging />} /> 
-              <Route path="/register" element={<Register />} /> 
+              <Route path="/" element={!user ? <Login /> : <Navigate to='/messaging' /> } /> 
+              <Route path="/messaging" element={user ? <Messaging /> : <Navigate to='/' /> } /> 
+              <Route path="/register" element={!user ? <Register /> : <Navigate to='/messaging' />} /> 
           </Routes>
       </Router>
   );

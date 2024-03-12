@@ -1,10 +1,12 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import  useFetchUserById  from "../../hooks/getUser";
 //import fetchUserByUsername from "../../hooks/getUser";
 import "./ChatList.css";
 import ChatListItems from "./ChatListItems";
 import {faPlus, faEllipsis, faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+import { useConvosContext } from "../../hooks/useConvosContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 //import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
 //import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
 
@@ -12,54 +14,79 @@ const ChatList = (props) => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [newChat, setNewChat] = useState(null);
+  const [allChatUsers, setAllChatUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { convos, dispatch } = useConvosContext()
+  const { user } = useAuthContext()
 
-  const [allChatUsers, setAllChatUsers] = useState( [
-    {
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
-      id: 1,
-      name: "Paul Eggert",
-      selected: false,
-      isOnline: true,
-      activeTime: "Online",
-    },
-    {
-      image:
-        "https://pbs.twimg.com/profile_images/1405919529713082370/wx64vl-A_400x400.jpg",
-      id: 2,
-      name: "Gene Block",
-      selected: false,
-      isOnline: false,
-      activeTime: "Active 32 mins ago"
-    },
-    {
-      image:
-        "https://s.research.com/images/f37a9fe6106c9c314ce360593a9e42f23098d35d-135x135.jpeg",
-      id: 3,
-      name: "Majid Sarrafzadeh",
-      selected: false,
-      isOnline: false,
-      activeTime: "Active 55 mins ago"
-    },
-    {
-      image:
-        "https://mascothalloffame.com/wp-content/uploads/bb-plugin/cache/joe-e1678911953635-circle.jpg",
-      id: 4,
-      name: "Joe Bruin",
-      selected: false,
-      isOnline: true,
-      activeTime: "Online"
-    },
-    {
-      image:
-        "https://mascothalloffame.com/wp-content/uploads/bb-plugin/cache/oski-e1678912051861-circle.jpg",
-      id: 5,
-      name: "Oski",
-      selected: false,
-      isOnline: false,
-      activeTime: "Active 2 hours ago"
-    },
-  ]);
+  useEffect(() => {
+    const fetchConvos = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/convos/', {
+          headers: {'Authorization': `Bearer ${user.token}`},
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch convos');
+        }
+        const json = await response.json();
+        dispatch({type: 'SET_CONVOS', payload: json});
+        setLoading(false); // Set loading to false after successful fetch
+      } catch (error) {
+        console.error('Error fetching convos:', error);
+      }
+    };
+
+    if (user) {
+      fetchConvos();
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+
+      const fetchConversationData = async (convo) => {
+        const convoID = convo._id
+        //console.log('convoID: ', convoID)
+        try {
+          console.log('sending request')
+          const response = await fetch(`http://localhost:4000/api/convos/render`, {
+            method: 'POST',
+            body: JSON.stringify({conversationID: convoID}),
+            headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
+          });
+          const json = await response.json()
+          console.log('response: ', response)
+          if (!response.ok) {
+           console.error('Error: ', json.error);
+          }
+          console.log('json: ', json)
+          return json; // Return fetched data
+        } catch (error) {
+          console.error('Error fetching conversation data:', error);
+          return null; // Return null if an error occurs
+        }
+      };
+
+      // Fetch data for each conversation ID
+      if(convos){
+      Promise.all(convos.map(convo => fetchConversationData(convo)))
+        .then(results => {
+          console.log('results', results)
+          // Filter out any null results (errors)
+          const filteredResults = results.filter(result => result !== null);
+          // Update state with fetched data
+          setAllChatUsers(filteredResults);
+        })
+        .catch(error => {
+          console.error('Error fetching conversation data:', error);
+        });
+       } }
+  , [convos, user]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+     
 
   const handleNewChat = () => {
     setNewChat("");
@@ -99,9 +126,25 @@ const ChatList = (props) => {
     ));
   };
 
-  const filteredChats = allChatUsers.filter(chat =>
-    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  console.log('allChatUsers: ', allChatUsers)
+
+  /**const filteredChats = [
+    {
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/6/60/TZDB_and_some_challenges_of_long_data_-_Paul_Eggert_-_LibrePlanet_2022.png",
+      id: 1,
+      name: "Paul Eggert",
+      selected: false,
+      isOnline: true,
+      activeTime: "Online",
+    }
+  ]; **/
+const filteredChats = allChatUsers.filter(chat =>
+    //console.log('chat: ', chat)
+    chat.username.toLowerCase().includes(searchTerm.toLowerCase())
 );
+
+  //console.log('filteredChats: ', filteredChats)
 
 if (newChat) {
     return (

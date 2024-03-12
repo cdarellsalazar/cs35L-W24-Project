@@ -20,7 +20,7 @@ exports.sendMessage = async (req, res) => {
 }
 
 // Get all messages for a user
-exports.getMessagesForUser = async (req, res) => {
+exports.getMessages = async (req, res) => {
     try {
         const userId = req.params.userId;
         const messages = await Message.find({
@@ -73,5 +73,15 @@ exports.markMessageAsRead = async (req, res) => {
         res.status(200).json(message);
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+}
+
+exports.getMessage = async (req, res) => {
+    try{
+        messageID = req.params.messageID
+        message = Message.findById(messageID)
+        res.status(200).json(message);
+    } catch (error) {
+        res.status(400).json({ error: error.message })
     }
 }

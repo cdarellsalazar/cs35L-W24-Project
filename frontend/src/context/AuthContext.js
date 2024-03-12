@@ -8,6 +8,8 @@ export const authReducer = (state, action) => {
             return { user: action.payload }
         case 'LOGOUT':
             return { user: null }
+        case 'FETCH_CONVOS':
+            return { renderList: [action.payload, ...state.renderList]}
         default:
             return state
     }
@@ -15,7 +17,8 @@ export const authReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, {
-        user: null
+        user: null,
+        renderList: []
     })
 
     useEffect(() => { //Checks if cookie/user information stored in local storage when page is refreshed

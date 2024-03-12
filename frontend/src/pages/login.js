@@ -11,13 +11,14 @@ function Login() {
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault()
-        try {
+        /*try {
             await login(email, password);
             navigate('/messaging');
         } catch (err) {
             console.error("Login failed: ", err);
-        }
-        
+            console.log(error)
+        }*/
+        await login(email, password);
     }
 
     return (
@@ -37,7 +38,7 @@ function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                     />
               </div>
-                <button disabled={isLoading} className="login-button">Login</button>
+                <button className="login-button" disabled={isLoading}>Login</button>
                 {error && <div>{error}</div>}
             </form>
             <p>
