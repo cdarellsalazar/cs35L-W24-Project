@@ -7,6 +7,7 @@ import ChatListItems from "./ChatListItems";
 import {faPlus, faEllipsis, faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import { useConvosContext } from "../../hooks/useConvosContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import NewConvo from "../../components/NewConvo";
 //import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
 //import { getUserByIdFromReq } from "../../../../backend/controllers/userController";
 
@@ -18,6 +19,7 @@ const ChatList = (props) => {
   const [loading, setLoading] = useState(true);
   const { convos, dispatch } = useConvosContext()
   const { user } = useAuthContext()
+  const [convoStarted, startConvo] = useState(false);
 
   useEffect(() => {
     const fetchConvos = async () => {
@@ -89,6 +91,7 @@ const ChatList = (props) => {
      
 
   const handleNewChat = () => {
+    startConvo(true);
     setNewChat("");
   };
 
@@ -161,10 +164,15 @@ if (newChat) {
 
 return (
   <div className="main__chatlist">
-      <button className="btn" onClick={handleNewChat}>
-          <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
-          <span>Start New Chat</span>
-      </button>
+      {!convoStarted ? (
+        <button className="btn" onClick={handleNewChat}>
+        <FontAwesomeIcon id="plus-sign" icon={faPlus}/>
+        <span>Start New Chat</span>
+    </button>
+      ) : (
+        <NewConvo />
+      )}
+      
       
       <div className="chatlist__heading">
           <h2 className="centered-heading">Chats</h2>
