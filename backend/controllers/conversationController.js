@@ -12,9 +12,7 @@ exports.startConversation = async (req, res) => {
         } catch (error) {
             throw error
         }
-        if (recipientID){
-            const participants  = [userID, recipientID];
-        }
+        const participants  = [userID, recipientID];
 
         const conversation = await Conversation.create({ 
             participants

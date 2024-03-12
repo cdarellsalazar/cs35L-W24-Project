@@ -31,11 +31,11 @@ conversationSchema.statics.getParticipants = async function (conversationID, use
 
     const conversation = await Conversation.findById(conversationID)
 
-    let otherParticipants = [];
+   // console.log(conversation)
 
-    if (conversation && conversation.participants) {
-        otherParticipants = conversation.participants.filter(participant => participant && participant.toString() !== userID.toString())
-    }
+    const otherParticipants = conversation.participants.filter(participant => participant.toString() !== userID.toString())
+
+    //console.log(otherParticipants)
 
     return otherParticipants
 }
