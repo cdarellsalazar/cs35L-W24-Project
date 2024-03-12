@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Avatar from "../LeftSidebar/Avatar";
+import StartReacting from "../../components/StartReacting";
 
 export default class ChatItem extends Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export default class ChatItem extends Component {
           <div className="chat__meta">
             <span>{this.props.timeSent}</span>
             <span>Seen 1.03PM</span>
+            <StartReacting />
+
           </div>
         </div>
         <Avatar isOnline={this.props.isOnline} image={this.props.image} />

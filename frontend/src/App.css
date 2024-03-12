@@ -238,3 +238,16 @@ input {
 .shake-animation {
   animation: shake 0.5s;
 }
+
+#reactionBar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  overflow-x: auto; 
+}
+
+#reactionBar img {
+  width: 50px; 
+  height: auto;
+  margin: 5px; 
+}

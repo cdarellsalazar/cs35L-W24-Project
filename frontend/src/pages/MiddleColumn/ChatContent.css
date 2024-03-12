@@ -80,10 +80,9 @@
   .chat__item__content .chat__meta span {
     font-size: 14px;
     color: #c4ddf1;
-    user-select: none;
   }
   .chat__msg {
-    user-select: none;
+    color: #000;
   }
   
   .chat__item.other {
