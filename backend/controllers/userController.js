@@ -108,4 +108,24 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
-module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq };
+const updateUserProfileImage = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  // The path to the uploaded image
+  const imagePath = req.file.path;
+
+  // Update the user document with the image path
+  try {
+    const user = await User.findByIdAndUpdate(req.user.id, { image: imagePath }, { new: true });
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+    res.status(200).json({ message: 'Profile image updated.', user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage };
