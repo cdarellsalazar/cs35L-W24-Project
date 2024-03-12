@@ -7,84 +7,62 @@ import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 
 const ChatContent = (props) => {
-  
-  const testConvo = [
-    {
-      messageId: 8,
-      sender: "Paul Eggert",
-      receiver: "User Logged In",
-      msg: "How's your Latin?",
-      timeSent: "12:53",
-    },
-    {
-      messageId: 9,
-      sender: "User Logged In",
-      receiver: "Paul Eggert",
-      msg: "LOL",
-      timeSent: "12:54",
-    },
-    {
-      messageId: 10,
-      sender: "Paul Eggert",
-      receiver: "User Logged In",
-      msg: "I can't wait for everyone to fail the final!",
-      timeSent: "12:55",
-    },
-  ];
 
-  
+  // PLEASE NOTE: there are three props (external variables) that are being passed to ChatContent.js:
+  // 1. selectedConversation: this is the conversation that the user has clicked on
+  // 2. currentConvoMessages: this is the list of messages in the selected conversation
+  // 3. onNewChatSubmit: when a user tries to send a message, this external function updates currentConvoMessages
+  // These are stored in messaging.js, the parent component. 
+
+  // This function scrolls to the bottom of the chat window
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
+/*
+  // This function scrolls to the bottom when currentConvoMessages changes
   useEffect(() => {
     scrollToBottom();
   }, [props.currentConvoMessages]);
-  
+  */
 
-  const [msg, setMsg] = useState("");
-  const [chat, setChat] = useState(testConvo);
-  const messagesEndRef = useRef(null);
-  const [ selectedConversation, setSelectedConversation ] = useState(null);
-  const inputRef = useRef();
-  const handleConversationClick = (newConversation) => {
-    setSelectedConversation(newConversation);
-};
+  const [msg, setMsg] = useState(""); // This is the message that the user is typing
 
+  // Used for css/stlying
+  const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
+  const inputRef = useRef(); // This is the reference to the input field
+
+
+  // Send Message Function
   const sendMessage = () => {
-      if (msg !== "" && props.currentConvoMessages) {
-          const now = new Date();
+      if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
+          const now = new Date(); // Get the current time
           const currentTime = now.getHours() + ":" + now.getMinutes();
-          console.log("Entire selected convo details:", {selectedConversation});
-          const newMessage = {
+          const newMessage = { // Create a new message object
               messageId: props.currentConvoMessages.length + 1,
-              sender: "User Logged In",
+              sender: "User Logged In", // Change this to current user later once the function to fetch user data is up
               receiver: props.selectedConversation.name,
-              msg: msg,
+              msg: msg, // actual message the user is typing
               timeSent: currentTime,
           };
-          props.onNewChatSubmit(newMessage);
-          //props.setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
-          setMsg("");
+          props.onNewChatSubmit(newMessage); // passes the new message to onNewChatSubmit, which updates currentConvoMessages
+          setMsg(""); //clears message
+          console.log("Entire selected convo details:", props.currentConvoMessages); // used for debugging
       }
   };
-/*
-  useEffect(() => {
-    if (props.selectedConversation) {
-        setChat(props.selectedConversation.messages);
-    }
-}, [props.selectedConversation]);
-*/
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [chat]);
 
+    // Calls the scroll to bottom function when currentConvoMessages changes
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); 
+    }, [props.currentConvoMessages]);
+
+    // When the enter key is pressed, call the sendMessage function
     const keydownHandler = useCallback((e) => {
       if (e.key === "Enter") {
           sendMessage();
       }
     }, []);
 
+    // When the component mounts, add an event listener for the enter key
     useEffect(() => {
       const inputElement = inputRef.current;
       if (inputElement) {
@@ -97,17 +75,19 @@ const ChatContent = (props) => {
       }
     }, [keydownHandler]);
 
+    // When the state changes, update the Msg variable to whatever the user is typing
     const onStateChange = (e) => {
         setMsg(e.target.value);
     };
 
+    // Used for debugging: when the selectedConversation changes, print the selectedConversation
     useEffect(() => {
       console.log(props.selectedConversation);
     }, [props.selectedConversation]);
 
     return (
       <div className="main__chatcontent">
-        {props.selectedConversation ? (
+        {props.selectedConversation ? ( // if there's a selected conversation, do all of this
         <>
           <div className="content__header">
             <div className="blocks">
@@ -130,7 +110,7 @@ const ChatContent = (props) => {
           <div className="content__body">
             <div className="chat__items">
               {props.currentConvoMessages.map((message, index) => (
-                <ChatItem
+                <ChatItem // for each message in currentConvoMessages, create a ChatItem; it's rendered here
                             isOnline={message.sender === "User Logged In" ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
                             timeSent={message.timeSent}
                             animationDelay={index + 2}
@@ -163,7 +143,7 @@ const ChatContent = (props) => {
                 </button>
             </div>
         </div>
-      </>) : (
+      </>) : ( // else just display this
                 <div className="current-chatting-user">
                 <p>Welcome to DisruptChat!</p>
               </div>

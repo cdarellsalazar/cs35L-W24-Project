@@ -146,14 +146,6 @@ function Messaging() {
         setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
       };
 
-    /*
-    const handleNewChatSubmit = (newUsername) => {
-        setUsername(newUsername);
-        //const user = await getUserByUserName(newUsername);
-        console.log(getUserByUserName(newUsername));
-        //console.log('User:', user);
-        };*/
-
     return (
         <div className="container">
             <div className="left-column">
