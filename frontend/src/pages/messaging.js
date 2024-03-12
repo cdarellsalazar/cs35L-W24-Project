@@ -29,6 +29,36 @@ function Messaging() {
         setMessage(event.target.value);
     };
 
+    useEffect(() => {
+        //console.log('user: ', user)
+        const fetchConvos = async () => {
+          const response = await fetch('http://localhost:4000/api/convos/', {
+            headers: {'Authorization': `Bearer ${user.token}`},
+          })
+          const json = await response.json()
+    
+          if (response.ok) {
+            ConvoDispatch({type: 'SET_CONVOS', payload: json})
+          }
+        }
+          const fetchMessages = async () => {
+            const response = await fetch('http://localhost:4000/api/messages/', {
+                headers: {'Authorization': `Bearer ${user.token}`},
+            })
+            const json = await response.json()
+
+            if (response.ok){
+                MessageDispatch({type: 'SET_MESSAGES', payload: json})
+            }
+        }
+    
+        if (user) {
+          fetchConvos()
+          //fetchMessages()
+        }
+      }, [ConvoDispatch, MessageDispatch, user])
+
+
 
     useEffect(() => {
         //console.log('user: ', user)
@@ -68,6 +98,19 @@ function Messaging() {
             // Optionally handle logout error here
         }
     };
+    function toggleBoolYes() {
+        answer(!answered)
+      }
+    function toggleBoolNo() {
+        answer(!answered)
+      }
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
     function toggleBoolYes() {
         answer(!answered)
       }
@@ -148,12 +191,12 @@ function Messaging() {
     const handleConversationClick = (newConversation) => {
         newConversation.selected = true;
         if(previousConversation) {
-            console.log("Prev Selected Convo:", previousConversation.name);
+            console.log("Prev Selected Convo:", previousConversation.username);
             previousConversation.selected = false;
         }
         setPreviousConversation(newConversation);
         setSelectedConversation({ ...newConversation, selected: true });
-        console.log("Selected Conversation:", newConversation.name);
+        console.log("Selected Conversation:", newConversation.username);
         console.log("Messages of Selected Convo:", newConversation.messages);
     };
     /*
@@ -205,12 +248,10 @@ function Messaging() {
                 <div className="disrupt-container">
                 {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered />}
                 </div>
-                <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>
                 
             </div>
-        </div>
     );
 };
 export default Messaging;

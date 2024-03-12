@@ -94,9 +94,9 @@ const ChatContent = (props) => {
               <div className="current-chatting-user">
                 <Avatar
                   isOnline={props.selectedConversation.isOnline ? props.selectedConversation.isOnline : false}
-                  image={props.selectedConversation.image ? props.selectedConversation.image : "http://placehold.it/80x80"}
+                  image={props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"}
                 />
-                <p>{props.selectedConversation.name ? props.selectedConversation.name : "No Conversation Selected"}</p>
+                <p>{props.selectedConversation.username ? props.selectedConversation.username : "No Conversation Selected"}</p>
               </div>
               </div>
               <div className="blocks">
@@ -117,7 +117,7 @@ const ChatContent = (props) => {
                             key={message.messageId}
                             user={message.sender === "User Logged In" ? "" : "other"}
                             msg={message.msg}
-                            image={message.sender === "User Logged In" ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation ? props.selectedConversation.image : "http://placehold.it/80x80")}
+                            image={message.sender === "User Logged In" ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}
                         />
               ))}
