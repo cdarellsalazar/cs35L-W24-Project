@@ -32,7 +32,7 @@ app.post('/test', (req, res) => {
 
 //routes
 app.use('/api/user', userRoutes)
-//app.use('/api/message', messageRoutes)
+app.use('/api/message', messageRoutes)
 app.use('/api/convos', conversationRoutes)
 
 // connect to db

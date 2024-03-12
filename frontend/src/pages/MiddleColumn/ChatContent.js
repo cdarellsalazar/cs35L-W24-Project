@@ -41,14 +41,13 @@ const ChatContent = (props) => {
             },
             
         });
-        console.log("current user:", user)
-        console.log("response: ", response)
         if (!response.ok) {
             throw new Error('Failed to fetch user');
         }
 
         const userData = await response.json();
         console.log("User data:", userData);
+        console.log("username:", userData.username)
         return userData;
     } catch (error) {
         console.error('Error:', error);
@@ -59,24 +58,26 @@ const ChatContent = (props) => {
   const sendMessage = async () => {
     if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
         const now = new Date(); // Get the current time
-        const currentTime = now.getHours() + ":" + now.getMinutes();
+        //const currentTime = now.getHours() + ":" + now.getMinutes();
         const currentUser = await fetchCurrentUser(); // Get the current user
         console.log("current user in sendmessage:", currentUser.user.username);
+        const userID = currentUser.user._id
+        const senderID = props.selectedConversation._id
         const newMessage = { // Create a new message object
             //messageId: props.currentConvoMessages.length + 1, commented out for maybe future usage
-            conversation: ,
+            participants: [userID, senderID],
             sender: currentUser.user._id, // Change this to current user later once the function to fetch user data is up
             receiver: props.selectedConversation._id,
             msg: msg // actual message the user is typing
             //timeSent: currentTime,
         };
+        console.log(newMessage);
           
         try {
+          console.log('Helloooooo')
           const response = await fetch('http://localhost:4000/api/message/send', {
               method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
+              headers: {'Content-Type': 'application/json'},
               body: JSON.stringify(newMessage),
           });
 
@@ -88,6 +89,7 @@ const ChatContent = (props) => {
 
           console.log("Message sent successfully:", message); 
         } catch (error) {
+          //console.log("---------------------")
           console.error("There was an error sending the message:", error);
       }
 
@@ -193,9 +195,11 @@ const ChatContent = (props) => {
             </div>
         </div>
       </>) : ( // else just display this
-                <div className="current-chatting-user">
-                <p>Welcome to DisruptChat!</p>
-              </div>
+      <>
+      <div >
+        <p> Welcome to DisruptChat! For optimal viewing, please ensure your browser window is maximized and zoom is set to 100%. </p>
+      </div>
+    </>
     )}
     </div>)
 };

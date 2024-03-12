@@ -27,7 +27,7 @@ conversationSchema.statics.getMessageIDfromConversation = async function (conver
 }
 
 conversationSchema.statics.getConversationIDfromParticipants = async function (participantIDs) {
-    
+
     if (participantIDs.length === 0) {
         throw Error('There are no participants in this conversation')
     }
@@ -37,7 +37,7 @@ conversationSchema.statics.getConversationIDfromParticipants = async function (p
     }); 
 
     if (conversationID) {
-        return conversation._id
+        return conversationID._id
     }
     else {
         throw Error('There does not exist a conversation for the given participants')

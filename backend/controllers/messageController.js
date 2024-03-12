@@ -1,25 +1,33 @@
 //logic for handling HTTP requests that relate to message operations
 const Message = require('../models/messageModel');
-const Conversation = require('../models/conversationModel')
+const Conversation = require('../models/conversationModel');
+const { getConversation } = require('./conversationController');
 
 // Send a message
 exports.sendMessage = async (req, res) => {
     try {
-        const { conversation, senderId, receiverId, content } = req.body;
+        const { participants, sender, receiver, msg } = req.body;
+        console.log(await Conversation.getConversationIDfromParticipants(participants))
         const message = await Message.create({
-            //conversation: ,
-            sender: senderId,
-            receiver: receiverId,
-            content: content,
+            conversation: await Conversation.getConversationIDfromParticipants(participants),
+            sender: sender,
+            receiver: receiver,
+            content: msg
         });
-        
-        res.status(201).json(message);
+        res.status(200).json(message);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
 // Get all messages for a user
+
+exports.testExampleFunction = async (req, res) => {
+    console.log('asdasd');
+    
+    console.log('asdasd');
+}
+
 exports.getMessages = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -85,3 +93,4 @@ exports.getMessage = async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 }
+

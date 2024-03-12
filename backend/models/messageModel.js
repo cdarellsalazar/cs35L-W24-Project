@@ -38,4 +38,7 @@ const messageSchema = new Schema({
 }, { timestamps: true }); // 'timestamps' option adds 'createdAt' and 'updatedAt' fields automatically
 
 // Export the Message model with the associated schema
-module.exports = mongoose.model('Message', messageSchema);
+
+const Message = mongoose.model('Message', messageSchema);
+
+module.exports = Message;
