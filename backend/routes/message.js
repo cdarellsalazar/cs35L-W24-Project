@@ -8,9 +8,9 @@ router.post('/send', sendMessage);
 
 // GET endpoint for retrieving all messages for a user
 
-router.post('/testing', testExampleFunction);
+router.get('/', getMessages);
 
-////router.get('/', getMessages);
+
 
 // GET endpoint for retrieving unread messages for a user
 //router.get('/message/unread/:userId', getUnreadMessages);
@@ -21,6 +21,6 @@ router.post('/testing', testExampleFunction);
 // PUT endpoint for marking a message as read
 //router.put('/message/read/:messageId', markMessageAsRead);
 
-////router.get('/getMessage/:messageID', getMessage)
+router.get('/getMessage/:messageID', getMessage)
 
 module.exports = router;
