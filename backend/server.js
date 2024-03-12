@@ -11,6 +11,8 @@ const cors = require('cors')
 const multer = require('multer');
 const path = require('path');
 
+app.use(express.static('public'));
+
 // creates express app
 const app = express();
 
