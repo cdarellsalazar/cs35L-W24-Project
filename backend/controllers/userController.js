@@ -80,4 +80,26 @@ const getUserByUsernameFromReq = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq };
+const getCurrentUser = async (req, res) => {
+  try {
+      // Get the user ID from the token
+      // const token = req.headers.authorization.split(' ')[1];
+      // const decodedToken = jwt.verify(token, SECRET);
+      // const userId = decodedToken.id;
+      const userId = req.user._id
+      console.log("this is the userid:", userId);
+
+      // Find the user in the database
+      const user = await User.findById(userId);
+
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+
+      res.status(200).json({ user });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq };

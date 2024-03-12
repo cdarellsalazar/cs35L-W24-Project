@@ -4,7 +4,7 @@ const express = require('express')
 const requireAuth = require('../middleware/requireAuth')
 
 //controller functions
-const { signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, fetchConvos } = require('../controllers/userController');
+const { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, fetchConvos } = require('../controllers/userController');
 
 //router object that holds routes to be exported
 const router = express.Router()
@@ -20,5 +20,8 @@ router.post('/signup', signupUser)
 
 // User by username route
 router.post('/getUserByUsernameFromReq', getUserByUsernameFromReq);
+
+//Get currently logged in user
+router.get('/getCurrentUser', getCurrentUser)
 
 module.exports = router;

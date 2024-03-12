@@ -4,6 +4,8 @@ import "./ChatContent.css";
 import Avatar from "../LeftSidebar/Avatar";
 import ChatItem from "./ChatItem";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { useAuthContext } from "../../hooks/useAuthContext";
+//import { get } from "mongoose";
 
 
 const ChatContent = (props) => {
@@ -24,26 +26,70 @@ const ChatContent = (props) => {
     scrollToBottom();
   }, [props.currentConvoMessages]);
   */
-
+  const { user } = useAuthContext()
   const [msg, setMsg] = useState(""); // This is the message that the user is typing
 
   // Used for css/stlying
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
 
+  async function fetchCurrentUser() {
+    try {
+        const response = await fetch('http://localhost:4000/api/user/getCurrentUser', {
+            headers: {
+                'Authorization': `Bearer ${user.token}`,
+            },
+            
+        });
+        console.log("current user:", user)
+        console.log("response: ", response)
+        if (!response.ok) {
+            throw new Error('Failed to fetch user');
+        }
+
+        const userData = await response.json();
+        console.log("User data:", userData);
+        return userData;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
   // Send Message Function
-  const sendMessage = () => {
+  const sendMessage = async () => {
       if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
           const now = new Date(); // Get the current time
           const currentTime = now.getHours() + ":" + now.getMinutes();
+          const currentUser = fetchCurrentUser(); // Get the current user
+          console.log("current user:", currentUser);
           const newMessage = { // Create a new message object
               messageId: props.currentConvoMessages.length + 1,
-              sender: "User Logged In", // Change this to current user later once the function to fetch user data is up
+              sender: currentUser.username, // Change this to current user later once the function to fetch user data is up
               receiver: props.selectedConversation.name,
               msg: msg, // actual message the user is typing
               timeSent: currentTime,
           };
+          /*
+          try {
+            const response = await fetch('http://localhost:4000/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newMessage),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const message = await response.json();
+
+            console.log("Message sent successfully:", message);
+        } catch (error) {
+            console.error("There was an error sending the message:", error);
+        }
+*/
           props.onNewChatSubmit(newMessage); // passes the new message to onNewChatSubmit, which updates currentConvoMessages
           setMsg(""); //clears message
           console.log("Entire selected convo details:", props.currentConvoMessages); // used for debugging
@@ -74,6 +120,8 @@ const ChatContent = (props) => {
         };
       }
     }, [keydownHandler]);
+
+
 
     // When the state changes, update the Msg variable to whatever the user is typing
     const onStateChange = (e) => {
