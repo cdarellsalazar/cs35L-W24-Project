@@ -29,6 +29,18 @@ const ChatContent = (props) => {
   const { user } = useAuthContext()
   const [msg, setMsg] = useState(""); // This is the message that the user is typing
 
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const getCurrentUserData = async () => {
+      const user = await fetchCurrentUser();
+      setCurrentUser(user);
+    };
+
+    getCurrentUserData();
+    console.log("in useEffect, this is currentUser:",currentUser);
+  }, []);
+
   // Used for css/stlying
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
@@ -53,7 +65,6 @@ const ChatContent = (props) => {
         console.error('Error:', error);
     }
 }
-
   // Send Message Function
   const sendMessage = async () => {
     if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
@@ -166,7 +177,7 @@ const ChatContent = (props) => {
                             timeSent={message.timeSent}
                             animationDelay={index + 2}
                             key={message.messageId}
-                            user={message.sender === "User Logged In" ? "" : "other"}
+                            user={message.sender === currentUser.user.username ? "" : "other"}
                             msg={message.msg}
                             image={message.sender === "User Logged In" ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}
@@ -195,11 +206,9 @@ const ChatContent = (props) => {
             </div>
         </div>
       </>) : ( // else just display this
-      <>
-      <div >
-        <p> Welcome to DisruptChat! For optimal viewing, please ensure your browser window is maximized and zoom is set to 100%. </p>
-      </div>
-    </>
+                <div className="current-chatting-user">
+                <p>Welcome to DisruptChat! For optimal viewing, please ensure your browser window is maximized and zoom is set to 100%.</p>
+              </div>
     )}
     </div>)
 };
