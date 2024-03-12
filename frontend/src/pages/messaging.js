@@ -11,7 +11,7 @@ import Answered from '../components/Answered';
 import Question from '../components/Question';
 import getUserByUserName from "../hooks/fetchUserByUsername";
 import NewConvo from "../components/NewConvo";
-
+import ProfileCard from "../components/ProfileCard";
 
 function Messaging() {
     const now = new Date();
@@ -205,6 +205,7 @@ function Messaging() {
                 <div className="disrupt-container">
                 {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered />}
                 </div>
+                <ProfileCard></ProfileCard>
                 <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>

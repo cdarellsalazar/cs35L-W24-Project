@@ -37,12 +37,12 @@ export default function Question(props){
     const qotd = questionMap[dayOnly()]
     return (
         <div>
-        <h3 class="daily-disrupt"> Daily !Disrupt! </h3>
+        <h3 className="daily-disrupt"> Daily !Disrupt! </h3>
         <CurrentDate />
             <p className="question">{qotd}</p>
-            <div class="button-container">
-            <button class="button-yes" onClick={props.toggleBoolYes}>Yes!</button>
-            <button class="button-no" onClick={props.toggleBoolNo}>No!</button>
+            <div className="button-container">
+            <button className="button-yes" onClick={props.toggleBoolYes}>Yes!</button>
+            <button className="button-no" onClick={props.toggleBoolNo}>No!</button>
         </div>
         </div>
     )

@@ -257,4 +257,14 @@ input {
   bottom: 10px;
   right: 10px;
   font-size: xx-large;
+  display: inline-block;
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #007bff; /* Blue color */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  transition: background-color 0.3s;
 }

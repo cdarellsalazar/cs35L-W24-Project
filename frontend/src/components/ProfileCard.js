@@ -12,7 +12,25 @@ export default function ProfileCard() {
       };
       const { user } = useAuthContext()
       const [currentUser, setCurrentUser] = useState(null);
+      const handleFileChange = event => {
+        const file = event.target.files[0];
+        if (file) {
 
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('http://localhost:4000/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }}
       async function fetchCurrentUser() {
         try {
             const response = await fetch('http://localhost:4000/api/user/getCurrentUser', {
@@ -48,13 +66,16 @@ export default function ProfileCard() {
 
 
     return (
-        <div class="profile-card">
+        <div className="profile-card">
         {currentUser ? (
-          <div>Current user; {currentUser.user.username}</div>
+          <div>Logged in as:  {currentUser.user.username}</div>
           ) : (<div> Loading... </div>)
         }
-        <img src={DefaultProfile} alt="Profile Picture" class="profile-picture"/>
-        <button class="set-profile-btn">+</button>
+         <img src={DefaultProfile} alt="Profile Picture" className="profile-picture"/>
+        <form id="uploadForm" action="http://localhost:3000/upload" method="post" encType="multipart/form-data">
+            <input type="file" name='image' id="imageInput" style={{display: 'none',}} onChange={handleFileChange}/>
+            <label htmlFor="imageInput" className="set-profile-btn">+</label>
+        </form>
     </div>
     );
-  }
+    }
