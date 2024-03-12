@@ -238,3 +238,23 @@ input {
 .shake-animation {
   animation: shake 0.5s;
 }
+
+.profile-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+  width: 200px;
+  margin: auto;
+}
+.profile-picture {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.set-profile-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: xx-large;
+}
