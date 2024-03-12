@@ -6,7 +6,7 @@ import {
   Navigate
 } from "react-router-dom";
 import { useAuthContext } from './hooks/useAuthContext';
-import Logo from './components/logo';
+import Logo from './components/Logo';
 import Login from "./pages/login";
 import Messaging from "./pages/messaging";
 import Register from "./pages/register";
