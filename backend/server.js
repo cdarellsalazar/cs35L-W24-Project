@@ -11,14 +11,13 @@ const cors = require('cors')
 const multer = require('multer');
 const path = require('path');
 
-app.use(express.static('public'));
-
 // creates express app
 const app = express();
 
 //middleware (debug info for us)
 app.use(cors());
 app.use(express.json())
+app.use(express.static('public'));
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
