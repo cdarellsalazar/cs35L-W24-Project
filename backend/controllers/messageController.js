@@ -113,7 +113,7 @@ exports.updateReactions = async (messageId, userId, reactionType) => {
         }
 
         // Directly set the reaction to the corresponding integer value
-        message.reaction = reactionValue;
+        message.reactions = reactionValue;
 
         await message.save();
         console.log(`Message ${messageId} updated with reaction ${reactionType} (value: ${reactionValue})`);
