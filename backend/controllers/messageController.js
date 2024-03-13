@@ -137,7 +137,3 @@ const updateReactions = async (req, res) => {
     }
 };
 
-
-
-
-

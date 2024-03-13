@@ -24,6 +24,7 @@ export default class ChatListItems extends Component {
             this.props.image ? this.props.image : "http://placehold.it/80x80"
           }
           isOnline={this.props.isOnline}
+          name={this.props.name}
         />
 
         <div className="userMeta">

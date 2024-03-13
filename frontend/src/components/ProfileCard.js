@@ -24,9 +24,10 @@ export default function ProfileCard() {
                   'Authorization': `Bearer ${user.token}`
               },
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
+                setProfilePicUrl(data.imageUrl);
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -72,7 +73,7 @@ export default function ProfileCard() {
   )}
   {currentUser && currentUser.user && (
     <div className='corner-pic'>
-      <ProfilePicture className='corner-pic' username={currentUser.user.username} />
+      <ProfilePicture className='corner-pic' username={currentUser.user.username} imageUrl={profilePicUrl} />
     </div>
   )}
         <form id="uploadForm" action="http://localhost:3000/upload" method="post" encType="multipart/form-data">

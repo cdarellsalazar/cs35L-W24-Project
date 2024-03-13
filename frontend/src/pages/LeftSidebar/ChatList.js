@@ -114,11 +114,11 @@ const ChatList = (props) => {
       console.log("User Info:") // useFetchUserById(newChat.name));
     };
 
-  const renderChatListItems = (chatUsers) => {
+  const renderChatListItems = (chatUsers, onConversationClick) => {
     console.log('renderChatListItems called with:', chatUsers);
     return chatUsers.map((user, index) => (
         <ChatListItems
-            key={user.id}
+            key={user}
             id={user.id}
             image={user.image || "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"}
             name={user.username}

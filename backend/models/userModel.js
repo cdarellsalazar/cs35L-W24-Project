@@ -30,7 +30,7 @@ const userSchema = new Schema({
     },
     image: {
         type: String,
-        default: '../public/default-profile.png' 
+        default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png' 
     },
     isOnline: {
         type: Boolean,
