@@ -147,5 +147,31 @@ const getUserImageByUsername = async (username) => {
   }
 };
 
+const addToBlockedList = async (req, res) => {
+  try{
+    const { blockedID } = req.body
+    const user = await User.findById(req.user._id);
+    user.blockedList.push(blocked)
+    res.status(200)
+  } catch(error){
+    console.error('Error: ', error.message)
+    res.status(400).json({ error: error.message })
+  }
+}
 
-module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername };
+const removeFromBlockedList = async(req, res) => {
+  try{
+    const { removeeID } = req.body
+    await YourModel.updateOne(
+      { _id: req.user._id },
+      { $pull: { blockedList: removeeID } }
+  );
+  res.status(200)
+  } catch(error) {
+    console.error(error.message)
+    res.status(400).json({ error: error.message })
+  }
+}
+
+
+module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList };

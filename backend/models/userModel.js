@@ -43,6 +43,11 @@ const userSchema = new Schema({
     conversations: [{
         type: Schema.Types.ObjectId,
         ref: 'Conversation' //refers to the conversation model. 
+    }],
+
+    blockedList: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }]
 })
 
@@ -142,6 +147,17 @@ userSchema.statics.login = async function(email, password) {
     }
 
     return user //compares info sent in with info in database
+}
+
+userSchema.statics.checkBlocked = async (sender, receiver) => {
+    sender = await User.findById(sender)
+    receiver = await User.findById(receiver)
+    isBlocked = await receiver.blockedList.includes(sender)
+    hasBlocked = await sender.blockedList.includes(receiver)
+    if( isBlocked || hasBlocked ){
+        return true;
+    }
+    return false;
 }
 
 const User = mongoose.model('User', userSchema)
