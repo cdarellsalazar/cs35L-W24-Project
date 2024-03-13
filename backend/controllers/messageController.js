@@ -7,13 +7,16 @@ const { getConversation } = require('./conversationController');
 exports.sendMessage = async (req, res) => {
     try {
         const { participants, sender, receiver, msg } = req.body;
-        console.log(await Conversation.getConversationIDfromParticipants(participants))
+        console.log("----------------------")
+        const conversationID = await Conversation.getConversationIDfromParticipants(participants) 
+        console.log(conversationID)
         const message = await Message.create({
-            conversation: await Conversation.getConversationIDfromParticipants(participants),
+            conversation: conversationID,
             sender: sender,
             receiver: receiver,
             content: msg
         });
+        await Conversation.findByIdAndUpdate(conversationID, { $push: { messages: message._id } });
         res.status(200).json(message);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -93,4 +96,45 @@ exports.getMessage = async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 }
+const updateReactions = async (req, res) => {
+    const { messageId } = req.params; 
+    const { userId, type } = req.body;
+
+    
+    const validReactions = ['love', 'shock', 'dislike', 'like'];
+    if (!validReactions.includes(type)) {
+        return res.status(400).json({ error: 'Invalid reaction type' });
+    }
+
+    try {
+        
+        const message = await Message.findById(messageId);
+
+        if (!message) {
+            return res.status(404).json({ error: 'Message not found' });
+        }
+
+        
+        const existingReactionIndex = message.reactions.findIndex(
+            (reaction) => reaction.reactedBy.toString() === userId && reaction.type === type
+        );
+
+        if (existingReactionIndex > -1) {
+            
+            message.reactions.splice(existingReactionIndex, 1);
+        } else {
+            
+            message.reactions.push({ reactedBy: userId, type });
+        }
+
+        await message.save();
+        res.json(message);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+
 
