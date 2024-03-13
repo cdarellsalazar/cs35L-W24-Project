@@ -28,8 +28,13 @@ const messageSchema = new Schema({
     },
     // field to record when the message was sent
     sentAt: {
-        type: Date,
-        default: Date.now, // default to the current time
+        type: String,
+        default: () => {
+            const now = new Date();
+            const month = String(now.getHours() + 1).padStart(2, '0'); 
+            const date = String(now.getMinutes()).padStart(2, '0');
+            return `${month}:${date}`;
+        }
     },
     // field to record when the message was read
     readAt: {
