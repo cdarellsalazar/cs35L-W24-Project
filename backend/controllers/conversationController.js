@@ -9,10 +9,12 @@ exports.startConversation = async (req, res) => {
         const { recipient } = req.body
         console.log(recipient)
         try {
-            recipientID = await User.findOne({username: `${recipient}` }).select('_id')
+            recipient = await User.findOne({username: `${recipient}` }).select('_id')
         } catch (error) {
             throw error
         }
+
+        const recipientID = recipient._id
         
         const participants  = [userID, recipientID];
 
@@ -25,6 +27,9 @@ exports.startConversation = async (req, res) => {
         const conversation = await Conversation.create({ 
             participants
         });
+
+        recipient.conversations.push(conversation);
+
         res.status(200).json(conversation);
     } catch (error) {
         console.log(error.message)
