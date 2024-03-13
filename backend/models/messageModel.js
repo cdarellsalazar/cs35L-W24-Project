@@ -40,6 +40,10 @@ const messageSchema = new Schema({
     readAt: {
         type: Date, // optional and only set when the message is read
     },
+    reactions: {
+        type: Number,
+        default: 0 
+    },
 }, { timestamps: true }); // 'timestamps' option adds 'createdAt' and 'updatedAt' fields automatically
 
 // Export the Message model with the associated schema

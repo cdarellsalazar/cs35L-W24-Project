@@ -27,4 +27,15 @@ router.get('/searchMessages', getMessagesWithSearchQuery);
 
 router.get('/getMessage/:messageID', getMessage)
 
+router.post('/reactions/:messageId', async (req, res) => {
+    try {
+        const { messageId } = req.params;
+        const { userId, type } = req.body;
+        const result = await updateReactions(messageId, userId, type);
+        res.status(200).json({ message: 'Reaction updated successfully', result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
 module.exports = router;

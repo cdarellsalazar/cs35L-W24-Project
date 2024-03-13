@@ -99,45 +99,39 @@ exports.getMessage = async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 }
-const updateReactions = async (req, res) => {
-    const { messageId } = req.params; 
-    const { userId, type } = req.body;
 
-    
-    const validReactions = ['love', 'shock', 'dislike', 'like'];
-    if (!validReactions.includes(type)) {
-        return res.status(400).json({ error: 'Invalid reaction type' });
-    }
-
-    try {
-        
-        const message = await Message.findById(messageId);
-
-        if (!message) {
-            return res.status(404).json({ error: 'Message not found' });
-        }
-
-        
-        const existingReactionIndex = message.reactions.findIndex(
-            (reaction) => reaction.reactedBy.toString() === userId && reaction.type === type
-        );
-
-        if (existingReactionIndex > -1) {
-            
-            message.reactions.splice(existingReactionIndex, 1);
-        } else {
-            
-            message.reactions.push({ reactedBy: userId, type });
-        }
-
-        await message.save();
-        res.json(message);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+const reactionValues = {
+    like: 1,
+    dislike: 2,
+    heart: 3,
+    shock: 4
 };
 
+exports.updateReactions = async (messageId, userId, reactionType) => {
+    try {
+        console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${reactionType}`);
 
+        const message = await Message.findById(messageId);
+        if (!message) {
+            console.log('Message not found');
+            throw new Error('Message not found');
+        }
 
+        const reactionValue = reactionValues[reactionType];
+        if (reactionValue === undefined) {
+            console.log('Invalid reaction type');
+            throw new Error('Invalid reaction type');
+        }
 
+        // Directly set the reaction to the corresponding integer value
+        message.reactions = reactionValue;
 
+        await message.save();
+        console.log(`Message ${messageId} updated with reaction ${reactionType} (value: ${reactionValue})`);
+
+        return message;
+    } catch (error) {
+        console.error(`Error updating reaction: ${error.message}`);
+        throw new Error(error.message);
+    }
+};
