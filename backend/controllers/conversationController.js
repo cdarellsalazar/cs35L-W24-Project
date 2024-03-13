@@ -9,15 +9,27 @@ exports.startConversation = async (req, res) => {
         const { recipient } = req.body
         console.log(recipient)
         try {
-            recipientID = await User.findOne({username: `${recipient}` }).select('_id')
+            recipient = await User.findOne({username: `${recipient}` }).select('_id')
         } catch (error) {
             throw error
         }
+
+        const recipientID = recipient._id
+        
         const participants  = [userID, recipientID];
+
+        const duplicateCheck = await Conversation.findOne({ participants: { $all: participants } });
+
+        if(duplicateCheck){
+            throw new Error('A conversation already exists between these users')
+        }
 
         const conversation = await Conversation.create({ 
             participants
         });
+
+        recipient.conversations.push(conversation);
+
         res.status(200).json(conversation);
     } catch (error) {
         console.log(error.message)
