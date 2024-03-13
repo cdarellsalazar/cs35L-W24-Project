@@ -56,6 +56,11 @@ app.use('/api/user', userRoutes)
 app.use('/api/message', messageRoutes)
 app.use('/api/convos', conversationRoutes)
 
+app.post('/api/messages/reactions/:messageId', (req, res) => {
+  console.log(req.body); 
+  res.send('Route is working'); 
+});
+
 app.post('/upload', upload.single('image'), (req, res) => {
     console.log('File:', req.file); // Log the file object received from Multer
     if (!req.file) {

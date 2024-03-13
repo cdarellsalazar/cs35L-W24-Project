@@ -31,19 +31,16 @@ exports.testExampleFunction = async (req, res) => {
     console.log('asdasd');
 }
 
-exports.getMessages = async (req, res) => {
+exports.getMessage = async (req, res) => {
     try {
-        const userId = req.params.userId;
-        if (!userId) {
-            return res.status(400).json({ error: "User ID parameter is required" });
-        }
-        const message = await Message.findById(userId);
+        const messageId = req.params.messageID; 
+        const message = await Message.findById(messageId);
         if (!message) {
             return res.status(404).json({ error: "Message not found" });
         }
         res.status(200).json(message);
     } catch (error) {
-        res.status(400).json({ error: error.message }); 
+        res.status(400).json({ error: error.message });
     }
 }
 
@@ -91,54 +88,56 @@ exports.markMessageAsRead = async (req, res) => {
     }
 }
 
-exports.getMessage = async (req, res) => {
-    try{
-        messageID = req.params.messageID
-        message = Message.findById(messageID)
-        res.status(200).json(message);
-    } catch (error) {
-        res.status(400).json({ error: error.message })
-    }
-}
-const updateReactions = async (req, res) => {
-    const { messageId } = req.params; 
-    const { userId, type } = req.body;
+const reactionValues = {
+    like: 0,
+    dislike: 1,
+    love: 2,
+    shock: 3
+};
 
-    
-    const validReactions = ['love', 'shock', 'dislike', 'like'];
-    if (!validReactions.includes(type)) {
-        return res.status(400).json({ error: 'Invalid reaction type' });
-    }
-
+exports.updateReactions = async (messageId, userId, type) => {
     try {
-        
+        console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${type}`);
+
         const message = await Message.findById(messageId);
+        console.log(`Found message: `, message);
 
         if (!message) {
-            return res.status(404).json({ error: 'Message not found' });
+            throw new Error('Message not found');
         }
 
-        
-        const existingReactionIndex = message.reactions.findIndex(
-            (reaction) => reaction.reactedBy.toString() === userId && reaction.type === type
-        );
+        // Find if the user has already reacted
+        const existingReactionIndex = message.reactions.findIndex(reaction => reaction.reactedBy.toString() === userId.toString());
+        console.log(`Existing reaction index: ${existingReactionIndex}`);
 
-        if (existingReactionIndex > -1) {
-            
-            message.reactions.splice(existingReactionIndex, 1);
+        // Assign numerical value based on reaction type
+        const reactionValue = reactionValues[type];
+        if (reactionValue === undefined) {
+            throw new Error('Invalid reaction type');
+        }
+
+        const reaction = {
+            reactedBy: userId,
+            type: type,
+            value: reactionValue
+        };
+        console.log(`Reaction to be updated or added: `, reaction);
+
+        // Update or add reaction
+        if (existingReactionIndex >= 0) {
+            message.reactions[existingReactionIndex] = reaction;
+            console.log('Updated existing reaction');
         } else {
-            
-            message.reactions.push({ reactedBy: userId, type });
+            message.reactions.push(reaction);
+            console.log('Added new reaction');
         }
 
         await message.save();
-        res.json(message);
+        console.log('Saved message with updated reactions');
+
+        return message;
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error updating reaction: ', error.message);
+        throw new Error(error.message);
     }
 };
-
-
-
-
-
