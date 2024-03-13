@@ -35,25 +35,12 @@ const messageSchema = new Schema({
     readAt: {
         type: Date, // optional and only set when the message is read
     },
-    reactions: [{
-        reactedBy: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        },
-        type: {
-            type: String,
-            enum: ['like', 'dislike', 'love', 'shock'],
-            required: true
-        },
-        value: { // New field to store numerical representation of reactions
-            type: Number,
-            required: true
-        }
-    }]
+    reactions: {
+        type: Number,
+        default: 0 
+    },
 }, { timestamps: true }); // 'timestamps' option adds 'createdAt' and 'updatedAt' fields automatically
 
-// Export the Message model with the associated schema
 
 const Message = mongoose.model('Message', messageSchema);
 

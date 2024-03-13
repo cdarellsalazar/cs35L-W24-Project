@@ -82,7 +82,7 @@ function Messaging() {
         return `${year}-${month}-${day}`;
     }
     const handleSendMessage = () => {
-        fetch('/api/messages/send', {
+        fetch('/api/message/send', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

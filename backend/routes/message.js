@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { sendMessage, getMessages, getUnreadMessages, getMessagesWithSearchQuery, markMessageAsRead, getMessage, testExampleFunction, updateReactions } = require('../controllers/messageController');
 
+
 // POST endpoint for sending a message
 router.post('/send', sendMessage);
 

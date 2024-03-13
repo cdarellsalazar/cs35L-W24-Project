@@ -16,7 +16,7 @@ const app = express();
 
 //middleware (debug info for us)
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 app.use(express.static('public'));
 
 const storage = multer.diskStorage({
@@ -56,10 +56,6 @@ app.use('/api/user', userRoutes)
 app.use('/api/message', messageRoutes)
 app.use('/api/convos', conversationRoutes)
 
-app.post('/api/messages/reactions/:messageId', (req, res) => {
-  console.log(req.body); 
-  res.send('Route is working'); 
-});
 
 app.post('/upload', upload.single('image'), (req, res) => {
     console.log('File:', req.file); // Log the file object received from Multer
@@ -72,8 +68,6 @@ app.post('/upload', upload.single('image'), (req, res) => {
     res.send('File uploaded successfully!');
 });
 
-
-  
 
 // connect to db
 mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-projectdataba.l4wjg5l.mongodb.net/?retryWrites=true&w=majority')

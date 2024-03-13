@@ -3,6 +3,7 @@ const Message = require('../models/messageModel');
 const Conversation = require('../models/conversationModel');
 const { getConversation } = require('./conversationController');
 
+
 // Send a message
 exports.sendMessage = async (req, res) => {
     try {
@@ -89,55 +90,37 @@ exports.markMessageAsRead = async (req, res) => {
 }
 
 const reactionValues = {
-    like: 0,
-    dislike: 1,
-    love: 2,
-    shock: 3
+    like: 1,
+    dislike: 2,
+    heart: 3,
+    shock: 4
 };
 
-exports.updateReactions = async (messageId, userId, type) => {
+exports.updateReactions = async (messageId, userId, reactionType) => {
     try {
-        console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${type}`);
+        console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${reactionType}`);
 
         const message = await Message.findById(messageId);
-        console.log(`Found message: `, message);
-
         if (!message) {
+            console.log('Message not found');
             throw new Error('Message not found');
         }
 
-        // Find if the user has already reacted
-        const existingReactionIndex = message.reactions.findIndex(reaction => reaction.reactedBy.toString() === userId.toString());
-        console.log(`Existing reaction index: ${existingReactionIndex}`);
-
-        // Assign numerical value based on reaction type
-        const reactionValue = reactionValues[type];
+        const reactionValue = reactionValues[reactionType];
         if (reactionValue === undefined) {
+            console.log('Invalid reaction type');
             throw new Error('Invalid reaction type');
         }
 
-        const reaction = {
-            reactedBy: userId,
-            type: type,
-            value: reactionValue
-        };
-        console.log(`Reaction to be updated or added: `, reaction);
-
-        // Update or add reaction
-        if (existingReactionIndex >= 0) {
-            message.reactions[existingReactionIndex] = reaction;
-            console.log('Updated existing reaction');
-        } else {
-            message.reactions.push(reaction);
-            console.log('Added new reaction');
-        }
+        // Directly set the reaction to the corresponding integer value
+        message.reaction = reactionValue;
 
         await message.save();
-        console.log('Saved message with updated reactions');
+        console.log(`Message ${messageId} updated with reaction ${reactionType} (value: ${reactionValue})`);
 
         return message;
     } catch (error) {
-        console.error('Error updating reaction: ', error.message);
+        console.error(`Error updating reaction: ${error.message}`);
         throw new Error(error.message);
     }
 };
