@@ -5,20 +5,23 @@ const { getConversation } = require('./conversationController');
 
 // Send a message
 exports.sendMessage = async (req, res) => {
+    console.log('running')
     try {
-        const { participants, sender, receiver, msg } = req.body;
-        console.log("----------------------")
-        const conversationID = await Conversation.getConversationIDfromParticipants(participants) 
-        console.log(conversationID)
+        const {conversationID, receiver, msg } = req.body;
+        sender = req.user._id
+        partcipants = [sender, receiver] 
+        console.log('here')
         const message = await Message.create({
             conversation: conversationID,
-            sender: sender,
-            receiver: receiver,
+            sender,
+            receiver,
             content: msg
         });
         await Conversation.findByIdAndUpdate(conversationID, { $push: { messages: message._id } });
+        console.log('message: ', message )
         res.status(200).json(message);
     } catch (error) {
+        console.log('error: ', error.message)
         res.status(400).json({ error: error.message });
     }
 }

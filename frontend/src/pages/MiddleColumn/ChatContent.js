@@ -29,66 +29,30 @@ const ChatContent = (props) => {
   const { user } = useAuthContext()
   const [msg, setMsg] = useState(""); // This is the message that the user is typing
 
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    const getCurrentUserData = async () => {
-      const user = await fetchCurrentUser();
-      setCurrentUser(user);
-    };
-
-    getCurrentUserData();
-    console.log("in useEffect, this is currentUser:",currentUser);
-  }, []);
-
   // Used for css/stlying
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
 
-  async function fetchCurrentUser() {
-    try {
-        const response = await fetch('http://localhost:4000/api/user/getCurrentUser', {
-            headers: {
-                'Authorization': `Bearer ${user.token}`,
-            },
-            
-        });
-        if (!response.ok) {
-            throw new Error('Failed to fetch user');
-        }
-
-        const userData = await response.json();
-        console.log("User data:", userData);
-        console.log("username:", userData.username)
-        return userData;
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
   // Send Message Function
   const sendMessage = async () => {
-    if (msg !== "" && props.currentConvoMessages) { // If the message is not empty and currentConvoMessages is initialized
+    if (msg !== "" && props.selectedConversation) { // If the message is not empty and currentConvoMessages is initialized
         const now = new Date(); // Get the current time
         //const currentTime = now.getHours() + ":" + now.getMinutes();
-        const currentUser = await fetchCurrentUser(); // Get the current user
-        console.log("current user in sendmessage:", currentUser.user.username);
-        const userID = currentUser.user._id
-        const senderID = props.selectedConversation._id
+        const conversationID = props.selectedConversation.conversationID
         const newMessage = { // Create a new message object
-            //messageId: props.currentConvoMessages.length + 1, commented out for maybe future usage
-            participants: [userID, senderID],
-            sender: currentUser.user._id, // Change this to current user later once the function to fetch user data is up
+            conversationID,
             receiver: props.selectedConversation._id,
-            msg: msg // actual message the user is typing
-            //timeSent: currentTime,
+            msg
         };
-        console.log(newMessage);
+        //console.log(newMessage);
           
         try {
-          console.log('Helloooooo')
+          //console.log('Helloooooo')
           const response = await fetch('http://localhost:4000/api/message/send', {
               method: 'POST',
-              headers: {'Content-Type': 'application/json'},
+              headers: {
+                'Authorization': `Bearer ${user.token}`,
+                'Content-Type': 'application/json'},
               body: JSON.stringify(newMessage),
           });
 
@@ -98,7 +62,7 @@ const ChatContent = (props) => {
 
           const message = await response.json();
 
-          console.log("Message sent successfully:", message); 
+          //console.log("Message sent successfully:", message); 
         } catch (error) {
           //console.log("---------------------")
           console.error("There was an error sending the message:", error);
@@ -177,7 +141,7 @@ const ChatContent = (props) => {
                             timeSent={message.timeSent}
                             animationDelay={index + 2}
                             key={message.messageId}
-                            user={message.sender === currentUser.user.username ? "" : "other"}
+                           // user={message.sender === currentUser.user.username ? "" : "other"}
                             msg={message.msg}
                             image={message.sender === "User Logged In" ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}

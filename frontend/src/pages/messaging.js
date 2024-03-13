@@ -42,20 +42,8 @@ function Messaging() {
             ConvoDispatch({type: 'SET_CONVOS', payload: json})
           }
         }
-        const fetchMessages = async () => {
-          const response = await fetch('http://localhost:4000/api/messages/', {
-              headers: {'Authorization': `Bearer ${user.token}`},
-          })
-          const json = await response.json()
-
-          if (response.ok){
-              MessageDispatch({type: 'SET_MESSAGES', payload: json})
-          }
-        }
-    
         if (user) {
           fetchConvos()
-          //fetchMessages()
         }
       }, [ConvoDispatch, MessageDispatch, user])
 
@@ -102,7 +90,45 @@ function Messaging() {
             console.error('Error sending message:', error);
         });
     };
-    const [currentConvoMessages, setCurrentConvoMessages] = useState( [
+
+    const [currentConvoMessages, setCurrentConvoMessages] = useState([])
+    const newMessage = "";
+    const [selectedConversation, setSelectedConversation] = useState();
+    const [previousConversation, setPreviousConversation] = useState(null);
+
+    useEffect(() => {
+      const fetchMessages = async (selectedConvoID) => {
+        try {
+          const response = await fetch(`http://localhost:4000/api/convos/getMessages`, {
+            method: 'POST',
+            body: JSON.stringify({conversationID: selectedConvoID}),
+            headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
+          });
+          const json = await response.json()
+          if (!response.ok) {
+           console.error('Error: ', json.error);
+          }
+          return json; // Return fetched data
+        } catch (error) {
+          console.error('Error fetching conversation data:', error);
+          return null; // Return null if an error occurs
+        }
+      };
+
+      const fetchAndSetMessages = async() => {
+      if(selectedConversation){
+        const renderInfo = await fetchMessages(selectedConversation.conversationID)
+        console.log('renderInfo: ', renderInfo)
+        setCurrentConvoMessages(renderInfo)
+        console.log('Current convo messages: ', currentConvoMessages)
+      }
+    }
+
+    fetchAndSetMessages()
+
+    }, [selectedConversation])
+
+    /**const [currentConvoMessages, setCurrentConvoMessages] = useState( [
         {
           messageId: 8,
           sender: "Paul Eggert",
@@ -124,10 +150,8 @@ function Messaging() {
           msg: "I can't wait for everyone to fail the final!",
           timeSent: "12:55",
         },
-      ])
-      const newMessage = "";
-      const [selectedConversation, setSelectedConversation] = useState();
-      const [previousConversation, setPreviousConversation] = useState(null);
+      ])**/
+      
       //const [newMessage, setNewMessage] = useState('');
       /*
       useEffect(() => {

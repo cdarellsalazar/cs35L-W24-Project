@@ -2,6 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const { sendMessage, getMessages, getUnreadMessages, getMessagesWithSearchQuery, markMessageAsRead, getMessage, testExampleFunction } = require('../controllers/messageController');
+const requireAuth = require('../middleware/requireAuth')
+
+router.use(requireAuth)
 
 // POST endpoint for sending a message
 router.post('/send', sendMessage);

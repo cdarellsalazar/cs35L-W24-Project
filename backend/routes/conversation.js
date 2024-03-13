@@ -15,7 +15,7 @@ router.get('/', fetchConversations)
 
 router.post('/render', getRenderInfo)
 
-router.get('/getMessage/:conversationID', getMessagesFromConvo)
+router.post('/getMessages', getMessagesFromConvo)
 
 module.exports = router;
 
