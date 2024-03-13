@@ -13,7 +13,14 @@ exports.startConversation = async (req, res) => {
         } catch (error) {
             throw error
         }
+        
         const participants  = [userID, recipientID];
+
+        const duplicateCheck = await Conversation.findOne({ participants: { $all: participants } });
+
+        if(duplicateCheck){
+            throw new Error('A conversation already exists between these users')
+        }
 
         const conversation = await Conversation.create({ 
             participants
