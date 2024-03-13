@@ -5,7 +5,7 @@ const requireAuth = require('../middleware/requireAuth')
 const imageUpload = require('../middleware/imageUpload');
 
 //controller functions
-const { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage } = require('../controllers/userController');
+const { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername} = require('../controllers/userController');
 
 //router object that holds routes to be exported
 const router = express.Router()
@@ -26,5 +26,16 @@ router.post('/getUserByUsernameFromReq', getUserByUsernameFromReq);
 router.get('/getCurrentUser', getCurrentUser)
 
 router.post('/updateProfileImage', requireAuth, imageUpload.single('profileImage'), updateUserProfileImage);
+
+router.get('/userImage/:username', async (req, res) => {
+    const { username } = req.params;
+    try {
+        const imageUrl = await getUserImageByUsername(username);
+        res.send(imageUrl); 
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
 
 module.exports = router;

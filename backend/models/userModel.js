@@ -30,7 +30,7 @@ const userSchema = new Schema({
     },
     image: {
         type: String,
-        default: '/images/default-profile.png' 
+        default: '../public/default-profile.png' 
     },
     isOnline: {
         type: Boolean,

@@ -112,20 +112,40 @@ const updateUserProfileImage = async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
+  cloudinary.uploader.upload(req.file.path, async function(result) {
+    try {
+      const user = await User.findByIdAndUpdate(req.user._id, {
+        profileImageUrl: result.url 
+      }, { new: true });
 
-  // The path to the uploaded image
-  const imagePath = req.file.path;
+      if (!user) {
+        return res.status(404).send('User not found.');
+      }
 
-  // Update the user document with the image path
-  try {
-    const user = await User.findByIdAndUpdate(req.user.id, { image: imagePath }, { new: true });
-    if (!user) {
-      return res.status(404).send('User not found.');
+      res.json({
+        message: 'Profile image updated successfully.',
+        imageUrl: result.url,
+        user
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-    res.status(200).json({ message: 'Profile image updated.', user });
+  });
+};
+
+const getUserImageByUsername = async (username) => {
+  try {
+      const user = await User.findOne({ username: username });
+      if (user) {
+          return user.image; 
+      } else {
+          throw new Error('User not found');
+      }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+      console.error('Error fetching user image:', error);
+      throw error; 
   }
 };
 
-module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage };
+
+module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername };
