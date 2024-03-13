@@ -144,10 +144,10 @@ const ChatList = (props) => {
       activeTime: "Online",
     }
   ]; **/
-const filteredChats = allChatUsers.filter(chat =>
-    //console.log('chat: ', chat)
-    chat.username.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredChats = allChatUsers.filter(chat =>
+    chat && chat.username && chat.username.toLowerCase().includes(searchTerm.toLowerCase())
 );
+
 
   //console.log('filteredChats: ', filteredChats)
 
