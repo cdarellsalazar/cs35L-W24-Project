@@ -44,7 +44,7 @@ const ChatContent = (props) => {
             receiver: props.selectedConversation._id,
             msg
         };
-        //console.log(newMessage);
+        console.log(newMessage);
           
         try {
           //console.log('Helloooooo')
@@ -53,9 +53,8 @@ const ChatContent = (props) => {
               headers: {
                 'Authorization': `Bearer ${user.token}`,
                 'Content-Type': 'application/json'},
-              body: JSON.stringify(newMessage),
+              body: JSON.stringify(newMessage)
           });
-
           if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -137,13 +136,13 @@ const ChatContent = (props) => {
             <div className="chat__items">
               {props.currentConvoMessages.map((message, index) => (
                 <ChatItem // for each message in currentConvoMessages, create a ChatItem; it's rendered here
-                            isOnline={message.sender === "User Logged In" ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
-                            timeSent={message.timeSent}
+                            isOnline={message.sender === user._id ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
+                            timeSent={message.sentAt}
                             animationDelay={index + 2}
                             key={message.messageId}
                            // user={message.sender === currentUser.user.username ? "" : "other"}
-                            msg={message.msg}
-                            image={message.sender === "User Logged In" ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
+                            msg={message.content}
+                            image={message.sender === user._id ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}
                         />
               ))}

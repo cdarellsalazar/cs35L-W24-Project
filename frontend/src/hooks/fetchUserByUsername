@@ -1,0 +1,31 @@
+
+import { useState } from 'react';
+/*const fetchUserByUsername = async (userName) => {
+  const response = await fetch(`http://localhost:4000/api/user?username=${userName}`);
+  const json = await response.json();
+
+  if (!response.ok) {
+    throw new Error(json.error);
+  }
+
+  if (response.ok && json.length > 0) {
+    return json[0]; // return the entire user object
+  }
+
+  return null;
+};
+export { fetchUserByUsername as default};*/
+
+// api.js
+export async function getUserByUsername(username) {
+    try {
+        const response = await fetch(`http://your-backend-url.com/users/${username}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const user = await response.json();
+        return user;
+    } catch (error) {
+        console.error('An error occurred while fetching the user:', error);
+    }
+}

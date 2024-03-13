@@ -118,7 +118,7 @@ function Messaging() {
       const fetchAndSetMessages = async() => {
       if(selectedConversation){
         const renderInfo = await fetchMessages(selectedConversation.conversationID)
-        console.log('renderInfo: ', renderInfo)
+        console.log('MESSAGES: ', renderInfo)
         setCurrentConvoMessages(renderInfo)
         console.log('Current convo messages: ', currentConvoMessages)
       }
@@ -126,7 +126,7 @@ function Messaging() {
 
     fetchAndSetMessages()
 
-    }, [selectedConversation])
+    }, [selectedConversation,currentConvoMessages])
 
     /**const [currentConvoMessages, setCurrentConvoMessages] = useState( [
         {
