@@ -4,7 +4,7 @@ const router = express.Router();
 const { sendMessage, getMessages, getUnreadMessages, getMessagesWithSearchQuery, markMessageAsRead, getMessage, testExampleFunction } = require('../controllers/messageController');
 const requireAuth = require('../middleware/requireAuth')
 
-router.use(requireAuth)
+router.use(requireAuth);
 
 // POST endpoint for sending a message
 router.post('/send', sendMessage);
@@ -14,6 +14,7 @@ router.post('/send', sendMessage);
 router.get('/', getMessages);
 
 
+router.get('/searchMessages', getMessagesWithSearchQuery);
 
 // GET endpoint for retrieving unread messages for a user
 //router.get('/message/unread/:userId', getUnreadMessages);

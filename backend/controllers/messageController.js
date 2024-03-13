@@ -46,22 +46,22 @@ exports.getMessages = async (req, res) => {
     }
 }
 
-//Get all messages for a user based on a search query
+// Get all messages for a user based on a search query
 exports.getMessagesWithSearchQuery = async (req, res) => {
     try {
-        const userId = req.params.userId;
-        const searchQuery = req.params.searchQuery;
+        const searchQuery = req.query.search; // Use the 'search' query parameter from the request
+
+        // Find messages where the content matches the search query (case-insensitive)
         const messages = await Message.find({
-            $and: [
-                {$or: [{ sender: userId }, { receiver: userId }]},
-                {content: contains(searchQuery)}
-            ]
-        });
+            content: { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search
+        }).sort({ createdAt: -1 }); // Sort by creation date, newest first
+
         res.status(200).json(messages);
-    } catch(error) {
-        res.status(400).json({ error: error.message});
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
-}
+};
+
 
 // Get unread messages for a user
 exports.getUnreadMessages = async (req, res) => {
@@ -136,3 +136,8 @@ const updateReactions = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+
+
+

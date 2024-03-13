@@ -7,6 +7,13 @@ const requireAuth = require('../middleware/requireAuth')
 // GET endpoint for retreiving all messages in a conversation
 router.use(requireAuth)
 
+/*
+router.use((req, res, next) => {
+    req.user = { _id: 'mockUserId' }; // Mock user ID
+    next();
+});
+*/
+
 router.get('/conversation/:conversationID', getConversation);
 
 router.post('/newConvo', startConversation)
