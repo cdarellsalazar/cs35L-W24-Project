@@ -5,6 +5,7 @@ import Avatar from "../LeftSidebar/Avatar";
 import ChatItem from "./ChatItem";
 import { faPaperPlane, faBars } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from "../../hooks/useAuthContext";
+
 //import { get } from "mongoose";
 
 
@@ -29,13 +30,14 @@ const ChatContent = (props) => {
   const { user } = useAuthContext()
   const [msg, setMsg] = useState(""); // This is the message that the user is typing
   const [userID, setUserID] = useState(null); // Initialize userID state
+ 
 
   // Used for css/stlying
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
 
   const [isOpen, setIsOpen] = useState(false);
-
+  
   // Send Message Function
   const sendMessage = async () => {
     if (msg !== "" && props.selectedConversation) { // If the message is not empty and currentConvoMessages is initialized
@@ -99,7 +101,30 @@ const ChatContent = (props) => {
     }
 }
 
+const blockUser = async (blocked) => {
+  try {
+    console.log('BLOCKUSER IS RUNNING WITH BLOCKEDID: ', blocked);
+    const response = await fetch('http://localhost:4000/api/user/blocked', { // replace with your API endpoint
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user.token}`, 
+          'Content-Type': 'application/json',
+            // Include any other headers, such as authorization headers
+        },
+        body: JSON.stringify({ blocked }),
+    });
+    console.log('RESPONSE: ', response)
+    const json = await response.json()
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
+    // If you expect a response from the server, you can get it like this:
+    // const data = await response.json();
+} catch (error) {
+    console.error('Error:', error);
+}
+};
 
 useEffect(() => {
   const getCurrentUserData = async () => {
@@ -197,8 +222,7 @@ useEffect(() => {
                   </button>
                   {isOpen && (
                       <div className="menu">
-                          <button onClick={() => console.log('Block User')}>Block User</button>
-                          <button onClick={() => console.log('Search for Message')}>Search for Message</button>
+                          <button onClick={() => blockUser(props.selectedConversation._id)}>Block User</button>
                       </div>
                   )}
                   </div>
@@ -206,7 +230,7 @@ useEffect(() => {
           </div>
           <div className="content__body">
             <div className="chat__items">
-              {props.currentConvoMessages.map((message, index) => (
+            {props.currentConvoMessages.map((message, index) => (
                 <ChatItem // for each message in currentConvoMessages, create a ChatItem; it's rendered here
                             isOnline={message.sender === userID ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
                             timeSent={message.sentAt}

@@ -9,9 +9,16 @@ exports.sendMessage = async (req, res) => {
     console.log('running')
     try {
         const {conversationID, receiver, msg } = req.body;
-        sender = req.user._id
-        partcipants = [sender, receiver] 
+        sender = req.user._id.toString();
+        console.log("sender: ", sender)
+        participants = [sender, receiver] 
+
+        console.log("participants:", participants)
+
         blockCheck = await User.checkBlocked(sender, receiver)
+
+        console.log('blockCheck: ', blockCheck)
+
         if(blockCheck){
             throw new Error('User is blocked or has recipient blocked')
         }

@@ -152,3 +152,7 @@
     background-color: #7a90a8;
     color: #fff;
   }
+
+  .menu button {
+    display: block;
+}

@@ -151,10 +151,46 @@ userSchema.statics.login = async function(email, password) {
 
 userSchema.statics.checkBlocked = async (sender, receiver) => {
     sender = await User.findById(sender)
+
+    console.log('sender in checkblocked: ', sender)
     receiver = await User.findById(receiver)
-    isBlocked = await receiver.blockedList.includes(sender)
-    hasBlocked = await sender.blockedList.includes(receiver)
+
+    rBlockedList = receiver.blockedList
+    sBlockedList = sender.blockedList
+
+    console.log('rBlockedList: ', rBlockedList)
+
+    if (rBlockedList === null) {
+        isBlocked = false;
+    }
+    else
+    {
+        isBlocked = rBlockedList.some(id => id.equals(sender._id));
+        console.log("in isblocked else statement:", isBlocked)
+    }
+
+    if (sBlockedList === null) {
+        hasBlocked = false;
+    }
+    else
+    {
+        hasBlocked = sBlockedList.some(id => id.equals(receiver._id));
+    }
+
+    // if (isblocked === null) {
+    //     isBlocked = false;
+    //     console.log('isBlocked is empty')
+    // }
+
+    // if (hasBlocked === null) {
+    //     hasBlocked = false;
+    //     console.log('hasBlocked is empty')
+    // }
+
+
+
     if( isBlocked || hasBlocked ){
+        console.log("isBlocked returned: ", isBlocked, "hasBlocked returned: ", hasBlocked)
         return true;
     }
     return false;
