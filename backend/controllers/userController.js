@@ -14,8 +14,8 @@ const loginUser = async (req, res) => {
   const password = data.password
 
   try{
-    console.log('trying')
-    console.log('verifying it works')
+    //console.log('trying')
+    //console.log('verifying it works')
     const user = await User.login(email, password)
     
     //create a token
@@ -23,7 +23,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({email, token}) //Sent out success status code and return the email and newly generated token
   } catch (error) {
-    console.log(error)
+   // console.log(error)
     res.status(400).json({error: error.message}) //If an error is detected (in this case credentials do not match, send error)
   }
 }
@@ -42,9 +42,9 @@ const signupUser = async (req, res) => {
       const token = createToken(user.id)
 
       res.status(200).json({email, token}) //return newly authenticated user and give token so they don't have to login after signing up
-      console.log(token)
+     // console.log(token)
     } catch (error) {
-      console.log(error.message)
+     // console.log(error.message)
       res.status(400).json({error: error.message})
     }
 }
@@ -84,19 +84,19 @@ const getCurrentUser = async (req, res) => {
   try {
       // Get the user ID from the token
       const token = req.headers.authorization.split(' ')[1];
-      console.log(token)
+    //  console.log(token)
       //console.log("-----------------------------------")
       const decodedTokenArray = jwt.verify(token, "nZ5XM37vWkFUWTCsoCtL");
       const currentUserId = decodedTokenArray._id;
       //console.log("-----------------------------------");
-      console.log(currentUserId);
+     // console.log(currentUserId);
       //const userId = req.user._id
-      console.log("this is the userid:", currentUserId);
+     // console.log("this is the userid:", currentUserId);
 
       // Find the user in the database
       const user = await User.findById(currentUserId);
 
-      console.log(user)
+    // console.log(user)
 
       if (!user) {
           return res.status(404).json({ error: "User not found" });

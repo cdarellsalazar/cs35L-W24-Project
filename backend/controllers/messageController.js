@@ -2,6 +2,7 @@
 const Message = require('../models/messageModel');
 const Conversation = require('../models/conversationModel');
 const { getConversation } = require('./conversationController');
+const User = require('../models/userModel');
 
 // Send a message
 exports.sendMessage = async (req, res) => {
@@ -33,9 +34,9 @@ exports.sendMessage = async (req, res) => {
 // Get all messages for a user
 
 exports.testExampleFunction = async (req, res) => {
-    console.log('asdasd');
+    //console.log('asdasd');
     
-    console.log('asdasd');
+    //console.log('asdasd');
 }
 
 exports.getMessages = async (req, res) => {
@@ -113,17 +114,17 @@ const reactionValues = {
 
 exports.updateReactions = async (messageId, userId, reactionType) => {
     try {
-        console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${reactionType}`);
+        //console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${reactionType}`);
 
         const message = await Message.findById(messageId);
         if (!message) {
-            console.log('Message not found');
+           // console.log('Message not found');
             throw new Error('Message not found');
         }
 
         const reactionValue = reactionValues[reactionType];
         if (reactionValue === undefined) {
-            console.log('Invalid reaction type');
+            //('Invalid reaction type');
             throw new Error('Invalid reaction type');
         }
 
@@ -131,7 +132,7 @@ exports.updateReactions = async (messageId, userId, reactionType) => {
         message.reactions = reactionValue;
 
         await message.save();
-        console.log(`Message ${messageId} updated with reaction ${reactionType} (value: ${reactionValue})`);
+        //console.log(`Message ${messageId} updated with reaction ${reactionType} (value: ${reactionValue})`);
 
         return message;
     } catch (error) {

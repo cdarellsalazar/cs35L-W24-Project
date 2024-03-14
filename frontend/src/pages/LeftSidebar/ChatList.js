@@ -115,7 +115,7 @@ const ChatList = (props) => {
     };
 
   const renderChatListItems = (chatUsers, onConversationClick) => {
-    console.log('renderChatListItems called with:', chatUsers);
+    //console.log('renderChatListItems called with:', chatUsers);
     return chatUsers.map((user, index) => (
         <ChatListItems
             key={user}
@@ -131,7 +131,7 @@ const ChatList = (props) => {
     ));
   };
 
-  console.log('allChatUsers: ', allChatUsers)
+  //console.log('allChatUsers: ', allChatUsers)
 
   /**const filteredChats = [
     {

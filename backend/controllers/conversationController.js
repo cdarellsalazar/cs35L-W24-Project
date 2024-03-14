@@ -7,7 +7,7 @@ exports.startConversation = async (req, res) => {
         //console.log(req.body)
         userID = req.user._id
         const { recipient } = req.body
-        console.log(recipient)
+      //  console.log(recipient)
         try {
             recipient = await User.findOne({username: `${recipient}` }).select('_id')
         } catch (error) {
@@ -32,7 +32,7 @@ exports.startConversation = async (req, res) => {
 
         res.status(200).json(conversation);
     } catch (error) {
-        console.log(error.message)
+     //   console.log(error.message)
         res.status(400).json({ error: error.message })
     }
 }
@@ -50,14 +50,14 @@ exports.getConversation = async (req, res) => {
 }
 
 exports.fetchConversations = async (req, res) => {
-    console.log("running");
+   // console.log("running");
     const userID = req.user._id
     
    //console.log('user: ', userID)
 
     const conversations = await Conversation.find({ participants: { $in: [userID]}})
 
-    console.log('conversations: ', conversations)
+   // console.log('conversations: ', conversations)
 
     res.status(200).json(conversations)
 }
@@ -78,7 +78,7 @@ exports.getRenderInfo = async (req, res) => {
         //console.log(conversationID)
         res.status(200).json(renderJSON);
     } catch(error) {
-        console.log(error)
+       // console.log(error)
         res.status(400).json({error: error.message });
     }
 
@@ -87,21 +87,21 @@ exports.getRenderInfo = async (req, res) => {
 exports.getMessagesFromConvo = async (req, res) => {
     try{
         const conversationID = req.body.conversationID
-        console.log('conversationID: ', conversationID)
+      //  console.log('conversationID: ', conversationID)
         conversation = await Conversation.findById(conversationID)
-        console.log('conversation: ', conversation)
+       // console.log('conversation: ', conversation)
         const messages = conversation.messages
         //console.log('success')
         const renderList = []
-        console.log('messages: ', messages)
+      //  console.log('messages: ', messages)
         for(const messageID of messages){
             const message = await Messages.findById(messageID)
             renderList.push(message);
         }
-        console.log('renderList: ', renderList)
+     //   console.log('renderList: ', renderList)
         res.status(200).json(renderList)
     } catch(error) {
-        console.log(error)
+      //  console.log(error)
         res.status(400).json({ error: error.message })
     }
 }
