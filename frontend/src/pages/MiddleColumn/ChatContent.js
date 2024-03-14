@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./ChatContent.css";
 import Avatar from "../LeftSidebar/Avatar";
 import ChatItem from "./ChatItem";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faBars } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from "../../hooks/useAuthContext";
 //import { get } from "mongoose";
 
@@ -34,7 +34,7 @@ const ChatContent = (props) => {
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
 
-
+  const [isOpen, setIsOpen] = useState(false);
 
   // Send Message Function
   const sendMessage = async () => {
@@ -98,6 +98,8 @@ const ChatContent = (props) => {
         console.error('Error:', error);
     }
 }
+
+
 
 useEffect(() => {
   const getCurrentUserData = async () => {
@@ -190,9 +192,15 @@ useEffect(() => {
               </div>
               <div className="blocks">
                   <div className="settings">
-                      <button className="btn-nobg">
-                          <i className="fa fa-cog"></i>
-                      </button>
+                  <button className="btn-nobg" onClick={() => setIsOpen(!isOpen)}>
+                    <FontAwesomeIcon icon={faBars}/>
+                  </button>
+                  {isOpen && (
+                      <div className="menu">
+                          <button onClick={() => console.log('Block User')}>Block User</button>
+                          <button onClick={() => console.log('Search for Message')}>Search for Message</button>
+                      </div>
+                  )}
                   </div>
               </div>
           </div>
