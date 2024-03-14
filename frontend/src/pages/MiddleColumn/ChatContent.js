@@ -103,6 +103,31 @@ const ChatContent = (props) => {
 }
 
 
+const blockUser = async (blocked) => {
+  try {
+    console.log('BLOCKUSER IS RUNNING WITH BLOCKEDID: ', blocked);
+    const response = await fetch('http://localhost:4000/api/user/blocked', { // replace with your API endpoint
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user.token}`, 
+          'Content-Type': 'application/json',
+            // Include any other headers, such as authorization headers
+        },
+        body: JSON.stringify({ blocked }),
+    });
+    console.log('RESPONSE: ', response)
+    const json = await response.json()
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // If you expect a response from the server, you can get it like this:
+    // const data = await response.json();
+} catch (error) {
+    console.error('Error:', error);
+}
+};
+
 
 useEffect(() => {
   const getCurrentUserData = async () => {
@@ -200,8 +225,7 @@ useEffect(() => {
                   </button>
                   {isOpen && (
                       <div className="menu">
-                          <button onClick={() => console.log('Block User')}>Block User</button>
-                          <button onClick={() => console.log('Search for Message')}>Search for Message</button>
+                          <button onClick={() => blockUser(props.selectedConversation._id)}>Block User</button>
                       </div>
                   )}
                   </div>
