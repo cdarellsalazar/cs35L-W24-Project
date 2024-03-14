@@ -1,9 +1,11 @@
 import {useState} from "react"
 import { useAuthContext } from "../hooks/useAuthContext"
+import { useConvosContext } from "../hooks/useConvosContext"
 
 const NewConvo = () => {
     const [recipient, setRecipient] = useState('')
     const { user } = useAuthContext()
+    const { dispatch } = useConvosContext()
     const [error, setError] = useState(null)
 
 
@@ -27,6 +29,7 @@ const NewConvo = () => {
         }
         if(response.ok)
         {
+            dispatch({type: 'CREATE_CONVO', payload: json});
             setRecipient('')
             setError(null)
             console.log('New conversation added', json)
