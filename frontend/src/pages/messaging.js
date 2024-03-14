@@ -24,10 +24,50 @@ function Messaging() {
     const { dispatch: MessageDispatch } = useMessageContext()
     const { user } = useAuthContext()
     const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
     const [convoStarted, startConvo] = useState(false);
-    const handleInputChange = (event) => {
-        setMessage(event.target.value);
-    };
+
+    useEffect(() => {
+      if (!searchQuery.trim() || !isSearching) {
+          setSearchResults([]);
+          if (isSearching) setIsSearching(false); // Reset if no search query to prevent loop
+          return;
+      }
+
+      const handleSearch = async () => {
+          try {
+              const response = await fetch(`http://localhost:4000/api/messages/search?search=${encodeURIComponent(searchQuery)}`, {
+                  method: 'GET',
+                  headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+              });
+              if (!response.ok) {
+                  throw new Error('Search failed');
+              }
+              const data = await response.json();
+              setSearchResults(data);
+          } catch (error) {
+              console.error('Failed to fetch search results:', error);
+              // Optionally, update the UI to show an error message
+          } finally {
+              setIsSearching(false); // Reset searching state
+          }
+      };
+
+      const delayDebounceFn = setTimeout(() => {
+        handleSearchEffect().finally(() => {
+            setIsSearching(false); // Ensure this is reset after search
+        });
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+}, [searchQuery, isSearching]);
+
+      const handleSearchInputChange = (event) => {
+          setIsSearching(true); // User starts typing, enable searching
+          setSearchQuery(event.target.value);
+      };
 
 
     useEffect(() => {
@@ -118,9 +158,9 @@ function Messaging() {
       const fetchAndSetMessages = async() => {
       if(selectedConversation){
         const renderInfo = await fetchMessages(selectedConversation.conversationID)
-        //console.log('MESSAGES: ', renderInfo)
+        console.log('MESSAGES: ', renderInfo)
         setCurrentConvoMessages(renderInfo)
-        //console.log('Current convo messages: ', currentConvoMessages)
+        console.log('Current convo messages: ', currentConvoMessages)
       }
     }
 
@@ -219,21 +259,37 @@ function Messaging() {
                 <ChatList onConversationClick={handleConversationClick} />
             </div>
             <div className="center-column">
-                <ChatContent selectedConversation={selectedConversation} currentConvoMessages={currentConvoMessages} onNewChatSubmit={onNewChatSubmit}/> {/*convoMessages={testConvo}*/}
+                <ChatContent selectedConversation={selectedConversation} currentConvoMessages={currentConvoMessages} onNewChatSubmit={onNewChatSubmit}/>
             </div>
             <div className="right-column">
-                <div className="logo-container">
-                    <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                {/* Existing UI elements in the right column */}
+
+                {/* Search functionality */}
+                <div className="search-container">
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchInputChange}
+                        placeholder="Search for messages..."
+                        className="search-input"
+                    />
+                    <button onClick={handleSearch} className="search-button">Search</button>
                 </div>
 
-                <div className="disrupt-container">
-                {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered />}
+                {/* Assuming you want to display search results in the right column for now */}
+                <div className="search-results">
+                    {searchResults.map((message, index) => (
+                        <div key={index} className="message">
+                            {/* Customize this part based on your display preferences */}
+                            <p>{message.content}</p>
+                        </div>
+                    ))}
                 </div>
-                <ProfileCard></ProfileCard>
+
+                {/* Existing UI elements */}
                 <div className="logout-container">
                     <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>
-                
             </div>
         </div>
     );
