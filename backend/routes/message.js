@@ -1,7 +1,7 @@
 //ensures that when the API receives a certain request, it knows which controller function should handle it
 const express = require('express');
 const router = express.Router();
-const { sendMessage, getMessages, getUnreadMessages, getMessagesWithSearchQuery, markMessageAsRead, getMessage, testExampleFunction } = require('../controllers/messageController');
+const { sendMessage, getMessages, getUnreadMessages, getMessagesWithSearchQuery, markMessageAsRead, getMessage, testExampleFunction, updateReactions } = require('../controllers/messageController');
 const requireAuth = require('../middleware/requireAuth')
 
 router.use(requireAuth);
@@ -30,8 +30,8 @@ router.get('/getMessage/:messageID', getMessage)
 router.post('/reactions/:messageId', async (req, res) => {
     try {
         const { messageId } = req.params;
-        const { userId, type } = req.body;
-        const result = await updateReactions(messageId, userId, type);
+        const { reactionType } = req.body;
+        const result = await updateReactions(messageId, reactionType);
         res.status(200).json({ message: 'Reaction updated successfully', result });
     } catch (error) {
         res.status(400).json({ error: error.message });
