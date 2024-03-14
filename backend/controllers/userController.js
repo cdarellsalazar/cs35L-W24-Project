@@ -176,7 +176,7 @@ const removeFromBlockedList = async(req, res) => {
  const getUserID = async (req, res) => {
   try{
   userID = req.user._id
-  console.log('HERE IS MY USER ID: ', userID)
+  //console.log('HERE IS MY USER ID: ', userID)
   res.status(200).json(userID)
   } catch(error){
   console.log('error: ', error.message)

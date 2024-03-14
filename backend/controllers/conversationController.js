@@ -86,9 +86,9 @@ exports.getMessagesFromConvo = async (req, res) => {
     try{
         
         const { conversationID } = req.body
-       console.log('conversationID: ', conversationID)
+       //console.log('conversationID: ', conversationID)
         conversation = await Conversation.findById(conversationID)
-        console.log('conversation: ', conversation)
+        //console.log('conversation: ', conversation)
         const messages = conversation.messages
         //console.log('success')
         const renderList = []

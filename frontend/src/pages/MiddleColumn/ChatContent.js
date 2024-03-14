@@ -8,17 +8,12 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { useMessageContext } from "../../hooks/useMessageContext";
 //import { get } from "mongoose";
 
-//import io from "socket.io-client"
-
-//const ChatContent = (props) => {
 
 
- // const ENDPOINT = "http://localhost:4000"
- // var socket, selectedChatCompare
+const ChatContent = (props) => {
 
- // useEffect(() => {
- // socket = io(ENDPOINT)
-//}, [])
+
+ 
 
   // PLEASE NOTE: there are three props (external variables) that are being passed to ChatContent.js:
   // 1. selectedConversation: this is the conversation that the user has clicked on

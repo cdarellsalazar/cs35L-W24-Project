@@ -11,6 +11,8 @@ const multer = require('multer');
 const path = require('path');
 const User = require('./models/userModel')
 const requireAuth = require('./middleware/requireAuth');
+const { instrument } = require('@socket.io/admin-ui')
+
 // creates express app
 const app = express();
 
@@ -20,7 +22,7 @@ app.use(express.json())
 app.use(express.static('public'));
 
 app.use((req, res, next) => {
-    //console.log(req.path, req.method)
+    console.log(req.path, req.method)
     next()
 })
 
@@ -67,8 +69,31 @@ app.post('/upload', requireAuth, imageUpload.single('image'), async (req, res) =
 // connect to db
 mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-projectdataba.l4wjg5l.mongodb.net/?retryWrites=true&w=majority')
     .then(() => {
-       app.listen(4000, () => {
+       const server = app.listen(4000, () => {
         console.log('listening on port ', 4000)
+        const corsOptions = {
+          origin: ["http://localhost:3000", "https://admin.socket.io"],
+          methods:["GET", "POST"],
+          credentials: true
+        }
+        const io = require('socket.io')(server, {
+          cors: corsOptions
+        });
+
+        io.on("connection", socket => {
+          console.log('Connection established: ', socket.id)
+
+          socket.on("setup", (userData) => {
+            socket.join(userData._id);
+            socket.emit("connected");
+          })
+
+          socket.on("join chat", (room) => {
+            socket.join(room);
+            console.log("User Joined Room: " + room);
+          })
+        })
+        instrument(io, { auth: false })
        }) 
     })
     .catch((error) => {

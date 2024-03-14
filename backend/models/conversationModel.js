@@ -45,7 +45,7 @@ conversationSchema.statics.getConversationIDfromParticipants = async function (p
 }
 
 conversationSchema.statics.getParticipants = async function (conversationID, userID) {
-    console.log('conversation: ', conversationID, 'userID: ', userID)
+    //console.log('conversation: ', conversationID, 'userID: ', userID)
 
     const conversation = await Conversation.findById(conversationID)
 
