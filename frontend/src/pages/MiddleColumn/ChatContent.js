@@ -76,6 +76,38 @@ const ChatContent = (props) => {
       }
   };
 
+  const [currentUser, setCurrentUser] = useState(null);
+
+  async function fetchCurrentUser() {
+    try {
+        const response = await fetch('http://localhost:4000/api/user/getCurrentUser', {
+            headers: {
+                'Authorization': `Bearer ${user.token}`,
+            },
+            
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user');
+        }
+
+        const userData = await response.json();
+        console.log("User data:", userData);
+        console.log("user name:", userData.user.username)
+        return userData;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+useEffect(() => {
+  const getCurrentUserData = async () => {
+    const user = await fetchCurrentUser();
+    setCurrentUser(user);
+  };
+
+  getCurrentUserData();
+}, []);
+
   useEffect(() => {
     const getUserID = async () => {
       try {
@@ -90,7 +122,6 @@ const ChatContent = (props) => {
         const responseJSON = await response.json()
         console.log('RESPONEJSON: ', responseJSON)
         setUserID(responseJSON)
-        console.log('USERID: ', userID)
       } catch (error) {
         console.error('Error while fetching user ID:', error);
       }
@@ -101,10 +132,14 @@ const ChatContent = (props) => {
     }
   }, [user]);
 
+    useEffect(() => {
+      console.log('USERID: ', userID);
+  }, [userID]);
+
     // Calls the scroll to bottom function when currentConvoMessages changes
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); 
-    }, [props.currentConvoMessages]);
+    }, []);
 
     // When the enter key is pressed, call the sendMessage function
     const keydownHandler = useCallback((e) => {
@@ -165,13 +200,13 @@ const ChatContent = (props) => {
             <div className="chat__items">
               {props.currentConvoMessages.map((message, index) => (
                 <ChatItem // for each message in currentConvoMessages, create a ChatItem; it's rendered here
-                            isOnline={message.sender === user._id ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
+                            isOnline={message.sender === userID ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
                             timeSent={message.sentAt}
                             animationDelay={index + 2}
                             key={message.messageId}
-                           // user={message.sender === currentUser.user.username ? "" : "other"}
+                            user={message.sender === userID ? "" : "other"}
                             msg={message.content}
-                            image={message.sender === user._id ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
+                            image={message.sender === userID ? currentUser.user.image : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}
                         />
               ))}
