@@ -53,6 +53,7 @@ exports.getMessages = async (req, res) => {
 
 // Get all messages for a user based on a search query
 exports.getMessagesWithSearchQuery = async (req, res) => {
+    console.log("in get messages with serach query")
     try {
         const searchQuery = req.query.search; // Use the 'search' query parameter from the request
 

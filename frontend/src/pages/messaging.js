@@ -28,11 +28,15 @@ function Messaging() {
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [convoStarted, startConvo] = useState(false);
+    const [currentConvoMessages, setCurrentConvoMessages] = useState([])
+    const [selectedConversation, setSelectedConversation] = useState();
+    const [previousConversation, setPreviousConversation] = useState(null);
+
 
 
     const handleSearch = async () => {
       try {
-          const response = await fetch(`http://localhost:4000/api/messages/search?search=${encodeURIComponent(searchQuery)}`, {
+          const response = await fetch(`http://localhost:4000/api/message/searchMessages?search=${encodeURIComponent(searchQuery)}`, {
               method: 'GET',
               headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
           });
@@ -41,6 +45,7 @@ function Messaging() {
           }
           const data = await response.json();
           setSearchResults(data);
+          setCurrentConvoMessages(data);
       } catch (error) {
           console.error('Failed to fetch search results:', error);
           // Optionally, update the UI to show an error message
@@ -69,6 +74,7 @@ function Messaging() {
           setIsSearching(true); // User starts typing, enable searching
           setSearchQuery(event.target.value);
       };
+
 
     useEffect(() => {
         //console.log('user: ', user)
@@ -131,10 +137,6 @@ function Messaging() {
         });
     };
 
-    const [currentConvoMessages, setCurrentConvoMessages] = useState([])
-    const newMessage = "";
-    const [selectedConversation, setSelectedConversation] = useState();
-    const [previousConversation, setPreviousConversation] = useState(null);
 
     useEffect(() => {
       const fetchMessages = async (selectedConvoID) => {
@@ -158,15 +160,15 @@ function Messaging() {
       const fetchAndSetMessages = async() => {
       if(selectedConversation){
         const renderInfo = await fetchMessages(selectedConversation.conversationID)
-        console.log('MESSAGES: ', renderInfo)
+        //console.log('MESSAGES: ', renderInfo)
         setCurrentConvoMessages(renderInfo)
-        console.log('Current convo messages: ', currentConvoMessages)
+        //console.log('Current convo messages: ', currentConvoMessages)
       }
     }
 
     fetchAndSetMessages()
 
-    }, [selectedConversation,currentConvoMessages])
+    }, [selectedConversation])
 
     /**const [currentConvoMessages, setCurrentConvoMessages] = useState( [
         {
