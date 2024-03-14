@@ -29,46 +29,46 @@ function Messaging() {
     const [isSearching, setIsSearching] = useState(false);
     const [convoStarted, startConvo] = useState(false);
 
+
+    const handleSearch = async () => {
+      try {
+          const response = await fetch(`http://localhost:4000/api/messages/search?search=${encodeURIComponent(searchQuery)}`, {
+              method: 'GET',
+              headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+          });
+          if (!response.ok) {
+              throw new Error('Search failed');
+          }
+          const data = await response.json();
+          setSearchResults(data);
+      } catch (error) {
+          console.error('Failed to fetch search results:', error);
+          // Optionally, update the UI to show an error message
+      } finally {
+          setIsSearching(false); // Reset searching state
+      }
+  };
+
     useEffect(() => {
       if (!searchQuery.trim() || !isSearching) {
           setSearchResults([]);
           if (isSearching) setIsSearching(false); // Reset if no search query to prevent loop
           return;
       }
-
-      const handleSearch = async () => {
-          try {
-              const response = await fetch(`http://localhost:4000/api/messages/search?search=${encodeURIComponent(searchQuery)}`, {
-                  method: 'GET',
-                  headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
-              });
-              if (!response.ok) {
-                  throw new Error('Search failed');
-              }
-              const data = await response.json();
-              setSearchResults(data);
-          } catch (error) {
-              console.error('Failed to fetch search results:', error);
-              // Optionally, update the UI to show an error message
-          } finally {
-              setIsSearching(false); // Reset searching state
-          }
-      };
-
+  
       const delayDebounceFn = setTimeout(() => {
-        handleSearchEffect().finally(() => {
-            setIsSearching(false); // Ensure this is reset after search
-        });
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-}, [searchQuery, isSearching]);
+          handleSearch().finally(() => {
+              setIsSearching(false); // Ensure this is reset after search
+          });
+      }, 500);
+  
+      return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, isSearching]);
 
       const handleSearchInputChange = (event) => {
           setIsSearching(true); // User starts typing, enable searching
           setSearchQuery(event.target.value);
       };
-
 
     useEffect(() => {
         //console.log('user: ', user)
