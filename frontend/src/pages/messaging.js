@@ -23,11 +23,57 @@ function Messaging() {
     const { dispatch: ConvoDispatch } = useConvosContext()
     const { dispatch: MessageDispatch } = useMessageContext()
     const { user } = useAuthContext()
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const navigate = useNavigate();
     const [convoStarted, startConvo] = useState(false);
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
+
+    const handleSearch = async () => {
+      try {
+          const response = await fetch(`http://localhost:4000/api/message/searchMessages?search=${encodeURIComponent(searchQuery)}`, {
+              method: 'GET',
+              headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+          });
+          if (!response.ok) {
+              throw new Error('Search failed');
+          }
+          const data = await response.json();
+          setSearchResults(data);
+          setCurrentConvoMessages(data);
+      } catch (error) {
+          console.error('Failed to fetch search results:', error);
+          // Optionally, update the UI to show an error message
+      } finally {
+          setIsSearching(false); // Reset searching state
+      }
+  };
+
+    useEffect(() => {
+      if (!searchQuery.trim() || !isSearching) {
+          setSearchResults([]);
+          if (isSearching) setIsSearching(false); // Reset if no search query to prevent loop
+          return;
+      }
+
+      const delayDebounceFn = setTimeout(() => {
+          handleSearch().finally(() => {
+              setIsSearching(false); // Ensure this is reset after search
+          });
+      }, 500);
+
+      return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, isSearching]);
+
+  const handleSearchInputChange = (event) => {
+    setIsSearching(true); // User starts typing, enable searching
+    setSearchQuery(event.target.value);
+};
+
 
 
     useEffect(() => {
@@ -222,6 +268,16 @@ function Messaging() {
                 <ChatContent selectedConversation={selectedConversation} currentConvoMessages={currentConvoMessages} onNewChatSubmit={onNewChatSubmit}/> {/*convoMessages={testConvo}*/}
             </div>
             <div className="right-column">
+                <div className="search-container">
+                      <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={handleSearchInputChange}
+                          placeholder="Search for messages..."
+                          className="search-input"
+                      />
+                      <button onClick={handleSearch} className="search-button">Search</button>
+                  </div>
                 <div className="logo-container">
                     <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
                 </div>
