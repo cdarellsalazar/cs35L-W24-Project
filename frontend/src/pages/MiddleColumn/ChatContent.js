@@ -28,10 +28,13 @@ const ChatContent = (props) => {
   */
   const { user } = useAuthContext()
   const [msg, setMsg] = useState(""); // This is the message that the user is typing
+  const [userID, setUserID] = useState(null); // Initialize userID state
 
   // Used for css/stlying
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
+
+
 
   // Send Message Function
   const sendMessage = async () => {
@@ -72,6 +75,31 @@ const ChatContent = (props) => {
           console.log("Entire selected convo details:", props.currentConvoMessages); // used for debugging
       }
   };
+
+  useEffect(() => {
+    const getUserID = async () => {
+      try {
+        console.log('GETUSERID IS RUNNING');
+        const response = await fetch('http://localhost:4000/api/user/getUserID', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${user.token}` }
+        });
+        if(!response.ok){
+          return
+        }
+        const responseJSON = await response.json()
+        console.log('RESPONEJSON: ', responseJSON)
+        setUserID(responseJSON)
+        console.log('USERID: ', userID)
+      } catch (error) {
+        console.error('Error while fetching user ID:', error);
+      }
+    };
+
+    if (user) {
+      getUserID();
+    }
+  }, [user]);
 
     // Calls the scroll to bottom function when currentConvoMessages changes
     useEffect(() => {
