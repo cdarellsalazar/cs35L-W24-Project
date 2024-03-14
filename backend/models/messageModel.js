@@ -31,10 +31,18 @@ const messageSchema = new Schema({
         type: String,
         default: () => {
             const now = new Date();
-            const month = String(now.getHours() + 1).padStart(2, '0'); 
-            const date = String(now.getMinutes()).padStart(2, '0');
-            return `${month}:${date}`;
+            const hours = String(now.getHours() + 1).padStart(2, '0'); 
+            const min = String(now.getMinutes()).padStart(2, '0');
+            return `${hours}:${min}`;
         }
+    },
+    sentDate: {
+        type: String,
+        default: () => {
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0'); 
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${month}/${day}`;}
     },
     // field to record when the message was read
     readAt: {

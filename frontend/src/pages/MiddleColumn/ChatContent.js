@@ -34,7 +34,9 @@ const ChatContent = (props) => {
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
 
-
+  useEffect(() => {
+    console.log("DEBUGDEBUG", props.currentConvoMessages);
+  }, [props.currentConvoMessages]);
 
   // Send Message Function
   const sendMessage = async () => {
@@ -165,14 +167,16 @@ const ChatContent = (props) => {
             <div className="chat__items">
               {props.currentConvoMessages.map((message, index) => (
                 <ChatItem // for each message in currentConvoMessages, create a ChatItem; it's rendered here
+                            idnotkey={message._id}
                             isOnline={message.sender === user._id ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
                             timeSent={message.sentAt}
+                            dateSent={message.sentDate}
                             animationDelay={index + 2}
-                            key={message.messageId}
                            // user={message.sender === currentUser.user.username ? "" : "other"}
                             msg={message.content}
                             image={message.sender === user._id ? "https://s3.amazonaws.com/cms.ipressroom.com/173/files/20198/5d72b4772cfac209ff04c634_Royce+Quad/Royce+Quad_hero.jpg" : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}
+                            reactions={message.reactions ? message.reactions : undefined}
                         />
               ))}
                 <div ref={messagesEndRef} /> 

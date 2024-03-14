@@ -112,10 +112,9 @@ const reactionValues = {
     shock: 4
 };
 
-exports.updateReactions = async (messageId, userId, reactionType) => {
-    try {
-        //console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${reactionType}`);
 
+exports.updateReactions = async (messageId, reactionType) => {
+    try {
         const message = await Message.findById(messageId);
         if (!message) {
            // console.log('Message not found');
