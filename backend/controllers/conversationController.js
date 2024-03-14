@@ -5,16 +5,14 @@ const Messages = require('../models/messageModel')
 exports.startConversation = async (req, res) => {
     try {
         //console.log(req.body)
-        userID = req.user._id
+        const userID = req.user._id
         const { recipient } = req.body
       //  console.log(recipient)
-        try {
-            recipient = await User.findOne({username: `${recipient}` }).select('_id')
-        } catch (error) {
-            throw error
-        }
+        const recipientObject = await User.findOne({username: `${recipient}` })
 
-        const recipientID = recipient._id
+       // console.log('Recipient Object: ', recipientObject)
+
+        const recipientID = recipientObject._id
         
         const participants  = [userID, recipientID];
 
@@ -28,11 +26,11 @@ exports.startConversation = async (req, res) => {
             participants
         });
 
-        recipient.conversations.push(conversation);
+        recipientObject.conversations.push(conversation);
 
         res.status(200).json(conversation);
     } catch (error) {
-     //   console.log(error.message)
+        console.log(error.message)
         res.status(400).json({ error: error.message })
     }
 }
