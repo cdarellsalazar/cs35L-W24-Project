@@ -21,7 +21,7 @@ function Messaging() {
     const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
     const { dispatch: ConvoDispatch } = useConvosContext()
-    const { dispatch: MessageDispatch } = useMessageContext()
+    const { dispatch: MessageDispatch, messages } = useMessageContext()
     const { user } = useAuthContext()
     const navigate = useNavigate();
     const [convoStarted, startConvo] = useState(false);
@@ -30,7 +30,7 @@ function Messaging() {
     };
 
 
-    useEffect(() => {
+   /**  useEffect(() => {
         //console.log('user: ', user)
         const fetchConvos = async () => {
           const response = await fetch('http://localhost:4000/api/convos/', {
@@ -45,7 +45,7 @@ function Messaging() {
         if (user) {
           fetchConvos()
         }
-      }, [ConvoDispatch, MessageDispatch, user])
+      }, [ConvoDispatch, MessageDispatch, user]) */
 
     const handleLogout = async () => {
         try {
@@ -98,17 +98,24 @@ function Messaging() {
 
     useEffect(() => {
       const fetchMessages = async (selectedConvoID) => {
+        console.log('FETCH MESSAGES IS RUNNINGGGGGGGG')
         try {
           const response = await fetch(`http://localhost:4000/api/convos/getMessages`, {
             method: 'POST',
             body: JSON.stringify({conversationID: selectedConvoID}),
             headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
           });
-          const json = await response.json()
           if (!response.ok) {
-           console.error('Error: ', json.error);
+           console.log('Error with response: ', response);
+           throw new Error('Failed to fetch messages for this convo')
           }
-          return json; // Return fetched data
+          const json = await response.json()
+          console.log('MESSAGES: ', messages, " JSON: ", json)
+          if((JSON.stringify(messages) !== JSON.stringify(json)) ){
+          console.log('DISPATCH IS HAPPENING')
+          MessageDispatch({type: 'SET_MESSAGES', payload: json})
+          }
+          setCurrentConvoMessages(json)
         } catch (error) {
           console.error('Error fetching conversation data:', error);
           return null; // Return null if an error occurs
@@ -116,17 +123,22 @@ function Messaging() {
       };
 
       const fetchAndSetMessages = async() => {
+      if(!selectedConversation){
+        MessageDispatch({type: 'SET_MESSAGES', payload: null})
+      }
       if(selectedConversation){
-        const renderInfo = await fetchMessages(selectedConversation.conversationID)
-        //console.log('MESSAGES: ', renderInfo)
-        setCurrentConvoMessages(renderInfo)
-        //console.log('Current convo messages: ', currentConvoMessages)
+        await fetchMessages(selectedConversation.conversationID)
+        if(JSON.stringify(currentConvoMessages) !== JSON.stringify(messages)){
+        console.log('CURRENTCONVOMESSAGES: ', currentConvoMessages, ' MESSAGES :', messages)
+        setCurrentConvoMessages(messages)
+        }
+        console.log('CURRENTMESSAGES', currentConvoMessages)
       }
     }
 
     fetchAndSetMessages()
 
-    }, [selectedConversation,currentConvoMessages])
+    }, [selectedConversation, messages, currentConvoMessages])
 
     /**const [currentConvoMessages, setCurrentConvoMessages] = useState( [
         {
@@ -209,7 +221,7 @@ function Messaging() {
     const [username, setUsername] = useState(null);
 
     const onNewChatSubmit = (newMessage) => {
-        // Update the state with the new message
+        //MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
         setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
       };
 

@@ -84,10 +84,11 @@ exports.getRenderInfo = async (req, res) => {
 
 exports.getMessagesFromConvo = async (req, res) => {
     try{
-        const conversationID = req.body.conversationID
-      //  console.log('conversationID: ', conversationID)
+        
+        const { conversationID } = req.body
+       console.log('conversationID: ', conversationID)
         conversation = await Conversation.findById(conversationID)
-       // console.log('conversation: ', conversation)
+        console.log('conversation: ', conversation)
         const messages = conversation.messages
         //console.log('success')
         const renderList = []
@@ -99,7 +100,7 @@ exports.getMessagesFromConvo = async (req, res) => {
      //   console.log('renderList: ', renderList)
         res.status(200).json(renderList)
     } catch(error) {
-      //  console.log(error)
+        console.log('GET ERROR: ', error)
         res.status(400).json({ error: error.message })
     }
 }

@@ -5,10 +5,20 @@ import Avatar from "../LeftSidebar/Avatar";
 import ChatItem from "./ChatItem";
 import { faPaperPlane, faBars } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useMessageContext } from "../../hooks/useMessageContext";
 //import { get } from "mongoose";
 
+//import io from "socket.io-client"
 
-const ChatContent = (props) => {
+//const ChatContent = (props) => {
+
+
+ // const ENDPOINT = "http://localhost:4000"
+ // var socket, selectedChatCompare
+
+ // useEffect(() => {
+ // socket = io(ENDPOINT)
+//}, [])
 
   // PLEASE NOTE: there are three props (external variables) that are being passed to ChatContent.js:
   // 1. selectedConversation: this is the conversation that the user has clicked on
@@ -206,7 +216,7 @@ useEffect(() => {
           </div>
           <div className="content__body">
             <div className="chat__items">
-              {props.currentConvoMessages.map((message, index) => (
+              {props.currentConvoMessages ? (props.currentConvoMessages.map((message, index) => (
                 <ChatItem // for each message in currentConvoMessages, create a ChatItem; it's rendered here
                             isOnline={message.sender === userID ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
                             timeSent={message.sentAt}
@@ -217,6 +227,8 @@ useEffect(() => {
                             image={message.sender === userID ? currentUser.user.image : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}
                         />
+              ))) : ((
+                <p>Loading messages...</p>
               ))}
                 <div ref={messagesEndRef} /> 
             </div>
