@@ -71,7 +71,7 @@ disruptSchema.methods.popBothFromQueueAndUpdateResponse = async function () {
         } 
     }
 
-    return userIds
+    return participants
 }
 
 disruptSchema.methods.clearQueues = async function () {

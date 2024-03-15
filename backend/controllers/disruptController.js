@@ -13,32 +13,38 @@ exports.createDisruptModel = async (req, res) => {
     }
 }
 
-exports.createDisruptConversation = async (req, res) => {
-    disruptQueue = await Disrupt.findOne()
+exports.disruptPopFromQueueAndReturnParticipants = async (req, res) => {
+    const disruptQueue = await Disrupt.findOne()
     if(!disruptQueue) {
         throw new Error('Could not find the disrupt queue. Please check if it has been created properly')
     }
     const userID = req.user._id
-    await disruptQueue.addUserToQueue(userID)
-    userResponse = await disruptQueue.userResponse()
-    
-    const matchFound = true
-    const matchNotFound = false
 
-    if (userResponse == 'Yes') {
-        if (await disruptQueue.noEmpty()) {
-            res.status(200).json({ matchNotFound })
+    if (!disruptQueue.yesResponse.includes(userID) && !disruptQueue.noResponse.includes(userID)) {
+        await disruptQueue.addUserToQueue(userID);
+    }
+
+    const userResponse = await disruptQueue.userResponse()
+    let matchFound
+    let participants
+
+    if (userResponse === 'Yes') {
+        let matchFound = !await disruptQueue.noEmpty()
+        if (matchFound) {
+            participants = await disruptQueue.popBothFromQueueAndUpdateResponse()
         }
         else {
-            res.status(200).json({ matchFound })
+            participants = null
         }
-    }
-    else if (userResponse == 'No') {
-        if (await disruptQueue.yesEmpty()) {
-            res.status(200).json({ matchNotFound })
+    } 
+    else {
+        let matchFound = !await disruptQueue.yesEmpty()
+        if (matchFound) {
+            participants = await disruptQueue.popBothFromQueueAndUpdateResponse()
         }
         else {
-            res.status(200).json({ matchFound })
+            participants = null
         }
     }
+    return res.status(200).json({ matchFound, participants })
 }
