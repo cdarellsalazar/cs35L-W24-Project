@@ -12,6 +12,7 @@ const path = require('path');
 const User = require('./models/userModel')
 const requireAuth = require('./middleware/requireAuth');
 const { instrument } = require('@socket.io/admin-ui')
+const Conversation = require('./models/conversationModel')
 
 // creates express app
 const app = express();
@@ -90,7 +91,29 @@ mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-proje
 
           socket.on("join chat", (room) => {
             socket.join(room);
-            console.log("User Joined Room: " + room);
+            const roomObject = io.sockets.adapter.rooms.get(room);
+            console.log("User Joined Room: " + room, " established by: ", socket.id);
+            console.log("Users currently in Room: " + room, " ", Array.from(roomObject))
+          })
+
+          /*socket.on('new message', async (newMessageRecieved) => {
+             const conversationID = newMessageReceived.conversation
+            
+            try{
+              const conversation = await Conversation.findById(conversationID)
+              conversation.participants.forEach(participant => {
+                if(participant == newMessageRecieved.sender){
+                  return;
+                }
+                socket.in(participant).emit("message received", newMessageRecieved)
+              })
+            } catch( error ){
+              console.log("ERROR IN RECEIVING MESSAGE: ", error)
+            }
+          }) **/
+
+          socket.on('new message', (newMessage, room) => {
+            socket.to(room).emit('received message', (newMessage))
           })
         })
         instrument(io, { auth: false })

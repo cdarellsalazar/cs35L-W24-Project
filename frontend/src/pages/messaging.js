@@ -15,7 +15,7 @@ import ProfileCard from "../components/ProfileCard";
 import io from "socket.io-client"
 
 const ENDPOINT = "http://localhost:4000"
-var socket;
+
     
 
 
@@ -31,7 +31,8 @@ function Messaging() {
     const { user } = useAuthContext()
     const navigate = useNavigate();
     const [convoStarted, startConvo] = useState(false);
-    const [socketConnected, setSocketConnect] = useState(false);
+    const [socket, setSocket] = useState(null);
+    const [selectedConversationCompare, setSelectedConversationCompare] = useState(null)
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
@@ -59,6 +60,7 @@ function Messaging() {
     };
 
     const fetchAndSetMessages = async() => {
+      await setSelectedConversationCompare(selectedConversation)
       console.log('RUNNING FETCH AND SET MESSAGES')
       if(!selectedConversation){
         MessageDispatch({type: 'SET_MESSAGES', payload: null})
@@ -77,10 +79,35 @@ function Messaging() {
 
 
     useEffect(() => {
-      var socket = io(ENDPOINT)
-      socket.emit("setup", user.token)
-      socket.on("connection", () => setSocketConnect(true));
-    }, [])
+      const socketSetup = async () => {
+        console.log('SOCKET SETUP RUNNING')
+        const newSocket = io(ENDPOINT)
+    
+        // Listen for the "connect" event to ensure the socket has connected
+        newSocket.on("connect", () => {
+          console.log('Socket connected! ID:', newSocket.id)
+        })
+    
+        console.log('NEW SOCKET:', newSocket)
+        console.log('NEWSOCKET IS MADE')
+    
+        // Emit the "setup" event with the user token
+        newSocket.emit("setup", user.token)
+    
+        // Set the socket in state
+        await setSocket(newSocket)
+      }
+    
+      socketSetup()
+    }, [user])
+
+      useEffect(() => {
+        if(socket){
+          socket.on('received message', (newMessage) => {
+            setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+          })
+        }
+      })
 
 
 
@@ -151,7 +178,9 @@ function Messaging() {
     const [previousConversation, setPreviousConversation] = useState(null);
 
     useEffect(() => {
+    console.log('CHECKING FOR SOCKET')
       if(socket){
+    console.log('FETCHING MESSAGES WITH SOCKET: ', socket)
     fetchAndSetMessages()
       }
     }, [selectedConversation, messages, socket])
@@ -239,6 +268,7 @@ function Messaging() {
     const onNewChatSubmit = (newMessage) => {
         //MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
         setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+        socket.emit('new message', newMessage)
       };
 
     return (
