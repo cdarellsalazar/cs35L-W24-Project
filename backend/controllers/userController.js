@@ -1,6 +1,7 @@
 //File containing the methods that get called by different routes relating to login process
 
 const User = require('../models/userModel')
+const Disrupt = require('../models/disruptModel')
 const jwt = require('jsonwebtoken')
 
 const createToken = (_id) => { //Creates json web token that is used for authentication purposes
@@ -177,8 +178,9 @@ console.log('error: ', error.message)
 res.status(400).json({error: error.message})}
 }
 
-const updateDisruptReaction = async (req, res) => {
+const updateDisrupt = async (req, res) => {
   try {
+    //const Disrupt = mongoose.model('Disrupt')
     userID = req.user._id
     const { dailyDisruptReaction } = req.body
     if (dailyDisruptReaction != 'Yes' && dailyDisruptReaction != 'No') {
@@ -187,8 +189,11 @@ const updateDisruptReaction = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userID, { dailyDisruptReaction }, { new: true })
     if (!updatedUser) {
       throw new Error('User not found')
-    } 
-    res.status(200).json({ message: 'Daily disrupt reaction updated without error' })
+    }
+    const { matchFound, participants } = await Disrupt.disruptPopFromQueueAndReturnParticipants(userID)
+    console.log(matchFound)
+    console.log(participants)
+    res.status(200).json({ matchFound, participants })
   } catch(error) {
     console.error(error.message)
     res.status(400).json({ error: error.message })
@@ -196,4 +201,4 @@ const updateDisruptReaction = async (req, res) => {
 }
 
 
-module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList, getUserID, updateDisruptReaction };
+module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList, getUserID, updateDisrupt };

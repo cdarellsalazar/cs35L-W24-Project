@@ -12,11 +12,11 @@ const disruptSchema = new Schema({
     }]
 })
 
-disruptSchema.methods.userResponse = async function (userID) {
-    if (userID.dailyDisruptReaction == 'Yes') {
+disruptSchema.methods.userResponse = async function (user) {
+    if (user.dailyDisruptReaction == 'Yes') {
         return 'Yes'
     }
-    else if (userID.dailyDisruptReaction == 'No') {
+    else if (user.dailyDisruptReaction == 'No') {
         return 'No'
     }
     else {
@@ -24,27 +24,33 @@ disruptSchema.methods.userResponse = async function (userID) {
     }
 }
 
-disruptSchema.methods.addUserToQueue = async function (userID) {
+disruptSchema.methods.addUserToQueue = async function (user) {
 
-    if (userID.dailyDisruptReaction == 'Yes') {
-        this.yesResponse.push(userId)
+    if (user.dailyDisruptReaction == 'Yes') {
+        this.yesResponse.push(userID)
     }
-    else if (userID.dailyDisruptReaction == 'No') {
+    else if (user.dailyDisruptReaction == 'No') {
         this.noResponse.push(userID)
     }
     else {
         throw Error('This user cannot be added to the queue, as they have not selected a dailydisrupt response yet')
     }
+
+    await this.save()
 }
 
 disruptSchema.methods.popFromYesQueue = async function () {
     const userID = await this.yesResponse.shift()
+    await this.save()
+
     return userID
 }
 
 
 disruptSchema.methods.popFromNoQueue = async function () {
-    const userID = await this.yesResponse.shift()
+    const userID = await this.noResponse.shift()
+    await this.save()
+
     return userID
 }
 
@@ -58,14 +64,16 @@ disruptSchema.methods.popBothFromQueueAndUpdateResponse = async function () {
     }
 
     if (this.yesResponse.length >= 1 && this.noResponse.length >= 1) {
-        participants.yesUserID = popFromYesQueue
-        participants.noUserID = popFromNoQueue
+        participants.yesUserID = await this.popFromYesQueue()
+        participants.noUserID = await this.popFromNoQueue()
 
-        const updatedYesUser = await User.findByIdAndUpdate(yesUserID, { dailyDisruptReaction: 'NoSelection' }, { new: true })
+        console.log(participants)
+
+        const updatedYesUser = await User.findByIdAndUpdate(participants.yesUserID, { dailyDisruptReaction: 'NoSelection' }, { new: true })
         if (!updatedYesUser) {
           throw new Error('User not found')
         }
-        const updatedNoUser = await User.findByIdAndUpdate(noUserID, { dailyDisruptReaction: 'NoSelection' }, { new: true })
+        const updatedNoUser = await User.findByIdAndUpdate(participants.noUserID, { dailyDisruptReaction: 'NoSelection' }, { new: true })
         if (!updatedNoUser) {
           throw new Error('User not found')
         } 
@@ -99,7 +107,7 @@ disruptSchema.methods.retrieveBothQueue = async function () {
 }
 
 disruptSchema.methods.yesEmpty = async function () {
-    if (yesResponse.length === 0) {
+    if (this.yesResponse.length === 0) {
         return true
     }
     else {
@@ -108,11 +116,49 @@ disruptSchema.methods.yesEmpty = async function () {
 }
 
 disruptSchema.methods.noEmpty = async function () {
-    if (noResponse.length === 0) {
+    if (this.noResponse.length === 0) {
         return true
     }
     else {
         return false
+    }
+}
+
+disruptSchema.statics.disruptPopFromQueueAndReturnParticipants = async (userID) => {
+    try {
+        const User = mongoose.model('User')
+        const user = await User.findById(userID)
+        const disruptQueue = await Disrupt.findOne()
+        if(!disruptQueue) {
+            throw new Error('Could not find the disrupt queue. Please check if it has been created properly')
+        }
+
+        if (!disruptQueue.yesResponse.includes(userID) && !disruptQueue.noResponse.includes(userID)) {
+            await disruptQueue.addUserToQueue(user);
+        }
+
+        const userResponse = await disruptQueue.userResponse(user)
+
+        let matchFound
+        let participants
+
+        if (userResponse === 'Yes') {
+            matchFound = !await disruptQueue.noEmpty()
+            if (matchFound) {
+                participants = await disruptQueue.popBothFromQueueAndUpdateResponse()
+                console.log(participants)
+            }
+        } 
+        else {
+            matchFound = !await disruptQueue.yesEmpty()
+            if (matchFound) {
+                participants = await disruptQueue.popBothFromQueueAndUpdateResponse()
+                console.log(participants)
+            }
+        }
+        return { matchFound, participants }
+    } catch (error) {
+        console.log(error)
     }
 }
 

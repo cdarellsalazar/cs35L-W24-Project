@@ -64,19 +64,12 @@ exports.getRenderInfo = async (req, res) => {
     try{
         const conversationID = req.body.conversationID
         const userID = req.user._id
-        //console.log(userID)
-        //console.log(conversationID)
         const info = await Conversation.getParticipants(conversationID, userID)
-        //console.log(info)
         const renderInfo = await User.findById(info)
         let renderJSON = renderInfo.toJSON();
         renderJSON['conversationID'] = conversationID
-        //console.log(renderInfo)
-        //console.log(userID)
-        //console.log(conversationID)
         res.status(200).json(renderJSON);
     } catch(error) {
-       // console.log(error)
         res.status(400).json({error: error.message });
     }
 
