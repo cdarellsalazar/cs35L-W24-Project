@@ -149,10 +149,13 @@ const getUserImageByUsername = async (username) => {
 
 const addToBlockedList = async (req, res) => {
   try{
-    const { blockedID } = req.body
+    const { blocked } = req.body
+    console.log('blocked: ', blocked)
     const user = await User.findById(req.user._id);
     user.blockedList.push(blocked)
+    await user.save();
     res.status(200)
+    console.log("in add to blocked list")
   } catch(error){
     console.error('Error: ', error.message)
     res.status(400).json({ error: error.message })

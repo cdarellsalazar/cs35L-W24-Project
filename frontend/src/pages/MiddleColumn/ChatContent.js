@@ -39,6 +39,9 @@ const ChatContent = (props) => {
   const messagesEndRef = useRef(null); // This is the reference to the bottom of the chat window
   const inputRef = useRef(); // This is the reference to the input field
 
+  useEffect(() => {
+    console.log("DEBUGDEBUG", props.currentConvoMessages);
+  }, [props.currentConvoMessages]);
   const [isOpen, setIsOpen] = useState(false);
 
   // Send Message Function
@@ -104,6 +107,31 @@ const ChatContent = (props) => {
     }
 }
 
+
+const blockUser = async (blocked) => {
+  try {
+    console.log('BLOCKUSER IS RUNNING WITH BLOCKEDID: ', blocked);
+    const response = await fetch('http://localhost:4000/api/user/blocked', { // replace with your API endpoint
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user.token}`, 
+          'Content-Type': 'application/json',
+            // Include any other headers, such as authorization headers
+        },
+        body: JSON.stringify({ blocked }),
+    });
+    console.log('RESPONSE: ', response)
+    const json = await response.json()
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // If you expect a response from the server, you can get it like this:
+    // const data = await response.json();
+} catch (error) {
+    console.error('Error:', error);
+}
+};
 
 
 useEffect(() => {
@@ -202,8 +230,7 @@ useEffect(() => {
                   </button>
                   {isOpen && (
                       <div className="menu">
-                          <button onClick={() => console.log('Block User')}>Block User</button>
-                          <button onClick={() => console.log('Search for Message')}>Search for Message</button>
+                          <button onClick={() => blockUser(props.selectedConversation._id)}>Block User</button>
                       </div>
                   )}
                   </div>
@@ -213,14 +240,17 @@ useEffect(() => {
             <div className="chat__items">
               {props.currentConvoMessages ? (props.currentConvoMessages.map((message, index) => (
                 <ChatItem // for each message in currentConvoMessages, create a ChatItem; it's rendered here
+                            idnotkey={message._id}
                             isOnline={message.sender === userID ? true : (props.selectedConversation ? props.selectedConversation.isOnline : false)}
                             timeSent={message.sentAt}
+                            dateSent={message.sentDate}
                             animationDelay={index + 2}
                             key={message.messageId}
                             user={message.sender === userID ? "" : "other"}
                             msg={message.content}
                             image={message.sender === userID ? currentUser.user.image : (props.selectedConversation.image ? props.selectedConversation.image : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg")}
                             onClick={() => props.onConversationClick(props.conversation)}
+                            reactions={message.reactions ? message.reactions : undefined}
                         />
               ))) : ((
                 <p>Loading messages...</p>

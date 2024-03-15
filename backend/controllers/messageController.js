@@ -9,9 +9,14 @@ exports.sendMessage = async (req, res) => {
     //console.log('running')
     try {
         const {conversationID, receiver, msg } = req.body;
-        sender = req.user._id
+        sender = req.user._id.toString();
+        console.log('sender: ', sender) 
+
         partcipants = [sender, receiver] 
+        console.log('participants: ', partcipants)
+
         blockCheck = await User.checkBlocked(sender, receiver)
+        console.log('blockCheck: ', blockCheck)
         if(blockCheck){
             throw new Error('User is blocked or has recipient blocked')
         }
@@ -112,10 +117,9 @@ const reactionValues = {
     shock: 4
 };
 
-exports.updateReactions = async (messageId, userId, reactionType) => {
-    try {
-        //console.log(`Received reaction update request: messageId=${messageId}, userId=${userId}, type=${reactionType}`);
 
+exports.updateReactions = async (messageId, reactionType) => {
+    try {
         const message = await Message.findById(messageId);
         if (!message) {
            // console.log('Message not found');

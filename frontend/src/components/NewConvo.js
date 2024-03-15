@@ -1,6 +1,7 @@
 import {useState} from "react"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useConvosContext } from "../hooks/useConvosContext"
+import './NewConvo.css';
 
 const NewConvo = () => {
     const [recipient, setRecipient] = useState('')
@@ -37,15 +38,16 @@ const NewConvo = () => {
     }
     return (
         <form className="create" onSubmit={handleSubmit}>
-            <label>Recipient:</label>
-            <input 
-                type="text"
-                onChange={(e) => setRecipient(e.target.value)}
-                value = {recipient}
-                />
-
-        <button>Start Conversation</button>
+          <label className="create-label">Recipient:</label>
+          <input 
+            className="create-input"
+            type="text"
+            onChange={(e) => setRecipient(e.target.value)}
+            value = {recipient}
+          />
+      
+          <button className="create-button">Start Conversation</button>
         </form>
-    )
+      )
 }
 export default NewConvo

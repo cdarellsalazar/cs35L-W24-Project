@@ -9,12 +9,19 @@
 }
 
 .logo-container {
+  margin-bottom: 20px;
   position: fixed;
-  top: 10px; 
-  right: 5px; 
+  bottom: 10px;    
+  left: 5px;
   width: 100px; 
   margin-bottom: auto;
 }
+
+.logo-and-search-container {
+  padding-top: 120px; /* Adjust as needed */
+}
+
+
 
 .centered-chunk {
   display: flex; 
@@ -126,7 +133,7 @@ input {
   border: none;
   outline: none;
   cursor: pointer;
-  width: 320px;
+  width: 100%; /* Takes up full width of parent */
   height: 47px;
   line-height: 47px;
   border-radius: 5px;
@@ -136,6 +143,7 @@ input {
   transition: all 0.3s ease-in-out;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box; /* Includes padding and border in width */
 }
 .btn:hover {
   background-color: #c4ddf1;
@@ -145,17 +153,19 @@ input {
 .btn #plus-sign {
   flex: 0.2;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
   height: 100%;
-  font-size: 14px;
+  font-size: 10px; /* Adjust as needed */
   border-right: 1px solid #ebe7fb;
 }
+
 .btn span {
   flex: 0.8;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
 }
 
 .disrupt-container {
@@ -278,4 +288,28 @@ input {
 .picture {
   max-width: 160px;
   max-height: auto;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.search-button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }

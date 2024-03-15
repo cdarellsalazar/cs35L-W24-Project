@@ -7,10 +7,10 @@ import ProfilePicture from "./ProfilePicture.js"
 export default function ProfileCard() {
     const handleClick = () => {
         document.getElementById('profilePicInput').click();
-      };
-      const [profilePicUrl, setProfilePicUrl] = useState('');
+    };
+    const [profilePicUrl, setProfilePicUrl] = useState('');
 
-      const { user } = useAuthContext()
+const { user } = useAuthContext()
       const [currentUser, setCurrentUser] = useState(null);
       const handleFileChange = event => {
         const file = event.target.files[0];
@@ -40,12 +40,12 @@ export default function ProfileCard() {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                 },
-                
+
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch user');
             }
-    
+
             const userData = await response.json();
             console.log("User data:", userData);
             console.log("user name:", userData.user.username)
@@ -80,6 +80,7 @@ export default function ProfileCard() {
             <input type="file" name='image' id="imageInput" style={{display: 'none',}} onChange={handleFileChange}/>
             <label htmlFor="imageInput" className="set-profile-btn">+</label>
         </form>
-    </div>
-    );
+        </div>
+        );
     }
+  

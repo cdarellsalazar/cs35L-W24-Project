@@ -1,11 +1,10 @@
 //File containing schema for user objects, as well as signup and login methods for the users
 
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 const validator = require('validator')
-const Conversation = require('./conversationModel')
 
-const Schema = mongoose.Schema
 
 //Establishes schema for a user object, contains an email and a password.
 const userSchema = new Schema({
@@ -44,11 +43,14 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Conversation' //refers to the conversation model. 
     }],
-
     blockedList: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    dailyDisruptReaction: {
+        type: Boolean,
+        default: false
+    }
 })
 
 userSchema.statics.getConversations = async function(userID) {
@@ -60,7 +62,7 @@ userSchema.statics.getConversations = async function(userID) {
 }
 
 userSchema.statics.getAllParticipants = async function (listOfConversationIDs, userID) {
-    
+
     const Conversation = mongoose.model('Conversation')
 
     const allParticipants = new Set()
@@ -82,7 +84,7 @@ userSchema.statics.getAllParticipants = async function (listOfConversationIDs, u
 }
 
 userSchema.statics.getMessageIDfromConversation = async function (conversationID) {
-    
+
     const Conversation = mongoose.model('Conversation')
 
     const messageIDs = await Conversation.findById(conversationID).populate('messages')
@@ -151,10 +153,34 @@ userSchema.statics.login = async function(email, password) {
 
 userSchema.statics.checkBlocked = async (sender, receiver) => {
     sender = await User.findById(sender)
+
+    console.log('sender in checkblocked: ', sender)
     receiver = await User.findById(receiver)
-    isBlocked = await receiver.blockedList.includes(sender)
-    hasBlocked = await sender.blockedList.includes(receiver)
+
+    rBlockedList = receiver.blockedList
+    sBlockedList = sender.blockedList
+
+    console.log('rBlockedList: ', rBlockedList)
+
+    if (rBlockedList === null) {
+        isBlocked = false;
+    }
+    else
+    {
+        isBlocked = rBlockedList.some(id => id.equals(sender._id));
+        console.log("in isblocked else statement:", isBlocked)
+    }
+
+    if (sBlockedList === null) {
+        hasBlocked = false;
+    }
+    else
+    {
+        hasBlocked = sBlockedList.some(id => id.equals(receiver._id));
+    }
+
     if( isBlocked || hasBlocked ){
+        console.log("isBlocked returned: ", isBlocked, "hasBlocked returned: ", hasBlocked)
         return true;
     }
     return false;

@@ -137,3 +137,37 @@
     width: 100%;
     height: 100%;
   }
+
+  .create-label {
+    font-size: 16px;
+    color: black; /* Changed color to black */
+  }
+  
+  .create-input {
+    height: 30px;
+    border: none;
+    background-color: #e6e5ea;
+    border-radius: 5px;
+    outline: none;
+    width: 100%; /* Takes up full width of parent */
+    padding: 15px;
+    box-sizing: border-box; /* Includes padding and border in width */
+  }
+  
+  .create-button {
+    height: 46px;
+    border: none;
+    background-color: #e6e5ea;
+    ; /* Same as .search-button background color */
+    color: black; /* Same as .search-button color */
+    border-radius: 5px; /* Same as .search-button border radius */
+    cursor: pointer;
+    padding: 15px;
+    margin-top: 10px;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out; /* Adds transition effect */
+  }
+
+  .create-button:hover {
+    background-color: #c4ddf1; /* Changes background color on hover */
+  }

@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const userRoutes = require('./routes/user')
 const messageRoutes = require('./routes/message')
 const conversationRoutes = require('./routes/conversation')
+const disruptRoutes = require('./routes/disrupt')
 const imageUpload = require('./middleware/imageUpload');
 const cors = require('cors')
 const multer = require('multer');
@@ -39,6 +40,7 @@ app.post('/test', (req, res) => {
 app.use('/api/user', userRoutes)
 app.use('/api/message', messageRoutes)
 app.use('/api/convos', conversationRoutes)
+app.use('/api/disrupt', disruptRoutes)
 
 
 app.post('/upload', requireAuth, imageUpload.single('image'), async (req, res) => {
