@@ -5,8 +5,8 @@ const { createDisruptModel } = require('../controllers/disruptController')
 
 router.use(requireAuth)
 
-router.use (createDisruptModel)
+console.log('000000000000000000000000000000000000000000000000000')
 
-//router.use()
+router.use(createDisruptModel)
 
 module.exports = router;

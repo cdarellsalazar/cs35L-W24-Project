@@ -4,14 +4,17 @@ const Messages = require('../models/messageModel')
 const Disrupt = require('../models/disruptModel')
 
 exports.createDisruptModel = async (req, res) => {
-    await Disrupt.create({
-        yesResponse: [],
-        noResponse: []
-    })
+    const existingDisruptInstance = await Disrupt.findOne();
+    if (!existingDisruptInstance) {
+        await Disrupt.create({
+            yesResponse: [],
+            noResponse: []
+        });
+    }
 }
 
 exports.createDisruptConversation = async (req, res) => {
-    disruptQueue = Disrupt.findOne()
+    disruptQueue = await Disrupt.findOne()
     if(!disruptQueue) {
         throw new Error('Could not find the disrupt queue. Please check if it has been created properly')
     }
@@ -36,5 +39,3 @@ exports.createDisruptConversation = async (req, res) => {
         }
     }*/
 }
-
-module.exports = { createDisruptModel }

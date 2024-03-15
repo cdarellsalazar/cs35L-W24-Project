@@ -11,6 +11,8 @@ const requireAuth = async (req, res, next) => {
 
     const token = authorization.split(' ')[1]
 
+    console.log(token)
+
     try {
         const {_id} = jwt.verify(token, 'nZ5XM37vWkFUWTCsoCtL')
 
