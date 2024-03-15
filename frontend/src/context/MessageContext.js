@@ -5,18 +5,18 @@ export const MessageContext = createContext()
 export const messageReducer = (state, action) => {
     console.log('message reducer is running. Type: ', action.type, ' payload: ', action.payload)
   switch (action.type) {
-    case 'SET_MESAGES': 
+    case 'SET_MESSAGES': 
       console.log('messages: ', action.payload)
       return {
         messages: action.payload
       }
     case 'CREATE_MESSAGE':
       return {
-        messages: [action.payload, ...state.convos]
+        messages: [action.payload, ...state.messages]
       }
     case 'DELETE_MESSAGE':
       return {
-        messages: state.convos.filter((w) => w._id !== action.payload._id)
+        messages: state.messages.filter((w) => w._id !== action.payload._id)
       }
     default:
       return state

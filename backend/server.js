@@ -12,6 +12,9 @@ const multer = require('multer');
 const path = require('path');
 const User = require('./models/userModel')
 const requireAuth = require('./middleware/requireAuth');
+const { instrument } = require('@socket.io/admin-ui')
+const Conversation = require('./models/conversationModel')
+
 // creates express app
 const app = express();
 
@@ -21,7 +24,7 @@ app.use(express.json())
 app.use(express.static('public'));
 
 app.use((req, res, next) => {
-    //console.log(req.path, req.method)
+    console.log(req.path, req.method)
     next()
 })
 
@@ -69,8 +72,53 @@ app.post('/upload', requireAuth, imageUpload.single('image'), async (req, res) =
 // connect to db
 mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-projectdataba.l4wjg5l.mongodb.net/?retryWrites=true&w=majority')
     .then(() => {
-       app.listen(4000, () => {
+       const server = app.listen(4000, () => {
         console.log('listening on port ', 4000)
+        const corsOptions = {
+          origin: ["http://localhost:3000", "https://admin.socket.io"],
+          methods:["GET", "POST"],
+          credentials: true
+        }
+        const io = require('socket.io')(server, {
+          cors: corsOptions
+        });
+
+        io.on("connection", socket => {
+          console.log('Connection established: ', socket.id)
+
+          socket.on("setup", (userData) => {
+            socket.join(userData._id);
+            socket.emit("connected");
+          })
+
+          socket.on("join chat", (room) => {
+            socket.join(room);
+            const roomObject = io.sockets.adapter.rooms.get(room);
+            console.log("User Joined Room: " + room, " established by: ", socket.id);
+            console.log("Users currently in Room: " + room, " ", Array.from(roomObject))
+          })
+
+          /*socket.on('new message', async (newMessageRecieved) => {
+             const conversationID = newMessageReceived.conversation
+            
+            try{
+              const conversation = await Conversation.findById(conversationID)
+              conversation.participants.forEach(participant => {
+                if(participant == newMessageRecieved.sender){
+                  return;
+                }
+                socket.in(participant).emit("message received", newMessageRecieved)
+              })
+            } catch( error ){
+              console.log("ERROR IN RECEIVING MESSAGE: ", error)
+            }
+          }) **/
+
+          socket.on('new message', (newMessage, room) => {
+            socket.to(room).emit('received message', (newMessage))
+          })
+        })
+        instrument(io, { auth: false })
        }) 
     })
     .catch((error) => {

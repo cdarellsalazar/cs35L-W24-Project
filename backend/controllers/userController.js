@@ -178,12 +178,12 @@ const removeFromBlockedList = async(req, res) => {
 
  const getUserID = async (req, res) => {
   try{
-    userID = req.user._id
-    console.log('HERE IS MY USER ID: ', userID)
-    res.status(200).json(userID)
-  } catch(error) {
-    console.log('error: ', error.message)
-    res.status(400).json({ error: error.message })}
+  userID = req.user._id
+  //console.log('HERE IS MY USER ID: ', userID)
+  res.status(200).json(userID)
+  } catch(error){
+  console.log('error: ', error.message)
+  res.status(400).json({error: error.message})}
   }
 
   const updateDisruptReaction = async (req, res) => {

@@ -44,9 +44,13 @@ const ChatList = (props) => {
     if (user) {
       fetchConvos();
     }
-  }, [dispatch, user]);
+  }, [user]);
 
   useEffect(() => {
+
+    if(!user){
+      return;
+    }
 
       const fetchConversationData = async (convo) => {
         const convoID = convo._id

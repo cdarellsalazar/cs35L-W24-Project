@@ -6,7 +6,7 @@ const User = require('../models/userModel');
 
 // Send a message
 exports.sendMessage = async (req, res) => {
-    console.log('running')
+    //console.log('running')
     try {
         const {conversationID, receiver, msg } = req.body;
         sender = req.user._id.toString();
@@ -20,7 +20,7 @@ exports.sendMessage = async (req, res) => {
         if(blockCheck){
             throw new Error('User is blocked or has recipient blocked')
         }
-        console.log('here')
+        //console.log('here')
         const message = await Message.create({
             conversation: conversationID,
             sender,
@@ -28,7 +28,7 @@ exports.sendMessage = async (req, res) => {
             content: msg
         });
         await Conversation.findByIdAndUpdate(conversationID, { $push: { messages: message._id } });
-        console.log('message: ', message )
+      //  console.log('message: ', message )
         res.status(200).json(message);
     } catch (error) {
         console.log('error: ', error.message)

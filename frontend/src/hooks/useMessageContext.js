@@ -5,7 +5,7 @@ export const useMessageContext = () => {
   const context = useContext(MessageContext)
 
   if (!context) {
-    throw Error('useConvosContext must be used inside a ConvosContextProvider')
+    throw Error('useMessageContext must be used inside a MesageContextProvider')
   }
 
   return context

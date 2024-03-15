@@ -13,6 +13,12 @@ import getUserByUserName from "../hooks/fetchUserByUsername";
 import NewConvo from "../components/NewConvo";
 import ProfileCard from "../components/ProfileCard";
 import '../components/NewConvo.css';
+import io from "socket.io-client"
+
+const ENDPOINT = "http://localhost:4000"
+
+    
+
 
 function Messaging() {
     const now = new Date();
@@ -22,7 +28,7 @@ function Messaging() {
     const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
     const { dispatch: ConvoDispatch } = useConvosContext()
-    const { dispatch: MessageDispatch } = useMessageContext()
+    const { dispatch: MessageDispatch, messages } = useMessageContext()
     const { user } = useAuthContext()
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -30,6 +36,8 @@ function Messaging() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const navigate = useNavigate();
     const [convoStarted, startConvo] = useState(false);
+    const [socket, setSocket] = useState(null);
+    const [selectedConversationCompare, setSelectedConversationCompare] = useState(null)
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
@@ -76,8 +84,81 @@ function Messaging() {
 };
 
 
+    const fetchMessages = async (selectedConvoID) => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/convos/getMessages`, {
+          method: 'POST',
+          body: JSON.stringify({conversationID: selectedConvoID}),
+          headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
+        });
+        if (!response.ok) {
+         console.log('Error with response: ', response);
+         throw new Error('Failed to fetch messages for this convo')
+        }
+        const json = await response.json()
+        if((JSON.stringify(messages) !== JSON.stringify(json)) ){
+        MessageDispatch({type: 'SET_MESSAGES', payload: json})
+        setCurrentConvoMessages(json)
+        }
+      } catch (error) {
+        console.error('Error fetching conversation data:', error);
+        return null; // Return null if an error occurs
+      }
+    };
+
+    const fetchAndSetMessages = async() => {
+      await setSelectedConversationCompare(selectedConversation)
+      console.log('RUNNING FETCH AND SET MESSAGES')
+      if(!selectedConversation){
+        MessageDispatch({type: 'SET_MESSAGES', payload: null})
+      }
+      if(selectedConversation){
+        await fetchMessages(selectedConversation.conversationID)
+        if(JSON.stringify(currentConvoMessages) !== JSON.stringify(messages)){
+        console.log('CURRENTCONVOMESSAGES: ', currentConvoMessages, ' MESSAGES :', messages)
+        setCurrentConvoMessages(messages)
+        }
+        console.log('CURRENTMESSAGES', currentConvoMessages)
+        socket.emit("join chat", selectedConversation.conversationID)
+      }
+    }
+
+
 
     useEffect(() => {
+      const socketSetup = () => {
+        console.log('SOCKET SETUP RUNNING')
+        const newSocket = io(ENDPOINT)
+    
+        // Listen for the "connect" event to ensure the socket has connected
+        newSocket.on("connect", () => {
+          console.log('Socket connected! ID:', newSocket.id)
+        })
+    
+        console.log('NEW SOCKET:', newSocket)
+        console.log('NEWSOCKET IS MADE')
+    
+        // Emit the "setup" event with the user token
+        newSocket.emit("setup", user.token)
+    
+        // Set the socket in state
+       setSocket(newSocket)
+      }
+    
+      socketSetup()
+    }, [user])
+
+      useEffect(() => {
+        if(socket){
+          socket.on('received message', (newMessage) => {
+            setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+          })
+        }
+      })
+
+
+
+   /**  useEffect(() => {
         //console.log('user: ', user)
         const fetchConvos = async () => {
           const response = await fetch('http://localhost:4000/api/convos/', {
@@ -92,7 +173,7 @@ function Messaging() {
         if (user) {
           fetchConvos()
         }
-      }, [ConvoDispatch, MessageDispatch, user])
+      }, [ConvoDispatch, MessageDispatch, user]) */
 
     const handleLogout = async () => {
         try {
@@ -115,36 +196,12 @@ function Messaging() {
     const [previousConversation, setPreviousConversation] = useState(null);
 
     useEffect(() => {
-      const fetchMessages = async (selectedConvoID) => {
-        try {
-          const response = await fetch(`http://localhost:4000/api/convos/getMessages`, {
-            method: 'POST',
-            body: JSON.stringify({conversationID: selectedConvoID}),
-            headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
-          });
-          const json = await response.json()
-          if (!response.ok) {
-           console.error('Error: ', json.error);
-          }
-          return json; // Return fetched data
-        } catch (error) {
-          console.error('Error fetching conversation data:', error);
-          return null; // Return null if an error occurs
-        }
-      };
-
-      const fetchAndSetMessages = async() => {
-      if(selectedConversation){
-        const renderInfo = await fetchMessages(selectedConversation.conversationID)
-        //console.log('MESSAGES: ', renderInfo)
-        setCurrentConvoMessages(renderInfo)
-        //console.log('Current convo messages: ', currentConvoMessages)
-      }
-    }
-
+    console.log('CHECKING FOR SOCKET')
+      if(socket){
+    console.log('FETCHING MESSAGES WITH SOCKET: ', socket)
     fetchAndSetMessages()
-
-    }, [selectedConversation,currentConvoMessages])
+      }
+    }, [selectedConversation, messages, socket])
 
 
     const handleConversationClick = (newConversation) => {
@@ -162,8 +219,9 @@ function Messaging() {
 
 
     const onNewChatSubmit = (newMessage) => {
-        // Update the state with the new message
+        //MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
         setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+        socket.emit('new message', newMessage)
       };
 
     return (
