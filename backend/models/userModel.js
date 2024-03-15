@@ -48,8 +48,9 @@ const userSchema = new Schema({
         ref: 'User'
     }],
     dailyDisruptReaction: {
-        type: Boolean,
-        default: false
+        type: String,
+        enum: ['Yes', 'No', 'NoSelection'],
+        default: 'NoSelection'
     }
 })
 
