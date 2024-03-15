@@ -126,7 +126,7 @@ function Messaging() {
 
 
     useEffect(() => {
-      const socketSetup = async () => {
+      const socketSetup = () => {
         console.log('SOCKET SETUP RUNNING')
         const newSocket = io(ENDPOINT)
     
@@ -142,7 +142,7 @@ function Messaging() {
         newSocket.emit("setup", user.token)
     
         // Set the socket in state
-        await setSocket(newSocket)
+       setSocket(newSocket)
       }
     
       socketSetup()
