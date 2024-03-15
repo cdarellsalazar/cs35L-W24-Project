@@ -1,28 +1,58 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import CurrentDate from './CurrentDate';
 
-export default function Answered(props) {
-    const addShakeAnimation = () => {
-        const button = document.getElementById('debateButton');
-        button.classList.add('shake-animation');
-        setTimeout(() => {
-            button.classList.remove('shake-animation');
-        }, 500); 
+export default function Answered({ token }) {
+    const [isLoading, setIsLoading] = useState(false);
+    const [matchFound, setMatchFound] = useState(false);
+    const [participants, setParticipants] = useState(null);
+
+    const handleDebateButtonClick = async () => {
+        console.log("Sending request to server...");
+        setIsLoading(true);
+        try {
+            console.log("Request URL: http://localhost:4000/api/disrupt/disruptResponse");
+            console.log(`Bearer token being sent: ${token}`);
+            const response = await fetch('http://localhost:4000/api/disrupt/disruptResponse', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ buttonPressed: 'debate' }),
+            });
+
+            console.log("Response status:", response.status);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Response data:", data);
+                setMatchFound(data.matchFound);
+                setParticipants(data.participants);
+            } else {
+                throw new Error('Failed to process disrupt response:', response.statusText);
+            }
+        } catch (error) {
+            console.error('An unexpected error occurred:', error);
+        } finally {
+            setIsLoading(false);
+            console.log("Set isLoading to false");
+        }
     };
-    useEffect(() => {
-        const button = document.getElementById('debateButton');
-        button.addEventListener('click', addShakeAnimation);
-        return () => {
-            button.removeEventListener('click', addShakeAnimation);
-        };
-    }, []); 
 
     return (
         <div>
             <h3 className="daily-disrupt"> Daily !Disrupt! </h3>
             <CurrentDate />
-            <button id="debateButton">Debate a Dissenter</button>
-            {/* Add a onclick event to make debate a dissenter button actually create a new chat! */}
+            <button id="debateButton" onClick={handleDebateButtonClick} disabled={isLoading}>
+                Debate a Dissenter
+            </button>
+            {isLoading && <p>Loading...</p>}
+            {!isLoading && matchFound && participants && (
+                <p>Match found! Participants: {JSON.stringify(participants)}</p>
+            )}
+            {!isLoading && !matchFound && (
+                <p>No match found. Please try again later.</p>
+            )}
         </div>
     );
 }

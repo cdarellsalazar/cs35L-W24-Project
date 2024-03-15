@@ -180,6 +180,7 @@ res.status(400).json({error: error.message})}
 
 const updateDisrupt = async (req, res) => {
   try {
+    console.log("NOT WORKING")
     //const Disrupt = mongoose.model('Disrupt')
     userID = req.user._id
     const { dailyDisruptReaction } = req.body
