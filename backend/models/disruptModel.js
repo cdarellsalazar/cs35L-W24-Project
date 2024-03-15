@@ -25,6 +25,7 @@ disruptSchema.methods.userResponse = async function (userID) {
 }
 
 disruptSchema.methods.addUserToQueue = async function (userID) {
+
     if (userID.dailyDisruptReaction == 'Yes') {
         this.yesResponse.push(userId)
     }
@@ -47,7 +48,10 @@ disruptSchema.methods.popFromNoQueue = async function () {
     return userID
 }
 
-disruptSchema.methods.popFromQueue = async function () {
+disruptSchema.methods.popBothFromQueueAndUpdateResponse = async function () {
+
+    const User = mongoose.model('User')
+
     const participants = {
         yesUserID: null,
         noUserID: null
@@ -56,6 +60,15 @@ disruptSchema.methods.popFromQueue = async function () {
     if (this.yesResponse.length >= 1 && this.noResponse.length >= 1) {
         participants.yesUserID = popFromYesQueue
         participants.noUserID = popFromNoQueue
+
+        const updatedYesUser = await User.findByIdAndUpdate(yesUserID, { dailyDisruptReaction: 'NoSelection' }, { new: true })
+        if (!updatedYesUser) {
+          throw new Error('User not found')
+        }
+        const updatedNoUser = await User.findByIdAndUpdate(noUserID, { dailyDisruptReaction: 'NoSelection' }, { new: true })
+        if (!updatedNoUser) {
+          throw new Error('User not found')
+        } 
     }
 
     return userIds

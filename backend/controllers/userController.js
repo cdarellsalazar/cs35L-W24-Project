@@ -84,19 +84,10 @@ const getCurrentUser = async (req, res) => {
   try {
       // Get the user ID from the token
       const token = req.headers.authorization.split(' ')[1];
-    //  console.log(token)
-      //console.log("-----------------------------------")
       const decodedTokenArray = jwt.verify(token, "nZ5XM37vWkFUWTCsoCtL");
       const currentUserId = decodedTokenArray._id;
-      //console.log("-----------------------------------");
-     // console.log(currentUserId);
-      //const userId = req.user._id
-     // console.log("this is the userid:", currentUserId);
-
       // Find the user in the database
       const user = await User.findById(currentUserId);
-
-    // console.log(user)
 
       if (!user) {
           return res.status(404).json({ error: "User not found" });
@@ -176,33 +167,33 @@ const removeFromBlockedList = async(req, res) => {
   }
 }
 
- const getUserID = async (req, res) => {
-  try{
-  userID = req.user._id
-  //console.log('HERE IS MY USER ID: ', userID)
-  res.status(200).json(userID)
-  } catch(error){
-  console.log('error: ', error.message)
-  res.status(400).json({error: error.message})}
-  }
+const getUserID = async (req, res) => {
+try{
+userID = req.user._id
+//console.log('HERE IS MY USER ID: ', userID)
+res.status(200).json(userID)
+} catch(error){
+console.log('error: ', error.message)
+res.status(400).json({error: error.message})}
+}
 
-  const updateDisruptReaction = async (req, res) => {
-    try {
-      userID = req.user._id
-      const { dailyDisruptReaction } = req.body
-      if (dailyDisruptReaction != 'Yes' && dailyDisruptReaction != 'No') {
-        throw new Error('Invalid value. The post does not post either Yes or No')
-      }
-      const updatedUser = await User.findByIdAndUpdate(userID, { dailyDisruptReaction }, { new: true })
-      if (!updatedUser) {
-        throw new Error('User not found')
-      } 
-      res.status(200).json({ message: 'Daily disrupt reaction updated without error' })
-    } catch(error) {
-      console.error(error.message)
-      res.status(400).json({ error: error.message })
+const updateDisruptReaction = async (req, res) => {
+  try {
+    userID = req.user._id
+    const { dailyDisruptReaction } = req.body
+    if (dailyDisruptReaction != 'Yes' && dailyDisruptReaction != 'No') {
+      throw new Error('Invalid value. The post does not post either Yes or No')
     }
+    const updatedUser = await User.findByIdAndUpdate(userID, { dailyDisruptReaction }, { new: true })
+    if (!updatedUser) {
+      throw new Error('User not found')
+    } 
+    res.status(200).json({ message: 'Daily disrupt reaction updated without error' })
+  } catch(error) {
+    console.error(error.message)
+    res.status(400).json({ error: error.message })
   }
+}
 
 
 module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList, getUserID, updateDisruptReaction };
