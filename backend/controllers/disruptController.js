@@ -21,21 +21,24 @@ exports.createDisruptConversation = async (req, res) => {
     const userID = req.user._id
     await disruptQueue.addUserToQueue(userID)
     userResponse = await disruptQueue.userResponse()
-    /*
+    
+    const matchFound = true
+    const matchNotFound = false
+
     if (userResponse == 'Yes') {
         if (await disruptQueue.noEmpty()) {
-            res.status(200).json({ message: 'Loading Screen '})
+            res.status(200).json({ matchNotFound })
         }
         else {
-            res.status(200).json({ message: 'Create conversation with userID: ${disruptQueue.popFromNoQueue}'})
+            res.status(200).json({ matchFound })
         }
     }
     else if (userResponse == 'No') {
         if (await disruptQueue.yesEmpty()) {
-            res.status(200).json({ message: 'Loading Screen '})
+            res.status(200).json({ matchNotFound })
         }
         else {
-            res.status(200).json({ message: 'Create conversation with userID: ${disruptQueue.popFromYesQueue}'})
+            res.status(200).json({ matchFound })
         }
-    }*/
+    }
 }
