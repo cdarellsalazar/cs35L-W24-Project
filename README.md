@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Getting Started with DisruptChat
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -6,8 +6,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Download the repo with git clone https://github.com/cdarellsalazar/cs35L-W24-Project.git
 Open the project on your code editor, open a terminal and cd into the project.
 Now we have to get you set up with the proper API's
-First we have MongoDB
-## MONGO DB Keys
 
 
 ## Cloudinary
