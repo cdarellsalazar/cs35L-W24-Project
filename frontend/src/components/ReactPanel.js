@@ -20,7 +20,7 @@ function ReactPanel({ messageID }){    const [selectedReaction, setSelectedReact
         console.log('reactionType received', alt )
         console.log(JSON.stringify({ reactionType: alt }));
         setSelectedReaction(alt);
-        const response = await fetch(`http://localhost:4000/api/message/reactions/${messageID}`, {
+        const response = await fetch(`https://disruptchat-backend.onrender.com/api/message/reactions/${messageID}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${user.token}`,

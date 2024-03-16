@@ -32,7 +32,7 @@ export const ConvosContextProvider = ({ children }) => {
 useEffect(() => {
   const { user } = useAuthContext
   const fetchConvos = async () => {
-    const response = await fetch('http://localhost:4000/api/convos/', {
+    const response = await fetch('https://disruptchat-backend.onrender.com/api/convos/', {
       headers: {'Authorization': `Bearer ${user.token}`},
     })
     const json = await response.json()

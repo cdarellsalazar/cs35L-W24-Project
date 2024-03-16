@@ -26,7 +26,7 @@ const ChatList = (props) => {
   useEffect(() => {
     const fetchConvos = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/convos/', {
+        const response = await fetch('https://disruptchat-backend.onrender.com/api/convos/', {
           headers: {'Authorization': `Bearer ${user.token}`},
         });
         if (!response.ok) {
@@ -57,7 +57,7 @@ const ChatList = (props) => {
         //console.log('convoID: ', convoID)
         try {
           console.log('sending request')
-          const response = await fetch(`http://localhost:4000/api/convos/render`, {
+          const response = await fetch(`https://disruptchat-backend.onrender.com/api/convos/render`, {
             method: 'POST',
             body: JSON.stringify({conversationID: convoID}),
             headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}

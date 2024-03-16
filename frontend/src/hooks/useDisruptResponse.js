@@ -7,7 +7,7 @@ export const useDisruptResponse = (token, disruptResponse) => {
 
   const postDisruptResponse = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/disrupt', {
+      const response = await fetch('https://disruptchat-backend.onrender.com/api/disrupt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

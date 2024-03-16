@@ -17,7 +17,7 @@ const { user } = useAuthContext()
         if (file) {
             const formData = new FormData();
             formData.append('image', file);
-            fetch('http://localhost:4000/upload', {
+            fetch('https://disruptchat-backend.onrender.com/upload', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -36,7 +36,7 @@ const { user } = useAuthContext()
       }
       async function fetchCurrentUser() {
         try {
-            const response = await fetch('http://localhost:4000/api/user/getCurrentUser', {
+            const response = await fetch('https://disruptchat-backend.onrender.com/api/user/getCurrentUser', {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                 },

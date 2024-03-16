@@ -59,7 +59,7 @@ const ChatContent = (props) => {
           
         try {
           //console.log('Helloooooo')
-          const response = await fetch('http://localhost:4000/api/message/send', {
+          const response = await fetch('https://disruptchat-backend.onrender.com/api/message/send', {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${user.token}`,
@@ -88,7 +88,7 @@ const ChatContent = (props) => {
 
   async function fetchCurrentUser() {
     try {
-        const response = await fetch('http://localhost:4000/api/user/getCurrentUser', {
+        const response = await fetch('https://disruptchat-backend.onrender.com/api/user/getCurrentUser', {
             headers: {
                 'Authorization': `Bearer ${user.token}`,
             },
@@ -111,7 +111,7 @@ const ChatContent = (props) => {
 const blockUser = async (blocked) => {
   try {
     console.log('BLOCKUSER IS RUNNING WITH BLOCKEDID: ', blocked);
-    const response = await fetch('http://localhost:4000/api/user/blocked', { // replace with your API endpoint
+    const response = await fetch('https://disruptchat-backend.onrender.com/api/user/blocked', { // replace with your API endpoint
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${user.token}`, 
@@ -147,7 +147,7 @@ useEffect(() => {
     const getUserID = async () => {
       try {
         console.log('GETUSERID IS RUNNING');
-        const response = await fetch('http://localhost:4000/api/user/getUserID', {
+        const response = await fetch('https://disruptchat-backend.onrender.com/api/user/getUserID', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${user.token}` }
         });

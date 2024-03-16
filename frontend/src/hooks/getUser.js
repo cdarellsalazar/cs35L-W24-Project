@@ -9,7 +9,7 @@ const useFetchUserById = (userId) => {
     const fetchUser = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:4000/api/user/${userId}`);
+        const response = await fetch(`https://disruptchat-backend.onrender.com/api/user/${userId}`);
         const data = await response.json();
 
         if (response.ok) {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 async function fetchUserProfile(username) {
   try {
-    const response = await fetch(`http://localhost:4000/api/user/userImage/${username}`);
+    const response = await fetch(`https://disruptchat-backend.onrender.com/api/user/userImage/${username}`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }

@@ -15,7 +15,7 @@ const NewConvo = () => {
 
         const conversation = {recipient}
 
-        const response = await fetch('http://localhost:4000/api/convos/newConvo', {
+        const response = await fetch('https://disruptchat-backend.onrender.com/api/convos/newConvo', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${user.token}`,

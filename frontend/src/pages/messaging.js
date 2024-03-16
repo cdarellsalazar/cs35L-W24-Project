@@ -15,7 +15,7 @@ import ProfileCard from "../components/ProfileCard";
 import '../components/NewConvo.css';
 import io from "socket.io-client"
 
-const ENDPOINT = "http://localhost:4000"
+const ENDPOINT = "https://disruptchat-backend.onrender.com"
 
     
 
@@ -46,7 +46,7 @@ function Messaging() {
 
     const handleSearch = async () => {
       try {
-          const response = await fetch(`http://localhost:4000/api/message/searchMessages?search=${encodeURIComponent(searchQuery)}`, {
+          const response = await fetch(`https://disruptchat-backend.onrender.com/api/message/searchMessages?search=${encodeURIComponent(searchQuery)}`, {
               method: 'GET',
               headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
           });
@@ -88,7 +88,7 @@ function Messaging() {
 
     const fetchMessages = async (selectedConvoID) => {
       try {
-        const response = await fetch(`http://localhost:4000/api/convos/getMessages`, {
+        const response = await fetch(`https://disruptchat-backend.onrender.com/api/convos/getMessages`, {
           method: 'POST',
           body: JSON.stringify({conversationID: selectedConvoID}),
           headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
@@ -134,14 +134,14 @@ function Messaging() {
     
         // Listen for the "connect" event to ensure the socket has connected
         newSocket.on("connect", () => {
-          const response = fetch(`http://localhost:4000/api/user/goOnline`, {
+          const response = fetch(`https://disruptchat-backend.onrender.com/api/user/goOnline`, {
           method: 'POST',
           headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}})
           console.log('Socket connected!, USER IS ONLINE ID:', newSocket.id)
         })
 
         newSocket.on("disconnect", () => {
-          const response = fetch(`http://localhost:4000/api/user/goOffline`, {
+          const response = fetch(`https://disruptchat-backend.onrender.com/api/user/goOffline`, {
           method: 'POST',
           headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}})
         })
@@ -183,7 +183,7 @@ function Messaging() {
    /**  useEffect(() => {
         //console.log('user: ', user)
         const fetchConvos = async () => {
-          const response = await fetch('http://localhost:4000/api/convos/', {
+          const response = await fetch('https://disruptchat-backend.onrender.com/api/convos/', {
             headers: {'Authorization': `Bearer ${user.token}`},
           })
           const json = await response.json()

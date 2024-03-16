@@ -16,7 +16,7 @@ const Answered = (props) => {
 
     async function fetchCurrentUser() {
         try {
-            const response = await fetch('http://localhost:4000/api/user/getCurrentUser', {
+            const response = await fetch('https://disruptchat-backend.onrender.com/api/user/getCurrentUser', {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                 },
@@ -50,7 +50,7 @@ const Answered = (props) => {
         console.log("props.response:", props.response);
         try {
             console.log(`Bearer token being sent: ${user.token}`);
-            const response = await fetch('http://localhost:4000/api/user/disruptResponse', {
+            const response = await fetch('https://disruptchat-backend.onrender.com/api/user/disruptResponse', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
@@ -84,7 +84,7 @@ const Answered = (props) => {
 
         const conversation = {recipient}
         console.log('other person inside createdisruptconvo:', conversation)
-        const response = await fetch('http://localhost:4000/api/convos/newConvo', {
+        const response = await fetch('https://disruptchat-backend.onrender.com/api/convos/newConvo', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
