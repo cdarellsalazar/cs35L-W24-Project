@@ -37,6 +37,7 @@ function ReactPanel({ messageID }){    const [selectedReaction, setSelectedReact
           .then(data => {
             console.log(data);
             setSelectedReaction(alt);
+            dispatch({type: 'RELOAD'})
           })
           .catch(error => {
             console.error('There was a problem with the fetch operation:', error);

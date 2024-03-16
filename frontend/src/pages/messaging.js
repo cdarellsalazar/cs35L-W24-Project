@@ -28,7 +28,7 @@ function Messaging() {
     const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
     const { dispatch: ConvoDispatch } = useConvosContext()
-    const { dispatch: MessageDispatch, messages } = useMessageContext()
+    const { dispatch: MessageDispatch, messages, reload } = useMessageContext()
     const { user } = useAuthContext()
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -225,7 +225,7 @@ function Messaging() {
     console.log('FETCHING MESSAGES WITH SOCKET: ', socket)
     fetchAndSetMessages()
       }
-    }, [selectedConversation, messages, socket, currentConvoMessages, ])
+    }, [selectedConversation, messages, socket, currentConvoMessages, reload])
 
 
     const handleConversationClick = (newConversation) => {

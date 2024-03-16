@@ -8,15 +8,23 @@ export const messageReducer = (state, action) => {
     case 'SET_MESSAGES': 
       console.log('messages: ', action.payload)
       return {
-        messages: action.payload
+        messages: action.payload,
+        reload: state.reload
       }
     case 'CREATE_MESSAGE':
       return {
-        messages: [action.payload, ...state.messages]
+        messages: [action.payload, ...state.messages],
+        reload: state.reload
       }
     case 'DELETE_MESSAGE':
       return {
-        messages: state.messages.filter((w) => w._id !== action.payload._id)
+        messages: state.messages.filter((w) => w._id !== action.payload._id),
+        reload: state.reload
+      }
+    case 'RELOAD':
+      return{
+        messages: state.messages,
+        reload: !state.reload
       }
     default:
       return state
@@ -25,7 +33,8 @@ export const messageReducer = (state, action) => {
 
 export const MessageContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(messageReducer, {
-    messages: null
+    messages: null,
+    reload: false
   })
 
   return (
