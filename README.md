@@ -25,6 +25,14 @@ The secret string is a string used in encoding tokens for authentication. Based 
 ## PORT:
 This is just the port you want your server running on. We keep this a secret to prevent attacks. Standard ports that are used are 3000, 8080, or 4000. Ports from 1024 to 49151 are not assigned or controlled, so you would preferably use one in this range.
 
+## env:
+After all this is done you should create a file named .env within the backend folder with the following keys inside that you got from the previous four steps from Port, Secret, MongoDB, and Cloudinary :
+MONGO_URI= 
+PORT=
+Secret=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
 ## NPM install
 Now that we have all the API's set up, we need to install some modules.
