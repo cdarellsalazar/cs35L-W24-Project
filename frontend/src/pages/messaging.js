@@ -39,6 +39,7 @@ function Messaging() {
     const [convoStarted, startConvo] = useState(false);
     const [socket, setSocket] = useState(null);
     const [selectedConversationCompare, setSelectedConversationCompare] = useState(null)
+    const [response, setResponse] = useState(null)
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
@@ -271,7 +272,7 @@ function Messaging() {
                         <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
                     </div>
                 <div className="disrupt-container">
-                {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered />}
+                {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered response={response} />}
                 </div>
                 <ProfileCard></ProfileCard>
                 <div className="logout-container">
