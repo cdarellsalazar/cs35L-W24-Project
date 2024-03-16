@@ -52,7 +52,7 @@ In the project directory, you can run:
 
 Create two terminals, In one, cd into backend, and the other cd into frontend. Run this command in both, on the backend to start the express and sockets server, and on the frontend to start your react application
 
-### `npm dev`
+### `npm run dev`
 
 You also have the option to run this in the backend folder. This will restart the backend server automatically every time code is updated in the backend folder, making the development process easier.
 
