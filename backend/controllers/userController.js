@@ -190,10 +190,10 @@ const updateDisrupt = async (req, res) => {
     if (!updatedUser) {
       throw new Error('User not found')
     }
-    const { matchFound, participants } = await Disrupt.disruptPopFromQueueAndReturnParticipants(userID)
+    const { matchFound, participantsUsername } = await Disrupt.disruptPopFromQueueAndReturnParticipants(userID)
     console.log(matchFound)
-    console.log(participants)
-    res.status(200).json({ matchFound, participants })
+    console.log(participantsUsername)
+    res.status(200).json({ matchFound, participantsUsername })
   } catch(error) {
     console.error(error.message)
     res.status(400).json({ error: error.message })
