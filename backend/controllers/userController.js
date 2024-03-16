@@ -183,6 +183,7 @@ const updateDisrupt = async (req, res) => {
     //const Disrupt = mongoose.model('Disrupt')
     userID = req.user._id
     const { dailyDisruptReaction } = req.body
+    console.log('dailyDisruptReaction: ', dailyDisruptReaction)
     if (dailyDisruptReaction != 'Yes' && dailyDisruptReaction != 'No') {
       throw new Error('Invalid value. The post does not post either Yes or No')
     }

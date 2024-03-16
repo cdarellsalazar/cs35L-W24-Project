@@ -152,14 +152,18 @@ disruptSchema.statics.disruptPopFromQueueAndReturnParticipants = async (userID) 
             if (matchFound) {
                 participants = await disruptQueue.popBothFromQueueAndUpdateResponse()
                 const yesUser = await User.findById(participants.yesUserID)
+                const noUser = await User.findById(participants.noUserID)
                 participantsUsername.yesUsername = yesUser.username
+                participantsUsername.noUsername = noUser.username
             }
         } 
         else {
             matchFound = !await disruptQueue.yesEmpty()
             if (matchFound) {
                 participants = await disruptQueue.popBothFromQueueAndUpdateResponse()
+                const yesUser = await User.findById(participants.yesUserID)
                 const noUser = await User.findById(participants.noUserID)
+                participantsUsername.yesUsername = yesUser.username
                 participantsUsername.noUsername = noUser.username
             }
         }

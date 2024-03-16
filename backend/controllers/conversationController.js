@@ -4,13 +4,13 @@ const Messages = require('../models/messageModel')
 
 exports.startConversation = async (req, res) => {
     try {
-        //console.log(req.body)
+        console.log("req body:", req.body)
         const userID = req.user._id
         const { recipient } = req.body
-      //  console.log(recipient)
+        console.log(recipient)
         const recipientObject = await User.findOne({username: `${recipient}` })
 
-       // console.log('Recipient Object: ', recipientObject)
+        console.log('Recipient Object: ', recipientObject)
 
         const recipientID = recipientObject._id
         

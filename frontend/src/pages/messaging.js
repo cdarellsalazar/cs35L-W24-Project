@@ -13,12 +13,7 @@ import getUserByUserName from "../hooks/fetchUserByUsername";
 import NewConvo from "../components/NewConvo";
 import ProfileCard from "../components/ProfileCard";
 import '../components/NewConvo.css';
-import io from "socket.io-client"
-
-const ENDPOINT = "http://localhost:4000"
-
-    
-
+import ChatItem from "../pages/MiddleColumn/ChatItem"
 
 function Messaging() {
     const now = new Date();
@@ -28,7 +23,7 @@ function Messaging() {
     const [showNewConversationBox, setShowNewConversationBox] = useState(false);
     const { logout } = useLogout()
     const { dispatch: ConvoDispatch } = useConvosContext()
-    const { dispatch: MessageDispatch, messages } = useMessageContext()
+    const { dispatch: MessageDispatch } = useMessageContext()
     const { user } = useAuthContext()
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -36,8 +31,6 @@ function Messaging() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const navigate = useNavigate();
     const [convoStarted, startConvo] = useState(false);
-    const [socket, setSocket] = useState(null);
-    const [selectedConversationCompare, setSelectedConversationCompare] = useState(null)
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
@@ -53,7 +46,7 @@ function Messaging() {
           }
           const data = await response.json();
           setSearchResults(data);
-          setCurrentConvoMessages(data);
+          //setCurrentConvoMessages(data); *EDIT HERE*
       } catch (error) {
           console.error('Failed to fetch search results:', error);
           // Optionally, update the UI to show an error message
@@ -84,81 +77,8 @@ function Messaging() {
 };
 
 
-    const fetchMessages = async (selectedConvoID) => {
-      try {
-        const response = await fetch(`http://localhost:4000/api/convos/getMessages`, {
-          method: 'POST',
-          body: JSON.stringify({conversationID: selectedConvoID}),
-          headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
-        });
-        if (!response.ok) {
-         console.log('Error with response: ', response);
-         throw new Error('Failed to fetch messages for this convo')
-        }
-        const json = await response.json()
-        if((JSON.stringify(messages) !== JSON.stringify(json)) ){
-        MessageDispatch({type: 'SET_MESSAGES', payload: json})
-        setCurrentConvoMessages(json)
-        }
-      } catch (error) {
-        console.error('Error fetching conversation data:', error);
-        return null; // Return null if an error occurs
-      }
-    };
-
-    const fetchAndSetMessages = async() => {
-      await setSelectedConversationCompare(selectedConversation)
-      console.log('RUNNING FETCH AND SET MESSAGES')
-      if(!selectedConversation){
-        MessageDispatch({type: 'SET_MESSAGES', payload: null})
-      }
-      if(selectedConversation){
-        await fetchMessages(selectedConversation.conversationID)
-        if(JSON.stringify(currentConvoMessages) !== JSON.stringify(messages)){
-        console.log('CURRENTCONVOMESSAGES: ', currentConvoMessages, ' MESSAGES :', messages)
-        setCurrentConvoMessages(messages)
-        }
-        console.log('CURRENTMESSAGES', currentConvoMessages)
-        socket.emit("join chat", selectedConversation.conversationID)
-      }
-    }
-
-
 
     useEffect(() => {
-      const socketSetup = () => {
-        console.log('SOCKET SETUP RUNNING')
-        const newSocket = io(ENDPOINT)
-    
-        // Listen for the "connect" event to ensure the socket has connected
-        newSocket.on("connect", () => {
-          console.log('Socket connected! ID:', newSocket.id)
-        })
-    
-        console.log('NEW SOCKET:', newSocket)
-        console.log('NEWSOCKET IS MADE')
-    
-        // Emit the "setup" event with the user token
-        newSocket.emit("setup", user.token)
-    
-        // Set the socket in state
-       setSocket(newSocket)
-      }
-    
-      socketSetup()
-    }, [user])
-
-      useEffect(() => {
-        if(socket){
-          socket.on('received message', (newMessage) => {
-            setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
-          })
-        }
-      })
-
-
-
-   /**  useEffect(() => {
         //console.log('user: ', user)
         const fetchConvos = async () => {
           const response = await fetch('http://localhost:4000/api/convos/', {
@@ -173,7 +93,7 @@ function Messaging() {
         if (user) {
           fetchConvos()
         }
-      }, [ConvoDispatch, MessageDispatch, user]) */
+      }, [ConvoDispatch, MessageDispatch, user])
 
     const handleLogout = async () => {
         try {
@@ -185,9 +105,11 @@ function Messaging() {
         }
     };
     function toggleBoolYes() {
+        setResponse("Yes");
         answer(!answered)
       }
     function toggleBoolNo() {
+        setResponse("No");
         answer(!answered)
       }
 
@@ -196,12 +118,36 @@ function Messaging() {
     const [previousConversation, setPreviousConversation] = useState(null);
 
     useEffect(() => {
-    console.log('CHECKING FOR SOCKET')
-      if(socket){
-    console.log('FETCHING MESSAGES WITH SOCKET: ', socket)
-    fetchAndSetMessages()
+      const fetchMessages = async (selectedConvoID) => {
+        try {
+          const response = await fetch(`http://localhost:4000/api/convos/getMessages`, {
+            method: 'POST',
+            body: JSON.stringify({conversationID: selectedConvoID}),
+            headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}
+          });
+          const json = await response.json()
+          if (!response.ok) {
+           console.error('Error: ', json.error);
+          }
+          return json; // Return fetched data
+        } catch (error) {
+          console.error('Error fetching conversation data:', error);
+          return null; // Return null if an error occurs
+        }
+      };
+
+      const fetchAndSetMessages = async() => {
+      if(selectedConversation){
+        const renderInfo = await fetchMessages(selectedConversation.conversationID)
+        //console.log('MESSAGES: ', renderInfo)
+        setCurrentConvoMessages(renderInfo)
+        //console.log('Current convo messages: ', currentConvoMessages)
       }
-    }, [selectedConversation, messages, socket])
+    }
+
+    fetchAndSetMessages()
+
+    }, [selectedConversation,currentConvoMessages])
 
 
     const handleConversationClick = (newConversation) => {
@@ -215,13 +161,14 @@ function Messaging() {
         console.log("Selected Conversation:", newConversation.name);
         console.log("Messages of Selected Convo:", newConversation.messages);
     };
+
+    const [response, setResponse] = useState(null);
   
 
 
     const onNewChatSubmit = (newMessage) => {
-        //MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
+        // Update the state with the new message
         setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
-        socket.emit('new message', newMessage)
       };
 
     return (
@@ -243,11 +190,21 @@ function Messaging() {
                       />
                       <button onClick={handleSearch} className="search-button">Search</button>
                       </div>
+                      <div className="search-results">
+                        {searchResults.map((result, index) => (
+                              <div key={index}>
+                              <p>Sender: {result.sender}</p>
+                              <p>Receiver: {result.receiver}</p>
+                              <p>Message: {result.message}</p>
+                              <p>Time Sent: {result.timeSent}</p>
+                            </div>
+                        ))}
+                      </div>
                     <div className="logo-container">
                         <img src={logoImg} alt="Logo" style={{ maxWidth: '100px', maxHeight: '100px' }} />
                     </div>
                 <div className="disrupt-container">
-                {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered />}
+                {answered ? <Question toggleBoolYes={toggleBoolYes} toggleBoolNo={toggleBoolNo} /> : <Answered response={response} />}
                 </div>
                 <ProfileCard></ProfileCard>
                 <div className="logout-container">
