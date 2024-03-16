@@ -5,7 +5,7 @@ const Disrupt = require('../models/disruptModel')
 const jwt = require('jsonwebtoken')
 
 const createToken = (_id) => { //Creates json web token that is used for authentication purposes
-  return jwt.sign({_id}, 'nZ5XM37vWkFUWTCsoCtL', { expiresIn: '3d' })
+  return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
 }
 
 //login user
@@ -201,5 +201,25 @@ const updateDisrupt = async (req, res) => {
   }
 }
 
+const goOnline = async(req, res) => {
+  try{
+    const user = await User.findByIdAndUpdate(req.user.id, {isOnline: true});
+    res.status(200).json({ user })
+    } catch(e) {
+    console.log(error.message)
+    res.status(400).json({ error: error.message })
+  }
+}
 
-module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList, getUserID, updateDisrupt };
+const goOffline = async(req, res) => {
+  try{
+    const user = await User.findByIdAndUpdate(req.user.id, {isOnline: false})
+    res.status(200).json({ user })
+  } catch(e) {
+    console.log(error.message)
+    res.status(400).json({ error: error.message })
+  }
+}
+
+
+module.exports = { getCurrentUser, signupUser, loginUser, getUserByIdFromReq, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList, getUserID, updateDisrupt, goOnline, goOffline};

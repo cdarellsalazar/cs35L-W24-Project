@@ -70,26 +70,36 @@ app.post('/upload', requireAuth, imageUpload.single('image'), async (req, res) =
 
 
 // connect to db
-mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-projectdataba.l4wjg5l.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
-       const server = app.listen(4000, () => {
-        console.log('listening on port ', 4000)
+       const server = app.listen(process.env.PORT, () => {
+        console.log('listening on port ', process.env.PORT)
+        console.log('attmepting to setup sockets')
         const corsOptions = {
-          origin: ["http://localhost:3000", "https://admin.socket.io"],
+          origin: ["https://disruptchat.onrender.com", "https://admin.socket.io", "http://localhost:3000"],
           methods:["GET", "POST"],
           credentials: true
         }
         const io = require('socket.io')(server, {
+          transports: ['websocket', 'polling'], // Specify WebSocket first, then polling
           cors: corsOptions
         });
 
+        console.log("io being created on server", server)
+
+        console.log("IO: ", io)
+
         io.on("connection", socket => {
           console.log('Connection established: ', socket.id)
-
           socket.on("setup", (userData) => {
             socket.join(userData._id);
             socket.emit("connected");
           })
+
+          socket.on('error', (error) => {
+            console.error('Socket error:', error);
+          });
+
 
           socket.on("join chat", (room) => {
             socket.join(room);
@@ -118,7 +128,11 @@ mongoose.connect('mongodb+srv://whyvimwhenemacs:ly00MAJz6QZxZ4Og@cs35l-w24-proje
             socket.to(room).emit('received message', (newMessage))
           })
         })
-        instrument(io, { auth: false })
+
+        io.on('error', (error) => {
+          console.error('Socket.IO error:', error);
+        });
+        
        }) 
     })
     .catch((error) => {

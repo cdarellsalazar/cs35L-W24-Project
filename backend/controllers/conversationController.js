@@ -53,7 +53,7 @@ exports.fetchConversations = async (req, res) => {
     
    //console.log('user: ', userID)
 
-    const conversations = await Conversation.find({ participants: { $in: [userID]}})
+    const conversations = await Conversation.find({ participants: { $in: [userID]}}).sort(-1)
 
    // console.log('conversations: ', conversations)
 
