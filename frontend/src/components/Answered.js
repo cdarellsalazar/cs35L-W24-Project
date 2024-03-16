@@ -10,9 +10,9 @@ export default function Answered({ token }) {
         console.log("Sending request to server...");
         setIsLoading(true);
         try {
-            console.log("Request URL: http://localhost:4000/api/disrupt/disruptResponse");
+            console.log("Request URL: http://localhost:4000/api/disrupt");
             console.log(`Bearer token being sent: ${token}`);
-            const response = await fetch('http://localhost:4000/api/disrupt/disruptResponse', {
+            const response = await fetch('http://localhost:4000/disrupt', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
