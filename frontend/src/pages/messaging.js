@@ -34,6 +34,7 @@ function Messaging() {
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [messagesReceived, setMessagesReceived] = useState([])
     const navigate = useNavigate();
     const [convoStarted, startConvo] = useState(false);
     const [socket, setSocket] = useState(null);
@@ -132,8 +133,22 @@ function Messaging() {
     
         // Listen for the "connect" event to ensure the socket has connected
         newSocket.on("connect", () => {
-          console.log('Socket connected! ID:', newSocket.id)
+          const response = fetch(`http://localhost:4000/api/user/goOnline`, {
+          method: 'POST',
+          headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}})
+          console.log('Socket connected!, USER IS ONLINE ID:', newSocket.id)
         })
+
+        newSocket.on("disconnect", () => {
+          const response = fetch(`http://localhost:4000/api/user/goOffline`, {
+          method: 'POST',
+          headers: {'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json'}})
+        })
+        
+        newSocket.on('connect_error', (error) => {
+          console.error('CONNECTION ERROR:', error);
+        });
+        
     
         console.log('NEW SOCKET:', newSocket)
         console.log('NEWSOCKET IS MADE')
@@ -151,6 +166,12 @@ function Messaging() {
       useEffect(() => {
         if(socket){
           socket.on('received message', (newMessage) => {
+            if(newMessage in messagesReceived){
+              return;
+            }
+            setMessagesReceived([...messagesReceived, newMessage])
+            console.log('NEW MESSAGE RECEIVED, ', newMessage)
+            MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
             setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
           })
         }
@@ -219,9 +240,10 @@ function Messaging() {
 
 
     const onNewChatSubmit = (newMessage) => {
-        //MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
+        MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
         setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
         socket.emit('new message', newMessage)
+        console.log('NEW MESSAGE SENT')
       };
 
     return (

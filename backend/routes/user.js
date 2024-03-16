@@ -5,7 +5,7 @@ const requireAuth = require('../middleware/requireAuth')
 const imageUpload = require('../middleware/imageUpload');
 
 //controller functions
-const { getCurrentUser, signupUser, loginUser, getUserID, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList, updateDisrupt} = require('../controllers/userController');
+const { getCurrentUser, signupUser, loginUser, getUserID, getUserByUsernameFromReq, updateUserProfileImage, getUserImageByUsername, addToBlockedList, removeFromBlockedList, updateDisrupt, goOnline, goOffline} = require('../controllers/userController');
 
 //router object that holds routes to be exported
 const router = express.Router()
@@ -45,5 +45,9 @@ router.post('/unblock', removeFromBlockedList)
 router.post('/getUserID', getUserID)
 
 router.post('/disruptResponse', updateDisrupt)
+
+router.post('/goOnline', goOnline)
+
+router.post('/goOffline', goOffline)
 
 module.exports = router;
