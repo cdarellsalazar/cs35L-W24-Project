@@ -141,7 +141,7 @@ const Answered = (props) => {
                 <p>Match found!</p>
             )}
             {!isLoading && !matchFound && (
-                <p>No match found. Please try again later.</p>
+                <p>You've been placed in the queue! Please wait for a match.</p>
             )}
         </div>
     );
