@@ -225,7 +225,7 @@ function Messaging() {
     console.log('FETCHING MESSAGES WITH SOCKET: ', socket)
     fetchAndSetMessages()
       }
-    }, [selectedConversation, messages, socket,  reload])
+    }, [selectedConversation, messages, socket, reload]) // HERE
 
 
     const handleConversationClick = (newConversation) => {
@@ -243,11 +243,11 @@ function Messaging() {
 
 
     const onNewChatSubmit = (newMessage) => {
-         
-        setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
-        socket.emit('new message', newMessage)
-        console.log('NEW MESSAGE SENT')
-      };
+      MessageDispatch({type: 'CREATE_MESSAGE', payload: newMessage})
+      setCurrentConvoMessages(prevCurrentConvoMessages => [...prevCurrentConvoMessages, newMessage]);
+      socket.emit('new message', newMessage)
+      console.log('NEW MESSAGE SENT')
+    };
 
     return (
         <div className="container">

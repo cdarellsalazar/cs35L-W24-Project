@@ -174,7 +174,7 @@ useEffect(() => {
     // Calls the scroll to bottom function when currentConvoMessages changes
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); 
-    }, []);
+    }, [props.currentConvoMessages]);
 
     // When the enter key is pressed, call the sendMessage function
     const keydownHandler = useCallback((e) => {
