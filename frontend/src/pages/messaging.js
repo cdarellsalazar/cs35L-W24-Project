@@ -225,7 +225,7 @@ function Messaging() {
     console.log('FETCHING MESSAGES WITH SOCKET: ', socket)
     fetchAndSetMessages()
       }
-    }, [selectedConversation, messages, socket, currentConvoMessages, reload])
+    }, [selectedConversation, messages, socket,  reload])
 
 
     const handleConversationClick = (newConversation) => {
