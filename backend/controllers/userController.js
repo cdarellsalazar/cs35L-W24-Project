@@ -180,10 +180,10 @@ res.status(400).json({error: error.message})}
 
 const updateDisrupt = async (req, res) => {
   try {
-    console.log("NOT WORKING")
     //const Disrupt = mongoose.model('Disrupt')
     userID = req.user._id
     const { dailyDisruptReaction } = req.body
+    console.log('dailyDisruptReaction: ', dailyDisruptReaction)
     if (dailyDisruptReaction != 'Yes' && dailyDisruptReaction != 'No') {
       throw new Error('Invalid value. The post does not post either Yes or No')
     }
@@ -191,10 +191,10 @@ const updateDisrupt = async (req, res) => {
     if (!updatedUser) {
       throw new Error('User not found')
     }
-    const { matchFound, participants } = await Disrupt.disruptPopFromQueueAndReturnParticipants(userID)
+    const { matchFound, participantsUsername } = await Disrupt.disruptPopFromQueueAndReturnParticipants(userID)
     console.log(matchFound)
-    console.log(participants)
-    res.status(200).json({ matchFound, participants })
+    console.log(participantsUsername)
+    res.status(200).json({ matchFound, participantsUsername })
   } catch(error) {
     console.error(error.message)
     res.status(400).json({ error: error.message })
